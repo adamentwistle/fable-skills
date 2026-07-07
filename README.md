@@ -10,22 +10,43 @@ These skills close that gap. Fable identified the places where a less deliberate
 
 Each skill is one focused habit. They fire situationally — a debugging task pulls in `root-cause-debugging`, a diff touching user input pulls in `security-reflexes`, a schema change pulls in `data-migration-safety` — so the model carries the right discipline into the right moment without drowning in guidance.
 
-## Does it actually help? A benchmark
+## Does it actually help? Benchmarks
 
-To sanity-check the premise, the same task was run through **two fresh Opus 4.8 agents** — one with no guidance ("without"), one given the relevant skill files ("with") — and both reviews were scored **blind** by an independent third agent against a fixed answer key.
+Same method throughout: run an identical task through fresh Opus 4.8 agents with **no guidance** vs. **with the relevant skill files**, then score the outputs against a fixed answer key. These are directional signals, not statistical proofs.
 
-**Task:** review a small Python orders module seeded with **14 distinct latent issues** (SQL injection, a connection leak, division-by-zero, float-money drift, a missing authorization check, and more) and report everything found.
+### Benchmark 1 — Security code review (n=1, blind-graded)
 
-**Result:**
+The same task was run through two fresh agents and both reviews were scored **blind** by an independent third agent. **Task:** review a Python orders module seeded with **14 latent issues** (SQL injection, connection leak, division-by-zero, float-money drift, a missing authorization check, …).
 
 | | Issues found (of 14) | Notable |
 |---|:---:|---|
 | **Without skills** | **10 / 14** | Solid: caught the injection, the leak, div-by-zero, float money |
-| **With skills** | **13 / 14** | Caught everything the control did **plus the IDOR / broken object-level authorization flaw the bare run missed entirely** — the single highest-severity issue in the file — along with an explicit rounding policy, result-set pagination, and robust row access |
+| **With skills** | **13 / 14** | Caught everything the control did **plus the IDOR / broken object-level authorization flaw the bare run missed entirely** — the single highest-severity issue in the file — plus an explicit rounding policy, result-set pagination, and robust row access |
 
-The skill-guided run didn't just find *more* — it found the issue that mattered most. Walking the `security-reflexes` checklist ("every mutating path: WHO is calling and MAY they touch THIS object?") surfaced an authorization gap that a capable-but-unprompted review sailed past. The bare run's only unique catch was a low-severity currency-formatting nit.
+The skill-guided run didn't just find *more* — it found the issue that mattered most. Walking the `security-reflexes` checklist ("every mutating path: WHO is calling and MAY they touch THIS object?") surfaced an authorization gap the unprompted review sailed past.
 
-**Honest caveats:** this is a single illustrative task (n=1), not a statistical benchmark — treat it as a directional signal, not a proof. The baseline was already strong (Opus 4.8 is a good model), so the delta is "good → more complete," not "broken → fixed." The effect is largest exactly where the skills add a checklist the model wouldn't otherwise run (security, edge cases, honest scope-flagging) and smallest on the obvious happy-path bugs any competent review catches. Your mileage varies by task.
+### Benchmark 2 — Three areas, n=5 per condition
+
+Five independent runs per condition on three fresh tasks, each seeded with a fixed answer key. Mean issues found (with run-to-run range):
+
+| Area (what it exercises) | Without skills | With skills |
+|---|:---:|:---:|
+| **Root-cause debugging** (stale-cache bug) | 5.4 / 8 · 68% _(range 5–6)_ | **7.8 / 8 · 98%** _(range 7–8)_ |
+| **Concurrency** (racy rate limiter) | 6.4 / 7 · 91% _(range 6–7)_ | **7.0 / 7 · 100%** _(range 7)_ |
+| **Edge / numerical** (CSV revenue parser) | 8.4 / 9 · 93% _(range 8–9)_ | **9.0 / 9 · 100%** _(range 9)_ |
+
+What moved the needle, by area:
+
+- **Debugging — the biggest gap.** With skills, every run stated a *falsifiable* root-cause hypothesis and gave explicit reproduce-and-verify steps (5/5 vs 0/5), and caught a subtle sentinel bug — a config of JSON `null` defeats the `is None` cache guard — that no bare run spotted (4/5 vs 0/5). This is where working *discipline*, not knowledge, is decisive.
+- **Concurrency — both strong.** Skills closed the last gaps: naming the lost-update race distinctly and flagging the off-by-one limit boundary on every run, where the bare runs did so only intermittently.
+- **Edge / numerical — smallest gap.** The prompt ("list every edge case") already pushes exhaustive enumeration, so both conditions found nearly everything. The consistent skill edge was error-message quality — naming the offending row/field/value in the failure (5/5 vs 2/5).
+
+Two patterns hold across every area:
+
+1. **Skills help most where the task rewards process** (debugging) and least where the prompt already forces thoroughness (enumeration).
+2. **Run-to-run variance shrank with skills** — scores clustered at the top instead of spreading (debugging: 7–8 with vs 5–6 without). More consistent, not merely higher on average.
+
+**Honest caveats:** n=5 is small and Benchmark 1 is n=1 — directional, not conclusive. The baseline Opus is already strong, so the gain is "good → near-complete," not "broken → fixed." Benchmark 1 was scored by an independent blind agent; Benchmark 2 was scored by the orchestrating agent against pre-registered answer keys (objective checklist items, but not blind).
 
 ## Using the skills
 
@@ -33,7 +54,7 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 
 **With Claude Code:** drop the skill directories into a discoverable skills location (e.g. `~/.claude/skills/` or a project `.claude/skills/`) and they become available to the `Skill` tool. The model selects them by description as tasks arise.
 
-**Anywhere else:** the bodies are plain Markdown — paste the relevant one into a system prompt, or concatenate a task-appropriate subset. That's exactly how the benchmark's "with skills" run was configured.
+**Anywhere else:** the bodies are plain Markdown — paste the relevant one into a system prompt, or concatenate a task-appropriate subset. That's exactly how the benchmarks' "with skills" runs were configured.
 
 ## The catalog (35 skills)
 

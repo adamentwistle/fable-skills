@@ -12,7 +12,7 @@ Each skill is one focused habit. They fire situationally — a debugging task pu
 
 ## Does it actually help? Benchmarks
 
-Same method throughout: run an identical task through fresh Opus 4.8 agents with **no guidance** vs. **with the relevant skill files**, then score the outputs against a fixed answer key. These are directional signals, not statistical proofs.
+Same method throughout: run an identical task through fresh agents with **no guidance** vs. **with the relevant skill files**, then score the outputs against a fixed answer key. Benchmark 1 uses Opus 4.8; Benchmark 2 runs both Opus 4.8 and Sonnet 5. These are directional signals, not statistical proofs.
 
 ### Benchmark 1 — Security code review (n=1, blind-graded)
 
@@ -25,28 +25,26 @@ The same task was run through two fresh agents and both reviews were scored **bl
 
 The skill-guided run didn't just find *more* — it found the issue that mattered most. Walking the `security-reflexes` checklist ("every mutating path: WHO is calling and MAY they touch THIS object?") surfaced an authorization gap the unprompted review sailed past.
 
-### Benchmark 2 — Three areas, n=5 per condition
+### Benchmark 2 — Three areas × two models, n=5 per cell, blind-graded
 
-Five independent runs per condition on three fresh tasks, each seeded with a fixed answer key. Mean issues found (with run-to-run range):
+Three fresh tasks (root-cause debugging, a racy rate limiter, a CSV revenue parser), each seeded with a fixed answer key. Every cell is **5 independent runs**; all 60 outputs per area were scored **blind** by an independent grader that knew neither the model nor whether skills were applied. Mean issues found:
 
-| Area (what it exercises) | Without skills | With skills |
-|---|:---:|:---:|
-| **Root-cause debugging** (stale-cache bug) | 5.4 / 8 · 68% _(range 5–6)_ | **7.8 / 8 · 98%** _(range 7–8)_ |
-| **Concurrency** (racy rate limiter) | 6.4 / 7 · 91% _(range 6–7)_ | **7.0 / 7 · 100%** _(range 7)_ |
-| **Edge / numerical** (CSV revenue parser) | 8.4 / 9 · 93% _(range 8–9)_ | **9.0 / 9 · 100%** _(range 9)_ |
+| Area | Opus 4.8 — bare | Opus 4.8 — skills | Sonnet 5 — bare | Sonnet 5 — skills |
+|---|:---:|:---:|:---:|:---:|
+| **Root-cause debugging** (/8) | 5.2 · 65% | **7.8 · 98%** | 4.4 · 55% | 6.4 · 80% |
+| **Concurrency** (/7) | 6.4 · 91% | **7.0 · 100%** | 6.0 · 86% | 7.0 · 100% |
+| **Edge / numerical** (/9) | 8.2 · 91% | **9.0 · 100%** | 8.6 · 96% | 9.0 · 100% |
 
-What moved the needle, by area:
+Four findings:
 
-- **Debugging — the biggest gap.** With skills, every run stated a *falsifiable* root-cause hypothesis and gave explicit reproduce-and-verify steps (5/5 vs 0/5), and caught a subtle sentinel bug — a config of JSON `null` defeats the `is None` cache guard — that no bare run spotted (4/5 vs 0/5). This is where working *discipline*, not knowledge, is decisive.
-- **Concurrency — both strong.** Skills closed the last gaps: naming the lost-update race distinctly and flagging the off-by-one limit boundary on every run, where the bare runs did so only intermittently.
-- **Edge / numerical — smallest gap.** The prompt ("list every edge case") already pushes exhaustive enumeration, so both conditions found nearly everything. The consistent skill edge was error-message quality — naming the offending row/field/value in the failure (5/5 vs 2/5).
+1. **Skills lift both models in every area** — biggest on debugging (Opus +2.6, Sonnet +2.0), where the task rewards *process*; smallest on the edge task, whose "list every edge case" prompt already forces exhaustiveness (both models near-saturate).
+2. **Skills bring the cheaper model above the stronger bare one.** Sonnet 5 + skills matches or beats bare Opus 4.8 in all three areas (6.4 vs 5.2, 7.0 vs 6.4, 9.0 vs 8.2). That is the parity thesis, measured: the discipline files close the model gap.
+3. **But raw capability still matters at the subtle end.** Opus + skills leads Sonnet + skills on debugging (7.8 vs 6.4) almost entirely on one item — a config of JSON `null` defeating the `is None` cache guard — caught by Opus-with-skills 4/5 times and by Sonnet **0/5 in any condition**. Skills prompt the right *class* of thinking; the hardest single insight still needed the stronger model.
+4. **Variance shrank with skills** — with-skills scores cluster at the top rather than spreading (Opus debugging 7–8 with vs 5–6 without), so the gain is greater consistency, not just a higher mean.
 
-Two patterns hold across every area:
+The Opus numbers here were produced by an earlier author-scored pass too; the blind re-grade reproduced them almost exactly (debugging 5.2 vs 5.4, concurrency and the with-skills scores identical), which is the main reason to trust the rest.
 
-1. **Skills help most where the task rewards process** (debugging) and least where the prompt already forces thoroughness (enumeration).
-2. **Run-to-run variance shrank with skills** — scores clustered at the top instead of spreading (debugging: 7–8 with vs 5–6 without). More consistent, not merely higher on average.
-
-**Honest caveats:** n=5 is small and Benchmark 1 is n=1 — directional, not conclusive. The baseline Opus is already strong, so the gain is "good → near-complete," not "broken → fixed." Benchmark 1 was scored by an independent blind agent; Benchmark 2 was scored by the orchestrating agent against pre-registered answer keys (objective checklist items, but not blind).
+**Honest caveats:** n=5 per cell is still small — directional, not conclusive. The baselines are already strong, so the gain is "good → near-complete," not "broken → fixed." Grading is an LLM applying an objective checklist, not a human. The edge task saturates, compressing its signal.
 
 ## Using the skills
 

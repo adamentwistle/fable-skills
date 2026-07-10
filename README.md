@@ -14,6 +14,8 @@ Each skill is one focused habit. They fire situationally — a debugging task pu
 
 Same method throughout: run an identical task through fresh agents with **no guidance** vs. **with the relevant skill files**, then score the outputs against a fixed answer key. Benchmark 1 uses Opus 4.8; Benchmark 2 runs both Opus 4.8 and Sonnet 5. These are directional signals, not statistical proofs.
 
+**The full assets are in [`benchmark/`](benchmark/)** — seeded tasks, answer keys, all 62 raw run outputs, the blind-grader prompts, and the per-item score tables — so every number below is auditable and re-gradable rather than take-my-word-for-it. (They were reconstructed verbatim from the original session transcript; each file carries a provenance header, and the recovery manifest in `benchmark/README.md` lists the known gaps.)
+
 ### Benchmark 1 — Security code review (n=1, blind-graded)
 
 The same task was run through two fresh agents and both reviews were scored **blind** by an independent third agent. **Task:** review a Python orders module seeded with **14 latent issues** (SQL injection, connection leak, division-by-zero, float-money drift, a missing authorization check, …).

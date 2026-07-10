@@ -111,9 +111,23 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 
 ## Agents
 
-Alongside the skills, `agents/` carries subagent definitions for Claude Code's `Agent` tool. Install one by dropping the file into `~/.claude/agents/` (or a project's `.claude/agents/`); it registers at the next session start.
+**Skills fix habits; agents fix structure.** A skill makes the driving model reach for a discipline it already has. But one gap no checklist can close is *self-correlation*: a model reviewing its own work inherits its own anchoring — the same context, the same wrong assumption it made an hour ago. Subagents close that gap structurally, because each one runs in a clean context. The `agents/` directory packages Fable's independence disciplines as reusable subagent definitions for Claude Code's `Agent` tool.
 
-- `agents/codex.md` — **codex**: runs the OpenAI Codex CLI (GPT-5.6) as a subagent inside Claude fan-outs, for cross-model second opinions — adversarial review, verification, judging, or an independent implementation attempt whose blind spots don't correlate with Claude's. The orchestrator picks the model tier and reasoning effort per task via two prompt headers (`codex-model:`, `codex-effort:`), steered by an evidence-based routing guide baked into the agent description: Luna for mechanical/lookup work, Terra at high effort for routine implementation (the best measured marginal return), Sol at xhigh for long-horizon, multi-file, and adversarial-review work — where Sol's higher completion rate makes it cheaper *per completed task* than Terra despite 2× the token price. Hard rules included: never hand Luna a >200K-token context (long-context recall cliff), and escalate effort on retry rather than defaulting to max (quality vs. effort is non-monotonic). Requires the `codex` CLI installed and authenticated; verified against codex-cli 0.144 / GPT-5.6 GA (2026-07).
+Install by dropping a file into `~/.claude/agents/` (or a project's `.claude/agents/`); it registers at the next session start.
+
+**Fresh-context independence** (uncorrelated eyes on your own work):
+
+- `skeptic` — adversarial verifier: takes one claim and tries to *refute* it from primary evidence; returns CONFIRMED / REFUTED / UNPROVEN with the evidence trail. For load-bearing conclusions, especially your own.
+- `fresh-eyes-reviewer` — red-team review of a diff with zero knowledge of the author's reasoning, by design; reports only findings with a concrete failure scenario attached.
+- `done-gate` — spec-compliance audit before "done": every requirement in the original request checked against evidence, cheap verifications re-run, unevidenced claims flagged.
+- `blind-judge` — grades N provenance-stripped candidates against a rubric, criterion-by-criterion, with anti-halo and position-bias guards. For judge panels and tournament selection (it's how this repo's own benchmarks were scored).
+- `plan-premortem` — "this plan already failed; write the incident report": verifies the plan's factual claims against the repo, surfaces unverified load-bearing assumptions, names the riskiest step and the cheapest de-risking probe.
+
+The verification agents deliberately pin `model: opus` — the point is a cheap driver doing the legwork while the strongest available model does the judging, not the reverse. Override the `model:` field to taste.
+
+**Cross-model independence** (blind spots that don't correlate with Claude's):
+
+- `codex` — runs the OpenAI Codex CLI (GPT-5.6) as a subagent inside Claude fan-outs. The orchestrator picks model tier and reasoning effort per task via two prompt headers (`codex-model:`, `codex-effort:`), steered by an evidence-based routing guide baked into the description: Luna for mechanical/lookup work, Terra at high effort for routine implementation (the best measured marginal return), Sol at xhigh for long-horizon, multi-file, and adversarial-review work — where Sol's higher completion rate makes it cheaper *per completed task* than Terra despite 2× the token price. Hard rules: never hand Luna a >200K-token context (long-context recall cliff), and escalate effort on retry rather than defaulting to max (quality vs. effort is non-monotonic). Requires the `codex` CLI installed and authenticated; verified against codex-cli 0.144 / GPT-5.6 GA (2026-07).
 
 ## Attribution
 

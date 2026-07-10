@@ -109,6 +109,12 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 **LLM application code**
 - `llm-app-code` — treat model output as untrusted input; schema-validate, gate writes
 
+## Agents
+
+Alongside the skills, `agents/` carries subagent definitions for Claude Code's `Agent` tool. Install one by dropping the file into `~/.claude/agents/` (or a project's `.claude/agents/`); it registers at the next session start.
+
+- `agents/codex.md` — **codex**: runs the OpenAI Codex CLI (GPT-5.6) as a subagent inside Claude fan-outs, for cross-model second opinions — adversarial review, verification, judging, or an independent implementation attempt whose blind spots don't correlate with Claude's. The orchestrator picks the model tier and reasoning effort per task via two prompt headers (`codex-model:`, `codex-effort:`), steered by an evidence-based routing guide baked into the agent description: Luna for mechanical/lookup work, Terra at high effort for routine implementation (the best measured marginal return), Sol at xhigh for long-horizon, multi-file, and adversarial-review work — where Sol's higher completion rate makes it cheaper *per completed task* than Terra despite 2× the token price. Hard rules included: never hand Luna a >200K-token context (long-context recall cliff), and escalate effort on retry rather than defaulting to max (quality vs. effort is non-monotonic). Requires the `codex` CLI installed and authenticated; verified against codex-cli 0.144 / GPT-5.6 GA (2026-07).
+
 ## Attribution
 
 Skills authored by Fable to lift lighter models to its own working standard. Benchmark run and scored with Claude Opus 4.8.

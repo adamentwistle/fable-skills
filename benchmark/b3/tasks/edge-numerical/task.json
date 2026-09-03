@@ -1,0 +1,53 @@
+{
+ "area": "edge-numerical",
+ "title": "CSV revenue aggregator edge cases",
+ "discipline": "edge-case-sweep",
+ "skills": [
+  "edge-case-sweep",
+  "numerical-care",
+  "error-message-quality"
+ ],
+ "prompt_file": "../../../tasks/edge-numerical/prompt-bare.md",
+ "answer_key_file": "../../../tasks/edge-numerical/answer-key.md",
+ "output_format": "numbered-findings",
+ "items": [
+  {
+   "id": "C1",
+   "short": "Missing 'price'/'qty' key \u2192 KeyError."
+  },
+  {
+   "id": "C2",
+   "short": "Present-but-None value (distinct from missing key) \u2192 TypeErr"
+  },
+  {
+   "id": "C3",
+   "short": "Empty string '' \u2192 ValueError."
+  },
+  {
+   "id": "C4",
+   "short": "Non-numeric / currency symbols / thousands separators / loca"
+  },
+  {
+   "id": "C5",
+   "short": "int('3.0') (decimal-looking qty string) raises ValueError."
+  },
+  {
+   "id": "C6",
+   "short": "Money as binary float \u2192 drift; use Decimal/integer cents."
+  },
+  {
+   "id": "C7",
+   "short": "Negative price or qty accepted silently."
+  },
+  {
+   "id": "C8",
+   "short": "'nan'/'inf' strings parse via float() and poison the total."
+  },
+  {
+   "id": "C9",
+   "short": "Error messages should NAME the offending row index / field /"
+  }
+ ],
+ "max_score": 9,
+ "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+}

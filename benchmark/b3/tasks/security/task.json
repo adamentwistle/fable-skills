@@ -1,0 +1,15 @@
+{
+ "area": "security",
+ "title": "Orders module security review",
+ "discipline": "security-reflexes",
+ "skills": [
+  "security-reflexes",
+  "workmanship"
+ ],
+ "prompt_file": "../../../tasks/security/prompt-bare.md",
+ "answer_key_file": "../../../tasks/security/answer-key.md",
+ "output_format": "numbered-findings",
+ "items": [],
+ "max_score": 0,
+ "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+}

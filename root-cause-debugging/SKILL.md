@@ -1,6 +1,6 @@
 ---
 name: root-cause-debugging
-description: Systematic debugging — reproduce, bisect, prove the cause with a falsifiable hypothesis, fix minimally, re-verify against the original repro. Use for any bug, test failure, regression, or flaky behavior, before proposing a fix — and whenever a first fix didn't work.
+description: Systematic debugging — reproduce, bisect, prove the cause with a falsifiable hypothesis, fix minimally, re-verify against the original repro. Use for any bug, test failure, regression, crash, wrong output, or flaky behavior, before proposing a fix — including "it used to work", "sometimes fails", and whenever a first fix didn't work. Not for pure environment failures (command-not-found, import errors) — see environment-first.
 ---
 
 # Root-Cause Debugging
@@ -9,39 +9,41 @@ Weak debugging looks like: read the error → pattern-match to a familiar cause 
 
 ## Stage 1 — Reproduce before anything else
 
-Get the failure happening on demand, in the smallest command you can run repeatedly (a single test, a curl, a node one-liner). If you cannot reproduce it, your job is to instrument until you can — not to fix blind.
+Run the failure on demand in the smallest command you can repeat (one test, one curl, one one-liner). Run it once *before* editing anything and record verbatim: the exact command, the observed output, the expected output. This is the acceptance test for the fix; every later claim is measured against it.
 
-Write down (mentally or in a scratch file) the exact reproduction command and the exact observed-vs-expected output. This is the acceptance test for your fix.
+If it does not reproduce, your job is to instrument until it does — not to fix blind. Say in the report when you could not reproduce.
 
 ## Stage 2 — Locate by bisection, not intuition
 
-Find where reality diverges from expectation by cutting the search space in half repeatedly:
+Cut the search space in half repeatedly:
 
-- Trace the data: pick one concrete value that ends up wrong and follow it backward from the symptom to where it was last correct.
-- Log/inspect at the midpoint of the suspected path; then midpoint again.
-- Use git: `git log --oneline -- <file>`, `git bisect`, or diff against the last-known-good commit when it's a regression.
-- Distrust the error site. The line that throws is where the bad state was *noticed*, rarely where it was *created*.
+- Pick one concrete value that ends up wrong and follow it backward from the symptom to the last place it was correct.
+- Inspect at the midpoint of the suspected path (print/log/debugger), then midpoint again.
+- Regression? `git log --oneline -- <file>`, `git bisect`, or diff against last-known-good.
+- Distrust the error site. The line that throws is where bad state was *noticed*, rarely where it was *created*.
 
 ## Stage 3 — State the cause as a falsifiable sentence
 
-Before fixing, complete this sentence with specifics: "The failure happens because **[specific code]** does **[specific wrong thing]** when **[specific condition]**."
+Before fixing, fill in: "The failure happens because **[specific code]** does **[specific wrong thing]** when **[specific condition]**." No placeholders — if you cannot name the code and the condition, return to stage 2.
 
-Then try to falsify it: if this were true, what ELSE would be broken? Check that. If the hypothesis predicts things that aren't happening, it's wrong — go back to stage 2. A hypothesis you haven't tried to break is a guess.
+Then try to break it: if this were true, what else would be broken, and what would a targeted check show? Predict the result *before* running the check. A prediction that misses means the hypothesis is wrong — back to stage 2. One hypothesis, one test; a hypothesis you haven't tried to break is a guess.
 
 ## Stage 4 — Fix the cause, minimally
 
-- Fix where the bad state is created, not where it's detected.
-- Prefer the smallest diff that makes the falsifiable sentence false.
-- If the real fix is large and you must ship a symptom-level guard, say so explicitly in your report — never present a mitigation as a root-cause fix.
+- Fix where the bad state is created, not where it is detected.
+- Smallest diff that makes the stage-3 sentence false. If the fix touches code the sentence didn't name, stop — either the sentence is wrong or the diff is.
+- If the real fix is large and you ship a guard at the symptom, label it a mitigation in the report. Never present a mitigation as a root-cause fix.
 
 ## Stage 5 — Verify with the original reproduction
 
-Run the exact stage-1 reproduction. Then run the surrounding test suite to check for collateral damage. A fix verified only by "the code looks right now" is not verified.
+Re-run the exact stage-1 command and compare the output to the recorded expectation. Then run the surrounding suite for collateral damage. "The code looks right now" and "the new test passes" are not verification — the original repro passing is.
+
+Report: the cause sentence, the repro command, before/after output, and any mitigation or unreproduced behavior.
 
 ## When a fix attempt fails
 
-Do not stack a second guess on the first. Revert your mental model to stage 3: the failed fix is *evidence* — it falsified your hypothesis. Ask what the failure of the fix tells you about where the real cause is.
+Revert the failed fix before testing the next hypothesis — never test hypothesis B with fix A still applied. The failed fix is evidence: it falsified the sentence. Ask what its failure says about where the real cause is, then return to stage 3. Two failed fixes on the same failure means stop and zoom out (see stop-thrashing).
 
 ## Flaky / intermittent failures
 
-Don't average over the noise. Find the varying input: timing (race), ordering (test pollution, map iteration), environment (env var, port, clock), or data (random seed). Run the reproduction in a loop (`for i in $(seq 20); do ...; done`) to measure the failure rate before and after the fix — "passed once" is not evidence for a flake fix.
+Don't average over the noise. Find the varying input: timing (race), ordering (test pollution, map iteration), environment (env var, port, clock), or data (random seed). Loop the repro (`for i in $(seq 20); do ...; done`) and record the failure rate before and after — "passed once" is not evidence for a flake fix.

@@ -1,0 +1,44 @@
+{
+ "area": "concurrency",
+ "title": "Racy rate limiter review",
+ "discipline": "concurrency-reasoning",
+ "skills": [
+  "concurrency-reasoning",
+  "edge-case-sweep"
+ ],
+ "prompt_file": "../../../tasks/concurrency/prompt-bare.md",
+ "answer_key_file": "../../../tasks/concurrency/answer-key.md",
+ "output_format": "numbered-findings",
+ "items": [
+  {
+   "id": "B1",
+   "short": "Check-then-act race (TOCTOU): read\u2192compare\u2192write not atomic,"
+  },
+  {
+   "id": "B2",
+   "short": "Lost update on the increment specifically (two threads read "
+  },
+  {
+   "id": "B3",
+   "short": "Fix is a lock / atomic increment / atomic backend (INCR)."
+  },
+  {
+   "id": "B4",
+   "short": "No time window / never resets \u2192 it's a lifetime cap, not a r"
+  },
+  {
+   "id": "B5",
+   "short": "Unbounded memory growth (entry per user_id, never evicted)."
+  },
+  {
+   "id": "B6",
+   "short": "Per-process/multi-worker: in-memory dict not shared across w"
+  },
+  {
+   "id": "B7",
+   "short": "Missing/None (or unhashable) user_id not validated."
+  }
+ ],
+ "max_score": 7,
+ "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+}

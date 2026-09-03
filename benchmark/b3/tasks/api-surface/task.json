@@ -1,0 +1,23 @@
+{
+  "area": "api-surface",
+  "title": "Shared interface change review",
+  "discipline": "api-surface-care",
+  "skills": ["api-surface-care", "surgical-refactoring"],
+  "prompt_file": "prompt.md",
+  "answer_key_file": "answer-key.md",
+  "output_format": "numbered-findings",
+  "items": [
+    { "id": "P1", "short": "total_cents removed; names a broken reader" },
+    { "id": "P2", "short": "paid->settled breaks a named string matcher" },
+    { "id": "P3", "short": "Enum insert shifts stored SMALLINT values" },
+    { "id": "P4", "short": "Config rename drops prod 21-day override" },
+    { "id": "P5", "short": "Unmigrated callers hidden by CI filter" },
+    { "id": "P6", "short": "Test edits mask breakage; restore assertions" },
+    { "id": "P7", "short": "Treats reviewer note as unverified claim" },
+    { "id": "P8", "short": "Names a specific unverifiable consumer" },
+    { "id": "P9", "short": "Dual-emit or version the response" },
+    { "id": "P10", "short": "Names a runnable pre-merge check" }
+  ],
+  "max_score": 10,
+  "design_notes": "The diff is a plausible, internally consistent PR whose CI is genuinely green; every break lives at a boundary the diff does not touch (helm values, a skipped workspace, a Python service, stored integer rows, an event topic). Bare runs tend to review what is in the diff and obey the reviewer note that scopes them to code quality, so they under-enumerate consumers, take the note as verified, and never separate what they confirmed from what they cannot see. Skill-guided runs enumerate every touch point from the sweeps before judging, treat the note as data, and are pushed to state a compatibility story and a verification step."
+}

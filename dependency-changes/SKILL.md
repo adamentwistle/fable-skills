@@ -1,37 +1,43 @@
 ---
 name: dependency-changes
-description: Adding/upgrading/removing dependencies — justification bar, changelog + pinned-constraint archaeology, matching package-manager/lockfile hygiene, one bump at a time, gates after. Use before touching package manifests, on security advisories, or version-mismatch errors.
+description: Adding, upgrading, or removing dependencies — justification bar, registry-verified versions, changelog and pinned-constraint archaeology, matching package-manager and lockfile hygiene, one bump at a time, gates after. Use when adding, bumping, removing, or auditing a package; before editing package.json, pyproject.toml, Cargo.toml, go.mod, or any lockfile; on security advisories, audit/Dependabot alerts, deprecation or peer-dependency warnings, version-mismatch errors, or "update everything" requests.
 ---
 
 # Dependency Changes
 
-Every dependency is a standing liability: supply-chain surface, upgrade treadmill, bundle weight, and a second opinion about how your code should work. Changes to the dependency set deserve more ceremony than code changes, not less.
+Weak dependency work types a version number from memory, runs whichever install command comes to mind, and declares success when the install exits 0. Strong dependency work queries the registry, uses the project's own package manager, changes one thing, runs the gates, and reads the lockfile diff before committing.
 
 ## Adding a dependency
 
-1. **Clear the justification bar first**: Does the stdlib do it? Does an existing dependency do it (grep package.json — the codebase often already carries a lib covering 90%)? Is it small enough to write inline (a 20-line util beats a package)? Only then add.
-2. **Vet it**: maintenance signal (recent releases, open-issue triage), weekly downloads, license compatibility, install footprint (`npm info <pkg>`, transitive count). A package that pulls 40 transitive deps for one function is a bad trade.
-3. **Use the project's package manager exactly** — check for `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` and use the matching tool. Never generate a second lockfile kind; never hand-edit a lockfile. Respect workspace/catalog conventions in monorepos.
-4. Pin ranges the way the project already pins them (look at neighbors in package.json) — don't introduce `^` into a repo that pins exact, or vice versa.
+1. **Clear the justification bar**: does the stdlib do it? Does an existing dependency (read the manifest — the codebase often already carries a lib covering 90%)? Is it small enough to write inline (a 20-line util beats a package)? Only then add.
+2. **Vet it**: last release date, open-issue triage, download count, license, install footprint and transitive count (`npm info`, `pip show`, `cargo tree`, or the equivalent). 40 transitive deps for one function is a bad trade.
+3. **Use the project's package manager exactly**: identify it from the lockfile present (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `uv.lock`, `poetry.lock`, `Cargo.lock`, ...) and use the matching tool. Never create a second lockfile kind; never hand-edit a lockfile; respect workspace/catalog conventions in monorepos.
+4. **Pin the way neighbors pin**: exact vs caret vs range — copy the manifest's existing style.
 
 ## Upgrading
 
-1. **Read the changelog/release notes between your version and the target** — specifically BREAKING sections and migration guides. For a major bump, expect API changes; budget for them rather than discovering them via type errors.
-2. **Check the project for pinned-constraint reasons before bumping.** A dependency held at an old major is often deliberate (compatibility with a sibling app, a plugin ecosystem, a known regression). Search CLAUDE.md/README/comments/git log for the package name — "upgrade everything" is not authorization to break a documented pin.
-3. Upgrade one thing at a time (or one tightly-coupled group, e.g. a framework and its plugins). A 15-package bump that breaks the build is unbisectable.
-4. Security advisories: prefer the smallest version delta that clears the advisory; verify the vulnerable path is actually reachable in your usage when deciding urgency.
+1. **Never write a version from memory.** Query the registry for the current version (`npm view <pkg> version`, `pip index versions <pkg>`, `cargo search <pkg>`, `go list -m -versions <mod>`) and read the currently installed version from the lockfile, not the manifest range. Paste both in your report.
+2. **Read the changelog between installed and target** — the BREAKING sections and migration guides. For a major bump, budget for API changes instead of discovering them via type errors.
+3. **Check for pinned-constraint reasons before bumping.** A dependency held at an old major is often deliberate. Search CLAUDE.md, README, comments, and `git log -S<pkg>` for the package name. "Upgrade everything" does not authorize breaking a documented pin.
+4. **Check engine and peer constraints**: the target's required runtime version and peer ranges against what the project runs. A peer warning in the install output is an error that has not happened yet — report it, do not scroll past it.
+5. **One bump at a time** (or one tightly coupled group, e.g. a framework and its plugins). A 15-package bump that breaks the build is unbisectable.
+6. **Security advisories**: take the smallest version delta that clears the advisory; check whether the vulnerable path is reachable in this codebase when judging urgency.
 
 ## After ANY dependency change
 
 - Full install with the project's tool, then the full gate suite: build/typecheck, lint, tests.
-- Exercise the features that use the changed package at runtime — type-compatible ≠ behavior-compatible (defaults change, peer behaviors shift).
-- Diff the lockfile at a glance: the change should touch what you expect. A one-package bump that rewrites 500 lockfile lines deserves a look before committing.
-- Commit lockfile + manifest together, and (unless asked otherwise) separately from feature code.
+- Exercise the features that use the changed package at runtime — type-compatible is not behavior-compatible (defaults change, peer behavior shifts).
+- Read the lockfile diff: it should touch what you expect. A one-package bump that rewrites 500 lockfile lines gets explained before it gets committed.
+- Commit lockfile and manifest together, and (unless asked otherwise) separately from feature code.
 
 ## Removing
 
-Grep for every import/require/config reference (plugins and configs reference packages by STRING — check rc files, build configs, CI). Remove, reinstall, run gates. Dead dependencies are worth removing when noticed — but as their own commit, not smuggled into a feature diff.
+Grep for every import/require AND every string reference — plugins, rc files, build configs, and CI reference packages by name. Remove, reinstall, run gates. Dead dependencies are worth removing when noticed, as their own commit.
 
-## Red flags to surface rather than push through
+## Surface rather than push through
 
-Typosquat-adjacent names, install scripts doing surprising work, a needed upgrade that forces a cascade (node version, framework major), or a license change mid-stream. These are decisions for the user, with your recommendation attached.
+Typosquat-adjacent names, install scripts doing surprising work, an upgrade that forces a cascade (runtime version, framework major), a license change, or a registry version that differs from what the user asked for. These are decisions for the user, with your recommendation attached.
+
+## Report
+
+Include: package, installed → target version with the registry query that produced it, the changelog items that affect this codebase, install warnings, gate results, what you exercised at runtime, and the lockfile diff size.

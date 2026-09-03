@@ -1,46 +1,50 @@
 ---
 name: performance-investigation
-description: Measurement-first performance work — baseline, profile, fix by leverage (do less work → cache → parallelize → tune constants), verify with the same measurement. Use for any "make it faster", latency/memory investigation, or before adding caching/memoization on intuition.
+description: Measurement-first performance work — baseline, profile, fix by leverage (do less work → cache → parallelize → tune constants), verify with the same measurement. Use for any "make it faster", "why is this slow", latency/memory/CPU investigation, timeout or p95 regression, or before adding caching, memoization, indexes or parallelism on intuition. Not for reviewing new code for complexity-class mistakes (see perf-sanity).
 ---
 
 # Performance Investigation
 
-The cardinal sin is optimizing unmeasured code. Intuition about bottlenecks is wrong more often than right — the discipline is a measurement loop, not a bag of tricks.
+Weak performance work looks like: read the code → spot something that "looks slow" → add a cache or parallelise it → declare it faster. Strong performance work is a measurement loop: nothing is edited until a number exists, and nothing is called an improvement until the same number moves. Do not skip stages.
 
-## 1. Define the metric and measure the baseline
+## 1. Define the metric and record the baseline
 
-Pick ONE number that captures the complaint: p95 latency of endpoint X, wall time of job Y, MB of heap after Z. Measure it reproducibly (same input, several runs, note variance) BEFORE touching code. No baseline → no proof of improvement.
+Pick ONE number that captures the complaint: p95 latency of endpoint X, wall time of job Y, MB of heap after Z. Write down the exact command that measures it and run it at least 5 times on the same input; record median and spread. If the spread is larger than the improvement you expect, fix the measurement first (warm-up runs, prod build, bigger input, quieter machine) — a noisy baseline proves nothing either way.
 
-Beware benchmark lies: cold vs warm caches, dev-mode builds (dev servers are not prod), tiny toy inputs, laptop-vs-prod hardware, and measuring the first iteration (JIT/warmup).
+Measure on an input representative of the complaint, not the test fixture: a 10-row run says nothing about 100k rows. Where cheap, also run at 10× the input — how the time grows (linear, quadratic) locates the problem faster than any profiler.
 
-## 2. Profile to find where the time actually goes
+Beware benchmark lies: cold vs warm caches, dev-mode builds, first-iteration JIT/warm-up, laptop-vs-prod hardware, and a metric that doesn't match the complaint (CPU time when the user feels wall time).
 
-Use the real instrument, not code-reading: CPU profiler/flamegraph for compute, query logs + EXPLAIN for DBs, network waterfall for pages, heap snapshots for memory, distributed traces for services. The bottleneck is a measurement result, not an opinion.
+If the baseline already meets the target, report that and stop.
 
-Expect the 80/20: one or two frames dominate. If the profile is flat, the problem is usually per-item overhead in a loop (allocation, serialization, sync IO) or the workload itself (doing N× more work than needed).
+## 2. Find where the time goes — waiting or working?
 
-## 3. Fix in order of leverage
+First split wall time from CPU time (`time`, a timer around the call, request duration vs CPU). Wall ≫ CPU means the process is waiting — on a query, a network call, a lock, a disk — and a CPU profiler will show nothing useful; use query logs + EXPLAIN, traces, or timestamps around each I/O call. Wall ≈ CPU means compute: CPU profiler or flamegraph. Memory complaints get a heap snapshot or allocation profile.
 
-1. **Do less work** — the biggest wins are algorithmic: N+1 queries → batch/join; O(n²) scan → index/map lookup; recomputing invariants inside loops → hoist; fetching/serializing fields nobody reads → trim.
-2. **Do work once** — cache/memoize, but only with an invalidation story; a stale cache is a correctness bug traded for speed.
-3. **Do work elsewhere/later** — defer off the critical path (lazy, background, streaming first byte early).
-4. **Do work in parallel** — after the above; parallelizing an N+1 is still N+1.
-5. **Tune constants last** — micro-optimizations only with a profiler receipt that the line is hot.
+The bottleneck is a measurement result, not an opinion: name the frame, query, or call and the share of time it accounts for. Expect one or two items to dominate. A flat profile usually means per-item overhead in a loop (allocation, serialization, sync I/O) or doing N× more work than the task needs.
 
-## 4. Verify with the SAME measurement, and check for damage
+## 3. Fix in order of leverage, one change at a time
 
-Rerun the exact baseline measurement. Report before/after with units and conditions ("p95 420ms → 95ms, warm, prod build, dataset X"). Then run the correctness suite — perf fixes love to break edge cases (caching stale data, reordered effects, dropped errors in parallelized code).
+1. **Do less work** — N+1 queries → batch/join; O(n²) scan → index/map lookup; recomputing invariants inside loops → hoist; fetching/serializing fields nobody reads → trim.
+2. **Do work once** — cache/memoize, only with a written invalidation story; a stale cache is a correctness bug traded for speed.
+3. **Do work elsewhere/later** — off the critical path: lazy, background, stream the first byte early.
+4. **Do work in parallel** — after the above; a parallelised N+1 is still N+1.
+5. **Tune constants last** — micro-optimisations only with a profiler receipt that the line is hot.
 
-If the number didn't move: revert the "optimization". Dead speedup code is complexity debt with no interest paid.
+Apply one change, rerun the stage-1 command, record the number. If it didn't move, revert that change before trying the next — never keep an "optimisation" that bought nothing, and never stack two unmeasured changes.
 
-## Common bottleneck signatures (check before deep-diving)
+## 4. Verify with the SAME measurement, then check for damage
+
+Rerun the exact baseline command under the same conditions. Then run the correctness suite — perf fixes break edge cases (stale cached data, reordered side effects, errors swallowed in parallel code).
+
+## Bottleneck signatures (check before deep-diving)
 
 - Latency scales with item count → N+1 (queries, HTTP calls, file reads per item).
-- Slow only in prod → missing index on prod data volume, cold cache, network hops dev doesn't have.
+- Slow only in prod → missing index at prod data volume, cold cache, network hops dev lacks.
 - Grows over time → leak (unbounded cache/listener/array), fragmentation, log growth.
 - Occasional spikes → GC pauses, lock contention, batch jobs sharing resources, retry storms.
 - "Fast function, slow system" → serialization at boundaries, chatty protocols, sync-over-async.
 
-## Scope honesty
+## Report
 
-Performance work trades readability, memory, or freshness for speed. Name the trade in your report. And if the requested target is already met by the baseline measurement — report that and stop; unneeded optimization is scope creep.
+Include: the measurement command; baseline and final numbers with units, run count, spread and conditions ("p95 420ms → 95ms, median of 5, warm, prod build, dataset X"); what the profile showed; each change tried with its measured effect, including reverted ones; and the trade made — readability, memory, or freshness for speed. If the target is not met, say what remains and where the remaining time goes.

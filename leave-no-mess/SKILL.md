@@ -1,17 +1,25 @@
 ---
 name: leave-no-mess
-description: Clean up your session's side effects — background processes, temp files, debug scaffolding, test data, stashed state — before reporting done. Use at the end of any task that spawned servers, wrote scratch files, added debug output, or altered state beyond the intended diff.
+description: Clean up a session's side effects — background processes and ports, temp files, debug scaffolding, seeded test data, stashes, config and env changes — and name what has to stay. Use before the final report on any task that started servers or watchers, wrote scratch or repro files, added logging or debug output, seeded databases, registered webhooks or test accounts, or changed configs, env vars, or branches. Not for reviewing the intended diff itself.
 ---
 
 # leave-no-mess
 
-The task isn't the diff alone; it's the diff plus a workspace in the state you found it (minus the intended change).
+Weak cleanup looks like: reporting "done" with a dev server still holding :3000, a `repro.py` in the repo root, and `console.log('HERE')` in three files. Strong cleanup leaves the workspace as you found it plus the intended diff, and names anything that had to stay. The task isn't the diff alone; it's the diff plus a workspace in the state you found it.
 
-1. **Kill what you started:** dev servers, watchers, background jobs, containers, port-holders. A zombie process from your session is the "port already in use" mystery in the user's next one. Check running background tasks before your final report.
-2. **Sweep your scaffolding out of the diff:** debug prints, verbose-logging flags you flipped, hardcoded test values, commented-out experiments, `TODO(remove)` markers. `git diff` read hunk-by-hunk is the checklist (see self-review-diff) — everything there should be the change, not the process of finding it.
-3. **Scratch files go in the scratchpad, and die with the task.** Throwaway repro scripts, downloaded samples, generated fixtures — if they were written into the repo, remove them or they'll show up in someone's `git status` as archaeology (see git-hygiene step 2).
-4. **Undo state changes made for testing:** seeded rows in a shared database, modified local configs, environment variables exported for one run, git stashes you created, test users/webhooks registered against real services. External test artifacts (a queue, a webhook, a sandbox record) especially — nobody else knows they exist.
-5. **What you can't or shouldn't clean, report:** a cache that will rebuild, a migration already applied, a process intentionally left serving. "Left running: dev server on :3000 for your review" converts a mess into a handoff (see honest-report).
-6. **Deliberate artifacts are not mess** — the new test fixture, the added script, the updated lockfile stay. The test is intent: did the task need this to exist afterward, or did *you* need it to exist during?
+## Sweep, in this order
 
-Exit check: `git status` shows only intended changes; no process you spawned is still running unannounced; the next session (theirs or yours) starts clean.
+1. **Processes and ports.** List background tasks you started this session (the harness's task list, plus `ps` / `Get-Process` for anything a script spawned) and stop each one — dev servers, watchers, containers, tunnels. Confirm the port is free afterwards (`lsof -i :<port>` / `netstat -ano | findstr :<port>`). A zombie from your session is the "port already in use" mystery in the user's next one.
+2. **Scaffolding in the diff.** Read `git diff` hunk by hunk (see workmanship): debug prints, log-level flips, hardcoded test values, commented-out experiments, `TODO(remove)`, skipped or `.only` tests, timeouts you shortened. Everything left should be the change, not the process of finding it.
+3. **Files you created.** `git status --porcelain`: every untracked path is yours to classify — deliberate artifact (keep) or repro script / downloaded sample / generated fixture (delete, or move to the scratchpad). Also check ignored locations you wrote to (`git status --ignored`: build dirs, caches, `.env.local`).
+4. **State you changed outside the repo.** Undo: seeded or mutated rows in a shared database, edited local or global configs, env vars exported for one run, git stashes you created, feature flags toggled, test users / webhooks / sandbox records registered against real services. External artifacts especially — nobody else knows they exist.
+5. **Working-tree position.** Same branch you started on unless moving it was the task; nothing of the user's left stashed; no half-applied migration.
+
+## What stays, and how to say so
+
+- **Deliberate artifacts are not mess** — the new fixture, the added script, the updated lockfile. The test is intent: did the task need this to exist afterward, or did *you* need it during?
+- **What you can't or shouldn't clean, report explicitly**, one "Left in place:" line each: `dev server on :3000 for your review (stop with ...)`, `migration 0042 applied to local db`, `cache in .next/ will rebuild`. A named leftover is a handoff; an unnamed one is a mess.
+
+## Exit check
+
+Before the final report: `git status` shows only intended changes; every process you spawned is stopped or listed under "Left in place"; every external test artifact is deleted or listed. If any item is unverified, say so rather than assume.

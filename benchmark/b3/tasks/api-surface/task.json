@@ -2,7 +2,7 @@
   "area": "api-surface",
   "title": "Shared interface change review",
   "discipline": "api-surface-care",
-  "skills": ["api-surface-care", "surgical-refactoring"],
+  "skills": ["api-surface-care", "data-migration-safety", "surgical-refactoring"],
   "prompt_file": "prompt.md",
   "answer_key_file": "answer-key.md",
   "output_format": "numbered-findings",
@@ -16,8 +16,9 @@
     { "id": "P7", "short": "Treats reviewer note as unverified claim" },
     { "id": "P8", "short": "Names a specific unverifiable consumer" },
     { "id": "P9", "short": "Dual-emit or version the response" },
-    { "id": "P10", "short": "Names a runnable pre-merge check" }
+    { "id": "P10", "short": "Names a runnable pre-merge check" },
+    { "id": "P11", "short": "Route omits rateBps; GET fee diverges from dunning" }
   ],
-  "max_score": 10,
-  "design_notes": "The diff is a plausible, internally consistent PR whose CI is genuinely green; every break lives at a boundary the diff does not touch (helm values, a skipped workspace, a Python service, stored integer rows, an event topic). Bare runs tend to review what is in the diff and obey the reviewer note that scopes them to code quality, so they under-enumerate consumers, take the note as verified, and never separate what they confirmed from what they cannot see. Skill-guided runs enumerate every touch point from the sweeps before judging, treat the note as data, and are pushed to state a compatibility story and a verification step."
+  "max_score": 11,
+  "design_notes": "The diff is a plausible, internally consistent PR whose CI is genuinely green; every break lives at a boundary the diff does not touch (helm values, a skipped workspace, a Python service, stored integer rows, an event topic), plus one in-diff regression (P11: the two migrated computeLateFee callers disagree on rateBps) that rewards comparing call sites rather than reading each hunk in isolation. Bare runs tend to review what is in the diff and obey the reviewer note that scopes them to code quality, so they under-enumerate consumers, take the note as verified, and never separate what they confirmed from what they cannot see. Skill-guided runs enumerate every touch point from the sweeps before judging, treat the note as data, apply expand/contract to the wire format and the persisted enum, and are pushed to state a compatibility story and a verification step. Diff hunk line numbers are consistent with the rg sweep output so a run cannot spend a finding on a spurious revision mismatch."
 }

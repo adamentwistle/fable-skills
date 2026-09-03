@@ -13,11 +13,12 @@
     {"id": "F4", "short": "Missing index on events(org_id, created_at)"},
     {"id": "F5", "short": "_request_timings grows unbounded"},
     {"id": "F6", "short": "_geo_cache never evicts"},
-    {"id": "F7", "short": "Named baseline, re-measured after"},
-    {"id": "F8", "short": "Instrument to rank before fixing"},
-    {"id": "F9", "short": "Rejects pool bump, defers cache"},
-    {"id": "F10", "short": "Memory attribution stated as unverified"}
+    {"id": "F7", "short": "Named baseline (org, limit, metric), same measurement re-run after"},
+    {"id": "F8", "short": "Ranks by cost: named instrument with purpose, or SELECT-vs-total arithmetic"},
+    {"id": "F9", "short": "Rejects worker/pool bump with reason; cache after fixes or rejected"},
+    {"id": "F10", "short": "RSS attribution between the two leaks stated as unverified, with a check"},
+    {"id": "F11", "short": "Cache key on default since never hits"}
   ],
-  "max_score": 10,
-  "design_notes": "The six seeded defects are all visible on inspection, so bare runs score well on F1-F6; the headroom is in what a solver does around them. Bare runs typically jump from findings to fixes without naming a reproducible measurement for a specific org (F7), without proposing EXPLAIN or a query count to rank the six by actual cost (F8), tend to accept the 60 s response cache as a cheap win alongside the algorithmic fixes rather than after them (F9), and report both unbounded structures as confirmed leaks instead of saying the artifacts do not show which one drives the RSS growth (F10)."
+  "max_score": 11,
+  "design_notes": "The six seeded defects (F1-F6) are all visible on inspection, so bare runs score well on them; the headroom is in what a solver does around them. Bare runs typically jump from findings to fixes without pinning a reproducible measurement to a specific org and input (F7); propose EXPLAIN without saying what it decides, and do not notice the ticket already shows the SELECT is only ~1.4 s of a 6.4 s p50 (F8); accept the 60 s response cache as a cheap stopgap alongside the algorithmic fixes rather than after them, or reject the worker bump without a material reason such as 4,800 pg connections (F9); report both unbounded structures as confirmed leaks instead of saying the artifacts do not show which one drives the RSS growth, when a back-of-envelope shows _request_timings alone is ~70 MB/worker (F10); and read the proposal's cache key without noticing that the default since is a moving now()-30d, so the key as written never hits for the mobile client (F11)."
 }

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`, now removed \u2014 the portal's own UI breaks",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` matches `status === 'paid'`, which the serializer no longer emits \u2014 paid invoices lose their badge",
+  "P3": "`InvoiceState.Disputed` inserted mid-enum renumbers Paid 2\u21923 and Void 3\u21924, and `invoices.state` is a persisted SMALLINT \u2014 every existing Paid row now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, which the new schema ignores \u2014 prod silently drops to the new default of 7",
+  "P5": "CI's `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts`, which is exactly where #3 and #4 live",
+  "P6": "The serializer test was weakened to `toBeTruthy()` / `toBeDefined()`, which passes for any value ... assert the actual `settled` label and `{amount, currency}` values",
+  "P7": "the \"platform team confirmed both shapes\" claim is contradicted by the code in this repo, so get that in writing against this diff or fix the consumer",
+  "P8": "",
+  "P9": "version the payload or keep `total_cents`/`currency` alongside the new `total` for a deprecation window",
+  "P10": "require a full-repo `turbo run typecheck test` on this PR",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS` \u2014 the same invoice gets two different fees whenever the config value isn't 150"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.169973,
+ "judge_wall_ms": 20900,
+ "graded_at": "2026-09-03T16:42:10+0100"
+}

@@ -1,0 +1,3 @@
+1. Cache never invalidates after first load, so `if _cache is None` blocks all subsequent re-reads — re-read from disk each call, or invalidate cache when file is modified.
+2. Tempting: mtime checking alone won't fix this; you still must re-read the file on every call to detect changes, defeating the cache entirely.
+3. Tempting: a `reload()` function or explicit invalidation parameter puts the burden on callers and doesn't prevent staleness between calls — you need automatic TTL expiration or file-change monitoring.

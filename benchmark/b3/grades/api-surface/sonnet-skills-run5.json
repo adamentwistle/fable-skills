@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": true,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts` still reads `data.total_cents` (now `undefined`) and `services/reconciler/reconcile.py` still reads `inv[\"total_cents\"]` \u2014 both break",
+  "P2": "`status: 'paid'` \u2192 `'settled'` breaks `apps/portal/src/client/components/InvoiceBadge.tsx` (`status === 'paid'`) and `services/reconciler/reconcile.py` (`status == \"paid\"`)",
+  "P3": "`repo.ts` persists `state` as a raw integer into a SMALLINT column, so existing rows written under the old numbering will be misread/miswritten after deploy",
+  "P4": "prod loses its grace-period override (silently falls back to hardcoded default), and the incident runbook's mitigation step stops working",
+  "P5": "these packages were skipped by CI's `--filter='[origin/main]'`, so this breakage is untested and unseen",
+  "P6": "the response-shape test now only checks `toBeTruthy()`/`toBeDefined()` instead of asserting actual values, and the state-persistence round-trip test is `.skip`'d ... Un-skip and restore real assertions before merge",
+  "P7": "contradicting the reviewer note that reconciler compatibility is \"confirmed.\" ... reconciler compatibility needs to be re-verified against actual code, not taken on faith",
+  "P8": "",
+  "P9": "",
+  "P10": "run the full non-filtered suite (or explicitly include those packages) before trusting green CI on this PR",
+  "P11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.161363,
+ "judge_wall_ms": 18803,
+ "graded_at": "2026-09-03T16:42:19+0100"
+}

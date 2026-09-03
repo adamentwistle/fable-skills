@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-bare-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": false,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "apps/portal/src/client/hooks/useInvoice.ts:23 reads `data.total_cents` which no longer exists in API response",
+  "P2": "InvoiceBadge.tsx:9 checks `invoice.status === 'paid'` but API now returns `'settled'`",
+  "P3": "InvoiceState enum shift (Paid 2\u21923, Void 3\u21924) requires database migration",
+  "P4": "infra/helm/billing/values.prod.yaml and values.staging.yaml reference old config name `INVOICE_GRACE_DAYS`; rename",
+  "P5": "",
+  "P6": "",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 4,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.43789,
+ "judge_wall_ms": 28407,
+ "graded_at": "2026-09-03T16:20:48+0100"
+}

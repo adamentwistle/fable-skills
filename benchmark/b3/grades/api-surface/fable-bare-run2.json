@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "fable-bare-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`services/reconciler/reconcile.py:64` still reads `total_cents` and `\"paid\"` and will KeyError on the new shape, and the in-repo portal client (`useInvoice.ts:23`, `InvoiceBadge.tsx:9`) breaks too",
+  "P2": "`services/reconciler/reconcile.py:64` still reads `total_cents` and `\"paid\"` ... `InvoiceBadge.tsx:9`",
+  "P3": "Inserting `Disputed` before `Paid` renumbers Paid 2\u21923 and Void 3\u21924 in a numeric enum persisted to the SMALLINT `invoices.state` column, so every existing Paid row reads as Disputed",
+  "P4": "Prod and staging Helm values still set `INVOICE_GRACE_DAYS` at 21 and 14. After merge zod drops the unknown key and prod silently falls to a 7-day grace period.",
+  "P5": "`services/notifier/src/reminders.ts:57` still calls the old positional signature ... `--filter='[origin/main]'` skips dependents, which is why notifier and scripts never typechecked or ran",
+  "P6": "The \"serializes a paid invoice\" test was hollowed out to `toBeTruthy` and `toBeDefined` and cannot catch a wrong label or amount. Assert `'settled'`, `'125.00'`, and `'GBP'` exactly.",
+  "P7": "The compatibility claim in the description is contradicted by the author's own sweep.",
+  "P8": "The shape and \"settled\" changes also ship on the `billing.invoice.updated` event via events.ts, which the description does not mention. Audit event consumers or version the event",
+  "P9": "or emit the old fields alongside the new ones for a deprecation window",
+  "P10": "Rerun with `--filter='...[origin/main]'` or a full run before merge.",
+  "P11": "The GET route omits `rateBps`, so the displayed `late_fee_cents` uses the hard-coded 150 while dunning charges `LATE_FEE_RATE_BPS`."
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.45019,
+ "judge_wall_ms": 29305,
+ "graded_at": "2026-09-03T16:20:49+0100"
+}

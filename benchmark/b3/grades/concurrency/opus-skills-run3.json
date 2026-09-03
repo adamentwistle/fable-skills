@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-skills-run3",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Check-then-act race: `get` and the assignment are separate operations, so N threads can all read `count = 99` and all pass",
+  "B2": "Lost updates on the write itself: concurrent `counts[user_id] = count + 1` overwrite each other, so the stored count drifts below the true number of admitted requests",
+  "B3": "fix by doing the read-increment under a single `threading.Lock`",
+  "B4": "It is not a rate limiter: counts never reset, so it is a lifetime quota",
+  "B5": "Unbounded memory growth: one permanent entry per distinct `user_id`",
+  "B6": "an in-process dict is per-worker, so with W workers the effective limit is `limit \u00d7 W`",
+  "B7": "`user_id` is unvalidated: `None` or an empty value collapses all anonymous callers into one bucket"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080633,
+ "judge_wall_ms": 14756,
+ "graded_at": "2026-09-03T11:26:35+0100"
+}

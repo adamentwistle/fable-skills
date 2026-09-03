@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-skills-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` awaits one `users` SELECT per event, sequentially \u2014 up to 1,000 round trips per request. Join `users` into the main query, or fetch actors in one `WHERE id = ANY($1)` batch.",
+  "F2": "Dedupe is O(n\u00b2): `ev[\"dedupe_key\"] in seen` scans a list per row \u2014 use a set, or do it in SQL.",
+  "F3": "`requests.get` is a blocking sync call inside an async handler, up to 2 s per uncached IP and up to 1,000 IPs per request, so the whole worker (including `/healthz`) stops for seconds",
+  "F4": "only `actor_id` and `kind` are indexed, so the `org_id`/`created_at` predicate seq-scans 4.2 M rows and sorts them. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` appends one float per request forever, ~30 req/s per worker across all routes, and nothing ever trims it \u2014 replace with a fixed-size ring buffer or a histogram.",
+  "F6": "`_geo_cache` is keyed by IP with no bound or eviction \u2014 give it an LRU cap and TTL, or move it to Redis.",
+  "F7": "time the endpoint 5\u00d7 warm at `limit=1000`; record median and spread. ... Re-run step 4's exact measurement",
+  "F8": "",
+  "F9": "16 workers \u00d7 pool max 50 \u00d7 6 pods = 4,800 Postgres connections against a default `max_connections` of 100 ... 4\u00d7 the workers means 4\u00d7 the per-process leaks, so OOM arrives sooner",
+  "F10": "",
+  "F11": "`since` defaults to `datetime.now(timezone.utc)` computed per request, so the key `(org_id, since, limit)` is unique every call \u2014 0% hit rate"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.150163,
+ "judge_wall_ms": 19729,
+ "graded_at": "2026-09-03T16:44:34+0100"
+}

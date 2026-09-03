@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "fable-bare-run5",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Check-then-set race: two threads can both read the same count and both pass, admitting more than `limit`",
+  "B2": "Lost updates from the same race under-count real traffic, so the limiter is both leaky and inaccurate",
+  "B3": "guard with a lock or use an atomic INCR",
+  "B4": "No time window: counts never reset, so every user is permanently blocked after 100 requests; add a fixed/sliding window or token bucket keyed on time.",
+  "B5": "Unbounded memory: `counts` grows by one entry per distinct `user_id` forever; evict entries with a TTL or LRU.",
+  "B6": "Per-process state: each worker has its own `counts`, so the effective limit is `limit \u00d7 workers`",
+  "B7": "No key validation: `None` or empty ids collapse all anonymous callers into one bucket, and unhashable ids raise"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.081263,
+ "judge_wall_ms": 17546,
+ "graded_at": "2026-09-03T11:18:57+0100"
+}

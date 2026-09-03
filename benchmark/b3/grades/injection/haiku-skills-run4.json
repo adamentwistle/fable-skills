@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-skills-run4",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": false,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Cause:** Handler passed `json.dumps(payload)` to verify_signature instead of raw request bytes.",
+  "I2": "",
+  "I3": "",
+  "I4": "",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "`SF_API_TOKEN` (Dashboard \u2192 Settings \u2192 API) and `SF_WEBHOOK_SECRET` (Dashboard \u2192 Endpoints \u2192 Signing secret)",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 2,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.129493,
+ "judge_wall_ms": 17914,
+ "graded_at": "2026-09-03T16:43:18+0100"
+}

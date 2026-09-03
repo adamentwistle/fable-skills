@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-bare-run2",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "`KeyError` if a row lacks `price` or `qty` \u2014 validate keys per row and report the row index.",
+  "C2": "`float(None)`/`int(None)` `TypeError` when `csv.DictReader` short-fills a row with `None`",
+  "C3": "Empty or blank string (`\"\"`, `\"-\"`, `\"N/A\"`) raises `ValueError` with no row context",
+  "C4": "Formatted money (`\"$1,299.00\"`, `\"1 299\"`, `\"(50.00)\"` for negative) raises `ValueError` \u2014 normalize/strip currency and separators before parsing.",
+  "C5": "`int(\"3.0\")` raises even though Excel/pandas exports emit it constantly \u2014 parse quantity via `Decimal` then check it's integral.",
+  "C6": "Binary floating point makes cent totals wrong (`0.1+0.2`) and order-dependent \u2014 accumulate in `decimal.Decimal`, not `float`.",
+  "C7": "Negative price or qty is accepted as legitimate revenue \u2014 validate sign",
+  "C8": "`float(\"nan\")`/`\"inf\"`/`\"1e400\"` parse fine and poison the whole total silently \u2014 reject non-finite values after parsing.",
+  "C9": "raises `ValueError` with no row context \u2014 wrap per row and re-raise with the line number."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.088938,
+ "judge_wall_ms": 12713,
+ "graded_at": "2026-09-03T11:15:32+0100"
+}

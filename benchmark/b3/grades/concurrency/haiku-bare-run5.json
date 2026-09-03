@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-bare-run5",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "Race condition: check and increment aren't atomic",
+  "B2": "",
+  "B3": "use lock or atomic operation",
+  "B4": "No time window: counts persist forever, blocking users permanently",
+  "B5": "Memory leak: old entries never deleted",
+  "B6": "Multi-worker broken: separate processes have isolated dicts",
+  "B7": ""
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.072048,
+ "judge_wall_ms": 14127,
+ "graded_at": "2026-09-03T11:19:09+0100"
+}

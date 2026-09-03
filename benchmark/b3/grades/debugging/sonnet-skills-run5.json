@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "Module-global `_cache` set once and never invalidated \u2014 fix: cache keyed/invalidated on file mtime (or hash), reloaded when it changes.",
+  "A2": "Tempting fix \"reduce cache lifetime with a TTL/timer\" masks the bug with polling latency instead of detecting the actual change",
+  "A3": "Tempting fix \"just remove the cache and always read the file\" works but defeats the purpose of caching",
+  "A4": "Multiple `path` values share the single global `_cache` \u2014 fix: cache should be keyed per `path`, not one global for all calls.",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": "`if _cache is None` treats a falsy-but-loaded config (`{}`) same as unloaded \u2014 fix: use a separate `loaded` flag/sentinel, not `is None` on the value itself."
+ },
+ "score": 5,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08515299999999999,
+ "judge_wall_ms": 15875,
+ "graded_at": "2026-09-03T11:27:28+0100"
+}

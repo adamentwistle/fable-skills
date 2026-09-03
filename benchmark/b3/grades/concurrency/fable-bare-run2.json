@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "fable-bare-run2",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Check-then-set race: two threads can both read `count < limit` and both increment",
+  "B2": "both increment, so users exceed the limit and increments are lost",
+  "B3": "guard with a `threading.Lock` (or an atomic INCR in a shared store)",
+  "B4": "No time window: counts never reset, so `limit` is a lifetime quota",
+  "B5": "Unbounded memory: the dict grows with every distinct `user_id` forever",
+  "B6": "Per-process state: each worker has its own `counts`, so the real limit is `limit \u00d7 workers`",
+  "B7": "No input validation: unhashable `user_id` raises `TypeError` and `None` becomes a shared bucket"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08418300000000001,
+ "judge_wall_ms": 18476,
+ "graded_at": "2026-09-03T11:18:58+0100"
+}

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` accesses removed field `data.total_cents` but response now uses `data.total.amount` \u2014 will crash at runtime.",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` checks `status === 'paid'` but response now sends `'settled'` \u2014 broken logic.",
+  "P3": "Enum value `Disputed` inserted at position 2 shifts numeric state values in the database \u2014 existing records with `state=2` (Paid) become `Disputed` ... Requires data migration before deploy.",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` use old env var `INVOICE_GRACE_DAYS` ... defaulting instead of using configured values.",
+  "P5": "",
+  "P6": "Test at `packages/billing-core/test/invoice.test.ts` lines 21\u201325 weakened to check only existence (`toBeTruthy()`, `toBeDefined()`) instead of actual values \u2014 no longer validates response schema.",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 5,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.16534300000000002,
+ "judge_wall_ms": 30155,
+ "graded_at": "2026-09-03T16:41:57+0100"
+}

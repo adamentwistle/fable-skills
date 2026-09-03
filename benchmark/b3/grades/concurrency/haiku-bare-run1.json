@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-bare-run1",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "Race condition: multiple threads read same count before either increments",
+  "B2": "",
+  "B3": "lock entire operation",
+  "B4": "No time window: counter never resets",
+  "B5": "Memory leak: old user entries never removed",
+  "B6": "Not multi-process safe: each worker process has own dict copy",
+  "B7": ""
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07522299999999998,
+ "judge_wall_ms": 17269,
+ "graded_at": "2026-09-03T11:18:57+0100"
+}

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": true,
+  "P11": false
+ },
+ "citations": {
+  "P1": "apps/portal/src/client/hooks/useInvoice.ts:23 reads `data.total_cents` which is no longer in response (replaced with `total.amount`); will be undefined.",
+  "P2": "apps/portal/src/client/components/InvoiceBadge.tsx:9 checks `status === 'paid'` but API now returns 'settled'; badge will never show success state.",
+  "P3": "Disputed added between Open and Paid shifts Paid from 2\u21923 and Void from 3\u21924; existing database records with state=2 will deserialize as Disputed instead of Paid",
+  "P4": "infra/helm/billing/values.prod.yaml and values.staging.yaml still set `INVOICE_GRACE_DAYS`; schema expects `BILLING_GRACE_PERIOD_DAYS`",
+  "P5": "services/notifier/src/reminders.ts:57 and scripts/backfill-late-fees.js:22 still call `computeLateFee` with positional `graceDays` parameter ... CI skipped affected packages: @acme/notifier and @acme/scripts not tested despite changes breaking their code",
+  "P6": "Test for paid invoice went from checking exact status/field values to only checking truthiness; does not verify the new shape is correct.",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "run full suite before merge",
+  "P11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.167928,
+ "judge_wall_ms": 30907,
+ "graded_at": "2026-09-03T16:41:57+0100"
+}

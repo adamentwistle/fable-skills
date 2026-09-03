@@ -1,0 +1,12 @@
+1. **Root cause:** `_cache` is a module global filled once and never invalidated, and the `is None` test carries no information about the file, so the process never looks at disk again until it dies; fix by storing the file's `st_mtime_ns` and `st_size` next to the data and reloading whenever a fresh `os.stat(path)` differs.
+2. The `path` argument is ignored after the first call, so a later call with a different file silently returns the first file's data; fix by keying the cache on `os.path.abspath(path)` (dict of path to stat-plus-data).
+3. The cached dict is handed out by reference, so any caller that mutates it changes what everyone sees next and looks exactly like this "stale config" bug; fix by returning a deep copy or a `MappingProxyType`.
+4. Not a fix: deleting the cache and re-reading every call cures staleness but puts a file open and JSON parse on every hot-path call; the stat check is one syscall and keeps the caching.
+5. Not a fix: `functools.lru_cache` or `functools.cache` keys by path but still never invalidates, so it is the same bug with a nicer decorator.
+6. Not a fix: a time-based TTL still serves stale values for up to the TTL and reloads unchanged files for nothing; use it only to rate-limit the stat if stat cost ever matters.
+7. Not a fix: resetting from outside with `from config import _cache; _cache = None` rebinds the importer's own name and leaves the module's global untouched; if callers need manual invalidation, expose a `reload_config()` inside the module.
+8. Not a fix: `importlib.reload` does reset `_cache` but re-executes the whole module and every side effect in it, a blunt hack standing in for missing invalidation.
+9. Not a fix: changing `is None` to `not _cache` only makes an empty `{}` reload every call and does nothing for a file that changed.
+10. Once you reload on change, a non-atomic writer can be caught mid-write and produce a `JSONDecodeError` or truncated data; keep the previous cache when parsing fails, and have writers write a temp file then `os.replace`.
+11. Compare `st_mtime_ns`, not the float from `os.path.getmtime`, and include `st_size`, because coarse timestamps or float rounding can make two quick writes look identical.
+12. The check-and-load is not thread-safe, so two threads can both miss the cache and one can read a half-updated tuple; wrap the stat-compare-and-reload in a `threading.Lock`.

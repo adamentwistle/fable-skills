@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`total_cents` \u2192 `total.{amount,currency}` is a breaking response-shape change; `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` in-repo ... `services/reconciler/reconcile.py:64` still checks `inv[\"total_cents\"]`",
+  "P2": "`status` label \"paid\" \u2192 \"settled\" breaks the same reconciler check (`status == \"paid\"`) and `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'`) \u2014 both now silently never match.",
+  "P3": "`InvoiceState.Disputed` was inserted between `Open` and `Paid` in the enum, shifting numeric values (`Paid` 2\u21923, `Void` 3\u21924) while `repo.ts` persists `state` as a raw SMALLINT ... Fix: append `Disputed` at the end of the enum (or explicit numeric values)",
+  "P4": "both Helm values files (`infra/helm/billing/values.prod.yaml:31`, `values.staging.yaml:29`) still set/read `INVOICE_GRACE_DAYS` ... changing prod grace period from 21 days to 7 without anyone touching prod config",
+  "P5": "",
+  "P6": "Test assertions were weakened, not adapted: `expect(res.status).toBe('paid')`/`toBe(12500)`/`toBe('GBP')` replaced with `toBeTruthy()`/`toBeDefined()` ... Fix: assert exact new values before merge.",
+  "P7": "the PR description's claim that mobile/reconciler \"handle both shapes\" is unverifiable from this diff \u2014 `services/reconciler/reconcile.py:64` still checks `inv[\"total_cents\"]`",
+  "P8": "the PR description's claim that mobile/reconciler \"handle both shapes\" is unverifiable from this diff",
+  "P9": "Fix: block until that compatibility claim is confirmed in writing or the response is versioned/dual-shaped.",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.178728,
+ "judge_wall_ms": 28315,
+ "graded_at": "2026-09-03T16:42:25+0100"
+}

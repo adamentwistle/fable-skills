@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-bare-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": false,
+  "S6": true,
+  "S7": false,
+  "S8": false,
+  "S9": true,
+  "S10": false,
+  "S11": false,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "**SQL Injection** (get_user_orders:4) \u2014 Query uses string formatting on untrusted user input.",
+  "S2": "**Connection leak** (get_user_orders:2) \u2014 Database connection is never closed.",
+  "S3": "**Type error** (format_receipt:15) \u2014 Tries to concatenate order[0] (an int from the database) directly to a string with `+`.",
+  "S4": "**Division by zero** (average_order_value:9) \u2014 Crashes if orders list is empty.",
+  "S5": "",
+  "S6": "**Invalid discount values** (apply_discount:11) \u2014 No validation that pct is 0\u2013100. Negative or >100 values silently produce wrong results.",
+  "S7": "",
+  "S8": "",
+  "S9": "will raise TypeError if order amount is NULL or malformed",
+  "S10": "",
+  "S11": "",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 6,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.095168,
+ "judge_wall_ms": 14471,
+ "graded_at": "2026-09-03T11:16:07+0100"
+}

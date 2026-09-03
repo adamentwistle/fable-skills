@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-skills-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": true,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` issues one `SELECT ... FROM users` per event, so limit=1000 means 1,000 round trips per request; fetch the distinct actor_ids in one `WHERE id = ANY($1)` query",
+  "F2": "`seen` is a list and `ev[\"dedupe_key\"] in seen` is a linear scan per row; make it a `set`",
+  "F3": "`lookup_geo` uses `requests.get` (2 s timeout) inside an `async def` handler, so every cache-miss event stalls the whole worker's event loop",
+  "F4": "`events` has indexes only on `actor_id` and `kind`, so filtering org_id over 4.2M rows is a sequential scan; add `events (org_id, created_at DESC)`",
+  "F5": "the timing middleware appends one float per request on *every* route at ~120 req/s, so ~8.6M entries accumulate in 20 h; replace with a bounded `collections.deque(maxlen=N)`",
+  "F6": "`_geo_cache` also grows forever \u2014 keyed on raw client IP with no eviction and no bound; give it an LRU with a size cap",
+  "F7": "`EXPLAIN (ANALYZE, BUFFERS)` the slow query with org 4127 and the 30 d bound, and record p50/p95 from Datadog plus pod RSS slope as the baseline you will re-check after each change",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal \u2014 16 workers \u00d7 pool max 50 \u00d7 6 pods is up to 4,800 Postgres connections ... and a 60 s Redis cache leaves every miss blocking the event loop exactly as now",
+  "F10": "Attribute the remaining RSS before calling the leak fixed \u2014 run `tracemalloc` (or `pympler`) on a pod for an hour; the two unbounded structures should account for most of the 310 MB \u2192 2.1 GB climb, and if they don't, something else is retaining",
+  "F11": ""
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.187703,
+ "judge_wall_ms": 36226,
+ "graded_at": "2026-09-03T16:44:47+0100"
+}

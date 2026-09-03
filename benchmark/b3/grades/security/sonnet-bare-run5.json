@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": false,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds SQL by string interpolation directly from HTTP request input",
+  "S2": "Connection/cursor never closed \u2014 high (resource leak).",
+  "S3": "`\"Order #\" + order[0]` raises `TypeError: can only concatenate str (not \"int\") to str`",
+  "S4": "If `orders` is empty (valid case \u2014 a user with no matching orders), `total / len(orders)` raises `ZeroDivisionError`",
+  "S5": "Money represented as `float` \u2014 medium (data integrity).",
+  "S6": "A negative `pct` increases the price; a `pct > 100` produces a negative amount.",
+  "S7": "`status` not validated against an allowlist \u2014 medium.",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "potential 500 with a stack trace leaking to the client, depending on the framework). Fix: catch `sqlite3.Error`, translate to a proper application-level error.",
+  "S12": "",
+  "S13": "No `LIMIT`/pagination on the orders query \u2014 low.",
+  "S14": ""
+ },
+ "score": 9,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.114983,
+ "judge_wall_ms": 17459,
+ "graded_at": "2026-09-03T11:16:39+0100"
+}

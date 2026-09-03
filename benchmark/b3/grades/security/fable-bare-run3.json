@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "fable-bare-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "**SQL injection. Critical.** `user_id` and `status` come from the request and are spliced into the query with `%`",
+  "S2": "**Connection leak. High.** The connection is never closed, and an exception in `execute` leaks it too.",
+  "S3": "The `id` column is an integer, and `\"Order #\" + order[0]` raises `TypeError`",
+  "S4": "**Division by zero. High.** `average_order_value([])` raises `ZeroDivisionError`.",
+  "S5": "**Money as float. Medium.** `total = 0.0` accumulates binary rounding error",
+  "S6": "A negative `pct` raises the price. `pct > 100` produces a negative amount... reject values outside 0 to 100",
+  "S7": "plus an allowlist for `status`",
+  "S8": "If the HTTP handler passes `user_id` from the request rather than from the authenticated session, that is an insecure direct object reference.",
+  "S9": "**NULL amount crashes the average. Medium.** A NULL `amount` becomes `None` and `total += None` raises `TypeError`.",
+  "S10": "**Receipt amount formatting. Low.** `str(order[1])` prints `$12.300000000000001` or `$5.0`. Fix: format to two decimals.",
+  "S11": "",
+  "S12": "Fix: `Decimal`, quantized to cents.",
+  "S13": "`fetchall` with no `LIMIT` loads every matching row",
+  "S14": "**Positional tuple coupling. Medium.** `o[1]` and `order[0]` depend on the SELECT column order."
+ },
+ "score": 13,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.137913,
+ "judge_wall_ms": 27168,
+ "graded_at": "2026-09-03T11:16:05+0100"
+}

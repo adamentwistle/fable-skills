@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-bare-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` (now undefined) and `services/reconciler/reconcile.py:64` matches `status == \"paid\"` and `total_cents`",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` compares `status === 'paid'`, so paid invoices lose their badge the moment this ships",
+  "P3": "inserting `Disputed` before `Paid` renumbers the enum (Paid 2\u21923, Void 3\u21924) while `invoices.state` is a SMALLINT holding the old ordinals, so every stored Paid row reads back as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, which zod now strips, so prod silently falls to the new 7-day default",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a positional number to `computeLateFee` ... `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts`, which are the packages that break",
+  "P6": "The serializer tests were weakened to `toBeTruthy()`/`toBeDefined()`, which is why the shape change passed; restore concrete assertions ... un-skip it and let it fail until the enum is fixed",
+  "P7": "the author's own sweep contradicts the \"consumers are compatible\" note",
+  "P8": "",
+  "P9": "either keep the old fields alongside the new ones for a deprecation window or land the consumer changes first",
+  "P10": "re-run including dependents (`...` filter) before merge",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes it \u2014 the same invoice can quote one fee and be charged another"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171373,
+ "judge_wall_ms": 23547,
+ "graded_at": "2026-09-03T16:21:15+0100"
+}

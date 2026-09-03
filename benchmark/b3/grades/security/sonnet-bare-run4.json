@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-bare-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds the query by string interpolation. Any request-controlled `user_id` or `status` (e.g. `' OR '1'='1`) lets an attacker read or manipulate arbitrary rows. Fix: use parameterized queries (`?` placeholders)",
+  "S2": "**High \u2014 connection/cursor never closed.** `conn`/`cur` leak on every call, and leak worse on any exception since there's no `try/finally` or context manager.",
+  "S3": "`order[0]` is an int (the id); `\"Order #\" + order[0]` raises `TypeError: can only concatenate str`. Fix: `str(order[0])`.",
+  "S4": "**Medium \u2014 `average_order_value` divides by zero.** Empty `orders` list raises `ZeroDivisionError`.",
+  "S5": "floating-point money is prone to rounding artifacts (`0.1 + 0.2` style errors) ... ideally store/compute money as `Decimal` or integer cents rather than `float`",
+  "S6": "Negative `pct` increases the price; `pct > 100` produces a negative price ... raise `ValueError` outside `0 <= pct <= 100`",
+  "S7": "**Low \u2014 `status` not validated against a known set.** ... Consider validating against an allowed-status enum/list.",
+  "S8": "`user_id` comes straight from the request with nothing verifying it matches the authenticated caller. As written, any logged-in user can pass someone else's `user_id` and read their orders.",
+  "S9": "",
+  "S10": "`str(order[1])` gives `\"$10.0\"` instead of `\"$10.00\"` ... Fix: format to 2 decimals for display",
+  "S11": "a `sqlite3.Error` bubbles up unsanitized, which can leak internals in an error response. Fix: catch `sqlite3.Error`, log it, raise/return a sanitized error.",
+  "S12": "",
+  "S13": "**Medium \u2014 unbounded result set.** No `LIMIT`/pagination \u2014 a user with a huge order history returns everything in one call",
+  "S14": ""
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.114583,
+ "judge_wall_ms": 17954,
+ "graded_at": "2026-09-03T11:16:35+0100"
+}

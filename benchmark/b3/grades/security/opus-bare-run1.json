@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-bare-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "`get_user_orders` builds the query with `%` string formatting, so `user_id` and `status` land in the SQL text verbatim",
+  "S2": "**Connection is never closed \u2014 high.** `get_user_orders` opens a connection and returns without closing it",
+  "S3": "`order[0]` is the `id` column, an `int` from SQLite, and `\"Order #\" + int` is a TypeError",
+  "S4": "**`average_order_value` divides by zero \u2014 high.** A user with no orders matching the status gives `len(orders) == 0` and a `ZeroDivisionError`",
+  "S5": "**Money handled as binary floats \u2014 medium, data integrity.** ... Fix: `Decimal`, converted from strings, not from floats. The durable fix is storing money as integer minor units (cents)",
+  "S6": "**`apply_discount` does not validate `pct` \u2014 medium.** A negative percent increases the charge; a percent over 100 returns a negative amount",
+  "S7": "**`status` is not validated \u2014 medium.** ... Validating against a known set moves the rejection to the edge",
+  "S8": "**No authorization check \u2014 critical** ... If the handler passes the client-supplied id through, any user reads any other user's orders.",
+  "S9": "**`amount` may be NULL \u2014 medium.** If the column is nullable, `total += None` is a TypeError.",
+  "S10": "return f\"Order #{order.id}: ${order.amount:.2f}\"",
+  "S11": "`sqlite3.Error` from connect or execute escapes raw to the handler, and SQLite error text can disclose schema details in a response body",
+  "S12": "**Discounts are not rounded \u2014 medium.** `apply_discount(19.99, 33)` returns `13.3933`, a fraction of a cent ... quantize to two places with an explicit rounding mode",
+  "S13": "**Unbounded `fetchall` \u2014 medium.** A user with a large order history loads the whole result set into memory ... Fix: `LIMIT`/`OFFSET`",
+  "S14": "**Positional tuple indexing everywhere \u2014 low.** `o[1]` and `order[0]` silently read the wrong column the moment the `SELECT` list changes."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.135098,
+ "judge_wall_ms": 23044,
+ "graded_at": "2026-09-03T11:16:17+0100"
+}

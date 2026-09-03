@@ -1,0 +1,6 @@
+1. Read-then-write on `counts` races across threads/workers — two concurrent requests can both read the same count and both pass, exceeding the limit — fix: use an atomic increment or per-key lock (e.g. `threading.Lock`, or a store with atomic INCR).
+2. No sliding/fixed window or reset — once a user hits `limit` they're blocked forever, not per-interval — fix: track a window start time and reset the count when the window elapses.
+3. State is process-local (`counts` dict in memory) — with multiple workers/processes, each has its own counter, so the real limit is `limit * num_workers` — fix: back the counter with shared external state (Redis/Memcached) or a coordinated store.
+4. Unbounded growth of `counts` — entries are never evicted, so memory grows forever with new user_ids — fix: expire/evict stale entries (TTL or LRU eviction).
+5. No input validation on `user_id`/`limit` — `None`, non-hashable, or negative/zero `limit` aren't handled — fix: validate and reject malformed input up front.
+6. No persistence — a worker restart silently resets everyone's count to 0 — fix: persist counts to durable shared storage if reset-on-restart is unacceptable.

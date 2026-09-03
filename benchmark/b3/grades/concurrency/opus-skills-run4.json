@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-skills-run4",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-modify-write on `counts` is not atomic across threads (get, compare, assign) \u2014 two threads can both see 99 and both allow",
+  "B2": "",
+  "B3": "wrap the whole check-and-increment in a `threading.Lock`",
+  "B4": "No time window at all \u2014 counts accumulate forever, so every user is permanently blocked after 100 lifetime requests",
+  "B5": "`counts` never shrinks and is keyed by arbitrary caller-supplied `user_id` \u2014 unbounded memory growth",
+  "B6": "In-process dict guards one process only, so N workers each grant the full limit (N\u00d7100)",
+  "B7": "`user_id` is not validated or normalized \u2014 `None`, `\"\"`, or case/whitespace variants become separate buckets"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080738,
+ "judge_wall_ms": 13912,
+ "graded_at": "2026-09-03T11:26:49+0100"
+}

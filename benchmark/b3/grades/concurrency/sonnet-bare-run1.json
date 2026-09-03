@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-bare-run1",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Not thread-safe: read-then-write on `count` races across threads",
+  "B2": "",
+  "B3": "fix with a lock (or atomic increment) around the check-and-set",
+  "B4": "No time window: once `limit` is hit, user is blocked forever, never resets",
+  "B5": "Unbounded memory growth: `counts` never evicts entries",
+  "B6": "Not multi-worker safe: `counts` is per-process memory",
+  "B7": "No input validation: `user_id` unvalidated (None, wrong type usable as dict key)"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.076013,
+ "judge_wall_ms": 16316,
+ "graded_at": "2026-09-03T11:19:18+0100"
+}

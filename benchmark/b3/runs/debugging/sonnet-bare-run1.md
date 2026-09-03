@@ -1,0 +1,6 @@
+1. Module-level `_cache` never invalidates once set — fix: re-read when the file's mtime/hash changes, not just when `_cache is None`.
+2. Caching keyed by nothing (global, ignores `path` argument) — fix: key the cache by resolved path so different configs don't collide.
+3. Tempting fix "just remove `if _cache is None` and always read" would work but reintroduces a disk read on every call with no benefit of caching — not root-cause-wrong, but defeats the purpose of caching at all.
+4. Tempting fix "add a TTL / periodic cache clear" would NOT properly address it — it papers over staleness with a delay instead of detecting the actual change, so updates still lag arbitrarily.
+5. Tempting fix "reload config on every request from the caller" would NOT address it — it just relocates the same stale-cache bug to call sites instead of fixing `get_config`.
+6. No thread safety — fix: guard cache read/write with a lock if `get_config` is called from multiple threads (mtime check + reload isn't atomic otherwise).

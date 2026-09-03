@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-skills-run4",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": false,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "two threads can both read count < limit and both increment, allowing multiple requests through",
+  "B2": "",
+  "B3": "add `threading.Lock()` around the entire function",
+  "B4": "",
+  "B5": "Unbounded memory growth: `counts` dict never expires old entries; grows indefinitely",
+  "B6": "each worker process has its own `counts` dict, so limits don't span across workers",
+  "B7": "validate that user_id is hashable/non-None"
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.074293,
+ "judge_wall_ms": 15122,
+ "graded_at": "2026-09-03T11:26:35+0100"
+}

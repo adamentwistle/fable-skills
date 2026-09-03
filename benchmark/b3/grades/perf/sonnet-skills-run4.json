@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `SELECT ... FROM users` per event \u2014 for 1000 events that's 1000 round trips; batch-fetch actors with a single `WHERE id = ANY($1)`",
+  "F2": "",
+  "F3": "`lookup_geo` uses synchronous `requests.get` inside an async endpoint, blocking the event loop for up to 2 s per uncached IP",
+  "F4": "no index on `(org_id, created_at)` \u2014 the SELECT does a full scan of 4.2M rows filtered/sorted in memory; add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` is also an unbounded list appended on every request forever \u2014 bound or roll it into a proper metrics counter",
+  "F6": "`_geo_cache` is an unbounded module-level dict keyed by every client IP ever seen, never evicted ... bound it (LRU with a cap/TTL)",
+  "F7": "After 2\u20136 are done, re-measure p95 for acme/northwind",
+  "F8": "",
+  "F9": "don't ship it as-is \u2014 more workers/pool connections just let more of the same slow, memory-leaking requests run concurrently ... only then consider a short-TTL response cache (30\u201360 s) as a smoothing layer, not a substitute",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171823,
+ "judge_wall_ms": 33191,
+ "graded_at": "2026-09-03T16:45:25+0100"
+}

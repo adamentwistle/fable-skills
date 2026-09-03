@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-bare-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`, which no longer exists",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` tests `status === 'paid'`, now `'settled'`, so paid invoices lose their badge with no error",
+  "P3": "inserting `Disputed` between `Open` and `Paid` renumbers Paid 2\u21923 and Void 3\u21924, so every existing SMALLINT row in `invoices.state` now decodes one state too low",
+  "P4": "prod and staging Helm values still set `INVOICE_GRACE_DAYS` (\"21\"/\"14\") and nothing sets `BILLING_GRACE_PERIOD_DAYS`, so zod's default silently applies and prod's grace period drops 21\u21927 on deploy",
+  "P5": "`services/notifier/src/reminders.ts:57` still calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` ... `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`, i.e. precisely the packages that break",
+  "P6": "The serializer test was gutted to `toBeTruthy()`/`toBeDefined()` ... assert `'settled'`, the exact amount, and the currency",
+  "P7": "the author's own sweep disproves the \"platform team confirmed both shapes\" claim, so get that in writing against this diff or fix the consumer first",
+  "P8": "this changes the event contract for every subscriber, not just the GET route \u2014 call it out explicitly and check subscribers outside this repo",
+  "P9": "emit `total_cents` alongside `total` for a deprecation period, or version the route",
+  "P10": "re-run typecheck/test across the whole repo before merge",
+  "P11": "`dunning.ts` passes `LATE_FEE_RATE_BPS` but `invoiceRoutes.ts` does not, so the fee shown on the invoice differs from the fee actually charged whenever the env value is not 150"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.166028,
+ "judge_wall_ms": 19986,
+ "graded_at": "2026-09-03T16:21:10+0100"
+}

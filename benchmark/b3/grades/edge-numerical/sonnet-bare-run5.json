@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "C1": true,
+  "C2": false,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing/empty key or field \u2014 `KeyError` on malformed row",
+  "C2": "",
+  "C3": "Non-numeric string (\"abc\", \"\") \u2014 `ValueError` on float()/int()",
+  "C4": "Thousands separators / currency symbols (\"$1,000\") break float()",
+  "C5": "`int(r['qty'])` fails on decimal-looking strings like \"1.0\" or \"3.5\"",
+  "C6": "Float accumulation of money causes rounding drift \u2192 use Decimal (or integer cents)",
+  "C7": "Negative price or qty \u2014 silently allowed, corrupts total",
+  "C8": "NaN/Infinity strings (\"nan\", \"inf\") accepted by float() \u2014 poisons the sum",
+  "C9": "One bad row aborts the entire aggregation with no partial result or diagnostics ... and report which rows failed"
+ },
+ "score": 8,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.086278,
+ "judge_wall_ms": 15720,
+ "graded_at": "2026-09-03T11:15:48+0100"
+}

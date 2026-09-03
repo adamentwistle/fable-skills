@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-bare-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "breaks `apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents` now undefined) and `services/reconciler/reconcile.py:64` (`inv[\"total_cents\"]`)",
+  "P2": "Status label `'paid'` \u2192 `'settled'` breaks `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'`) \u2014 Paid invoices will stop showing the \"Paid\" badge.",
+  "P3": "`InvoiceState.Disputed` shifting all subsequent enum ordinals (Paid: 2\u21923, Void: 3\u21924) \u2014 the DB stores this enum as a raw SMALLINT (`repo.ts`), so this is a silent data-migration bug",
+  "P4": "set by `infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` \u2014 ... prod's `\"21\"` override is dropped in favor of the new default `7`",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a raw number as second arg ... (no TS check ran on those, \"no changes since origin/main\" skip)",
+  "P6": "Test suite was weakened to match the change instead of testing it: `expect(res.status).toBeTruthy()` / `expect(res.total).toBeDefined()` ... Fix: assert exact values",
+  "P7": "contradicting \"consumer compatibility is covered\" for at least the portal client ... the note only covers \"the reconciler service\" generically, not this specific field/type change",
+  "P8": "",
+  "P9": "",
+  "P10": "force typecheck across all consumers of `@acme/billing-core` before merge",
+  "P11": "`invoiceRoutes.ts` doesn't pass `rateBps`, `dunning.ts` does \u2014 inconsistent rate source between the two call sites"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.180608,
+ "judge_wall_ms": 24774,
+ "graded_at": "2026-09-03T16:21:24+0100"
+}

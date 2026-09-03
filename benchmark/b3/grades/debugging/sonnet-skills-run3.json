@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Module-level cache never invalidated once set \u2014 fix by checking file mtime/hash on each call and reloading when it changes.",
+  "A2": "Tempting fix \"reduce cache lifetime with a timer/TTL\" masks the bug with polling latency instead of detecting actual changes \u2014 still serves stale data between TTL windows.",
+  "A3": "Tempting fix \"just remove the cache and read the file every call\" defeats the purpose of caching (perf) rather than addressing correctness \u2014 not a real fix, just an evasion.",
+  "A4": "Path parameter is ignored after first call (cache is keyed by nothing) \u2014 fix by keying the cache dict by resolved path",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 4,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.075823,
+ "judge_wall_ms": 10517,
+ "graded_at": "2026-09-03T11:27:14+0100"
+}

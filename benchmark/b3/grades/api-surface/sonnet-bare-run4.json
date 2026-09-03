@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-bare-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": false,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "Response shape change (`total_cents`/`currency` \u2192 `total.amount/currency`) breaks `apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents` now undefined) and `services/reconciler/reconcile.py:64` (`inv[\"total_cents\"]` KeyError)",
+  "P2": "Status label rename `paid`\u2192`settled` breaks `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'` never matches) and `services/reconciler/reconcile.py:64`",
+  "P3": "",
+  "P4": "`INVOICE_GRACE_DAYS` env var is still set in `infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29`; renaming ... means both environments silently fall back to the new zod default (7) instead of the configured 21/14",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` call `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` ... TS compiles clean only because those packages weren't in CI's `--filter='[origin/main]'` scope",
+  "P6": "Test for `toInvoiceResponse` was weakened from asserting exact status/total values to `toBeTruthy()`/`toBeDefined()`, and the InvoiceState persistence round-trip test was skipped rather than fixed ... restore real assertions ... and un-skip or fix the round-trip test",
+  "P7": "both are in-repo consumers, not the \"mobile app/reconciler service\" the PR note claims is already handled; that claim appears to be about a different reconciler than the one in this repo ... not defer it as a \"downstream concern.\"",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.170858,
+ "judge_wall_ms": 25077,
+ "graded_at": "2026-09-03T16:21:35+0100"
+}

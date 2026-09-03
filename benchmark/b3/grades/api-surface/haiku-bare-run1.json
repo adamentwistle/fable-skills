@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-bare-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` accesses removed `data.total_cents`; update to `data.total.amount`.",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` checks status `'paid'` but response now returns `'settled'`; update condition.",
+  "P3": "Adding `Disputed` between `Open` and `Paid` in the enum shifts subsequent state values (Paid: 2\u21923, Void: 3\u21924); existing DB records with state 2 and 3 will read as wrong states on deploy.",
+  "P4": "`infra/helm/billing/values.prod.yaml` and `values.staging.yaml` still define `INVOICE_GRACE_DAYS`, not renamed `BILLING_GRACE_PERIOD_DAYS`; update both files.",
+  "P5": "",
+  "P6": "Skipped test + weakened assertions leave enum/state persistence untested; re-enable after enum fix and DB rebuild.",
+  "P7": "verify claim that reconciler handles both old and new shapes, or update",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.16398800000000002,
+ "judge_wall_ms": 35769,
+ "graded_at": "2026-09-03T16:20:56+0100"
+}

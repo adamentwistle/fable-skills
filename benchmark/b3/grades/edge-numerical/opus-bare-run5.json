@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-bare-run5",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "`KeyError` if a row lacks `price` or `qty`",
+  "C2": "`TypeError` if a value is `None` (empty CSV cell parsed as null)",
+  "C3": "`ValueError` on non-numeric text like `\"N/A\"`, `\"\"`, or `\"1,234\"`",
+  "C4": "Currency symbols and thousands separators (`\"$1,299.00\"`) fail conversion",
+  "C5": "`int(\"3.0\")` raises even though the value is a valid quantity",
+  "C6": "Binary floating point loses cents; `0.1 + 0.2` style drift compounds over many rows \u2014 use `decimal.Decimal` for money",
+  "C7": "Negative prices or quantities pass silently and can zero out a total",
+  "C8": "`float(\"nan\")` and `float(\"inf\")` are accepted and poison the total irrecoverably",
+  "C9": "one bad row kills the whole aggregate with no indication of which \u2014 collect per-row errors with their index and report them"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.085288,
+ "judge_wall_ms": 12439,
+ "graded_at": "2026-09-03T11:15:36+0100"
+}

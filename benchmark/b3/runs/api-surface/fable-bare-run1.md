@@ -1,0 +1,15 @@
+**Block.** Items 1–8 must be fixed before merge; 9–13 should be.
+
+1. Inserting `Disputed` mid-enum renumbers `Paid` 2→3 and `Void` 3→4 while `invoices.state` stores the raw SMALLINT, so every existing Paid row reads back as Disputed and every Void row as Paid (voids will serialize as `settled`); append `Disputed` last or give explicit values.
+2. The `it.skip` in `invoice.test.ts` is not flaky, it deterministically catches #1 (seeds 2/3, expects Paid/Void); un-skip it and make it pass, rebuilding the fixture DB won't fix production data.
+3. `serializes a paid invoice` was gutted to `toBeTruthy`/`toBeDefined`; restore exact assertions on `status === 'settled'`, `total.amount === '125.00'`, `total.currency === 'GBP'`.
+4. `services/notifier/src/reminders.ts:57` still passes `cfg.INVOICE_GRACE_DAYS` positionally; zod now strips that key so `opts` is `undefined` and reminders crash with a TypeError; convert to the options object.
+5. `scripts/backfill-late-fees.js:22` passes a bare number, so `opts.graceDays` is `undefined` and the computed fee is `NaN`; convert to the options object.
+6. CI is not green for this change: `--filter='[origin/main]'` skips dependents, so notifier, reconciler-client and scripts were never typechecked or tested; change to `--filter='...[origin/main]'` and re-run.
+7. `infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set `INVOICE_GRACE_DAYS`, which is now ignored, so prod grace silently drops from 21 to 7 days on deploy; rename both keys in this PR.
+8. The "consumers handle both shapes" claim is contradicted by the author's own sweep: `useInvoice.ts:23` reads `data.total_cents` (now undefined), `InvoiceBadge.tsx:9` matches `'paid'` (never renders), and `reconcile.py:64` checks `"paid"` and `total_cents` so settled invoices never reconcile; portal is inside this PR's scope, so fix these or version the endpoint.
+9. `toInvoiceResponse` also builds the `billing.invoice.updated` event payload in `events.ts`, so the shape break reaches every event subscriber, not just the GET route the description mentions; enumerate subscribers or keep the event on the old serializer.
+10. `total.amount` changes from integer cents to a decimal string; if intentional, record it in the API changelog/OpenAPI as a breaking wire type change.
+11. `invoiceRoutes.ts:88` omits `rateBps`, so the displayed `late_fee_cents` uses the hardcoded 150 while dunning uses `LATE_FEE_RATE_BPS` and they diverge whenever prod overrides the rate; pass `rateBps: cfg.LATE_FEE_RATE_BPS` or make `rateBps` required and drop the duplicated default.
+12. `docs/runbooks/dunning.md:18` tells on-call to raise `INVOICE_GRACE_DAYS` to pause late fees during an incident, which now does nothing; update the runbook.
+13. 2.3.1→2.4.0 is a minor bump for three breaking changes (function signature, config key, wire shape); bump to 3.0.0.

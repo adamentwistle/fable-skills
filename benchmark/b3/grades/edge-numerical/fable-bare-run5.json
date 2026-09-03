@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "fable-bare-run5",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing or misnamed columns (`\"Price \"`, `\"PRICE\"`, BOM-prefixed `\"\\ufeffprice\"`) raise KeyError",
+  "C2": "Empty, whitespace-only, `None`, `\"N/A\"`, `\"NULL\"` cells raise ValueError/TypeError",
+  "C3": "Empty, whitespace-only, `None`, `\"N/A\"`, `\"NULL\"` cells raise ValueError/TypeError; define null handling (skip, zero, or fail) explicitly",
+  "C4": "Currency formatting: `\"$1,234.56\"`, `\"(12.00)\"`, `\"1 234\"`, trailing `\"USD\"` all raise ValueError; strip/normalize with a strict regex",
+  "C5": "Quantity as `\"3.0\"`, `\"1e3\"`, `\"3,000\"` raises in `int()`; parse via Decimal and require it to be integral.",
+  "C6": "Binary float drift: `float(\"0.10\")` isn't 0.10 and cents accumulate error over many rows; parse with `Decimal(str)` directly from the string",
+  "C7": "Negative price or qty silently shrinks revenue and can hide corruption; enforce a sign policy",
+  "C8": "Silent NaN/inf: `float(\"nan\")`, `\"inf\"`, `\"-Infinity\"` (any case) parse fine and poison the total; reject non-finite values",
+  "C9": "One bad row aborts the whole run with no row index or value in the traceback; wrap per-row errors with row number and raw cell content."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.103323,
+ "judge_wall_ms": 15893,
+ "graded_at": "2026-09-03T11:15:24+0100"
+}

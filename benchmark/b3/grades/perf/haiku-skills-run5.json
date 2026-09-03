@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch-fetch all actors in one query instead of per-event \u2014 N+1 doing 1,900 user queries for 1,900 events adds seconds; prefetch with `WHERE id = ANY($1)` and build a lookup map.",
+  "F2": "Change dedup from list to set \u2014 `if ev[\"dedupe_key\"] in seen:` is O(n) per iteration, making this O(n\u00b2) over ~2,000 events.",
+  "F3": "Switch geo lookups from `requests.get()` to async HTTP client (e.g., `httpx.AsyncClient`) \u2014 sync blocking calls freeze the event loop",
+  "F4": "Add index on (org_id, created_at) \u2014 the 1.2\u20131.6s slow query is a full-table scan",
+  "F5": "",
+  "F6": "Bound `_geo_cache` with LRU or maxsize \u2014 currently grows unbounded",
+  "F7": "",
+  "F8": "",
+  "F9": "**Do NOT ship the proposal.** Pool/worker bumps and Redis caching don't fix root causes ... After fixes 1\u20135, latency should drop from 6\u201312s to ~1s, eliminating the need for Redis caching.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14125300000000002,
+ "judge_wall_ms": 21493,
+ "graded_at": "2026-09-03T16:44:19+0100"
+}

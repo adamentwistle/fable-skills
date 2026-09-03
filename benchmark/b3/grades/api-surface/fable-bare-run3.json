@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "fable-bare-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "the portal's own client reads `data.total_cents` (`useInvoice.ts:23`, now `undefined`)",
+  "P2": "tests `status === 'paid'` (`InvoiceBadge.tsx:9`, never true for `'settled'`)",
+  "P3": "inserting `Disputed` mid-enum renumbers `Paid` 2\u21923 and `Void` 3\u21924 while `invoices.state` is a SMALLINT, so every existing paid row now reads as disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, zod silently drops the unknown key, so prod falls to the 7-day default",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a number ... CI used `--filter='[origin/main]'`, which excludes dependents, so `@acme/notifier`, `@acme/scripts` ... were never typechecked or tested",
+  "P6": "the serializer test was reduced to `toBeTruthy()`/`toBeDefined()`, which pass for any output; assert `'settled'`, `'125.00'`, `'GBP'`",
+  "P7": "this contradicts the reviewer note's claim, so the mobile-app assurance cannot be taken on trust either",
+  "P8": "`toInvoiceResponse` also feeds `billing.invoice.updated` in `events.ts` ... re-sweep `packages`, event subscribers, and looser patterns",
+  "P9": "ship additively (keep `total_cents`, `currency`, and `paid`, or version the endpoint and event)",
+  "P10": "switch to `--filter='...[origin/main]'` and re-run",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps`, so the displayed `late_fee_cents` uses the hardcoded 150 while dunning charges `LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.44777,
+ "judge_wall_ms": 26765,
+ "graded_at": "2026-09-03T16:20:46+0100"
+}

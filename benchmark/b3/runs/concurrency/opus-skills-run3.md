@@ -1,0 +1,14 @@
+1. Check-then-act race: `get` and the assignment are separate operations, so N threads can all read `count = 99` and all pass — fix by doing the read-increment under a single `threading.Lock`.
+2. Lost updates on the write itself: concurrent `counts[user_id] = count + 1` overwrite each other, so the stored count drifts below the true number of admitted requests — same lock fixes it.
+3. Guard scope is wrong for the deployment: an in-process dict is per-worker, so with W workers the effective limit is `limit × W` — fix by moving the counter to a shared store (`Redis INCR` + `EXPIRE`, or a DB row with an atomic update).
+4. It is not a rate limiter: counts never reset, so it is a lifetime quota that permanently locks out every user after 100 requests — fix with a time window (fixed-window key or token-bucket refill).
+5. Unbounded memory growth: one permanent entry per distinct `user_id`, and an attacker supplying random IDs grows the dict without limit — fix with TTL expiry or a bounded LRU.
+6. No release path: if the intent was concurrent in-flight requests rather than a rate, nothing ever decrements — fix by defining the semantics and decrementing in a `finally`, or committing to window-based counting.
+7. `limit` as a caller-supplied argument means two call sites can enforce different limits against the same shared counter — fix by resolving the limit from config inside the function, keyed by user or tier.
+8. `user_id` is unvalidated: `None` or an empty value collapses all anonymous callers into one bucket, and `1` versus `"1"` become separate buckets — fix by normalizing to a canonical string key and rejecting empty ones.
+9. `limit <= 0` silently denies everything and a negative limit is accepted without complaint — fix by validating the limit at load and failing loudly.
+10. Fixed-window boundary burst: once a window is added, a client can send `limit` at the end of one window and `limit` at the start of the next, so 2× the limit lands in a short span — fix with a sliding window or token bucket.
+11. Caller gets no retry information, only `False`, so no `Retry-After` or remaining quota can be returned — fix by returning remaining count and reset time.
+12. Module-level global state cannot be reset or isolated between tests, and the wall clock will be implicit once windowing is added — fix by encapsulating in a class with an injected store and a monotonic clock.
+13. No stated failure policy for when the shared store is unreachable — fix by deciding fail-open or fail-closed explicitly and logging the degraded mode.
+14. Denied requests are not recorded at all, so abusive clients are invisible to metrics and to any escalating backoff — fix by counting rejections separately.

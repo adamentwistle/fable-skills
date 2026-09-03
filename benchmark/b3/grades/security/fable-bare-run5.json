@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "fable-bare-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": true,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection in `get_user_orders` \u2014 critical.** Both request values are spliced into the query with `%`.",
+  "S2": "Connection never closed \u2014 medium.** `conn` is opened and abandoned, and any exception after `connect` leaks it.",
+  "S3": "`\"Order #\" + order[0]` adds a string to an integer id and raises `TypeError`.",
+  "S4": "`average_order_value` divides by zero \u2014 high.** A user with no orders, or none in the requested status, is the normal case and raises `ZeroDivisionError`.",
+  "S5": "Float arithmetic on money \u2014 medium.** `total = 0.0`, `amount * pct / 100`, and `str(order[1])` all use binary floats. Sums drift by fractions of a cent",
+  "S6": "Negative `pct` raises the price. `pct` over 100 gives a negative amount, which is a refund. ... Fix: validate `0 <= pct <= 100`",
+  "S7": "`status` should be checked against the known set of statuses",
+  "S8": "",
+  "S9": "NULL or text `amount` breaks the maths \u2014 medium.** ... A NULL or `\"12.50\"` in `amount` raises `TypeError` inside `average_order_value`.",
+  "S10": "receipts print `$12.5` or `$12.300000000000001`. Fix: ... format with `:.2f`",
+  "S11": "",
+  "S12": "`apply_discount(19.99, 15)` yields `16.9915` with no rounding ... quantize to two places with `ROUND_HALF_UP`",
+  "S13": "Unbounded result set \u2014 low.** No `LIMIT`, so a heavy account pulls its entire history into memory per request.",
+  "S14": "Positional tuple coupling \u2014 low.** Three functions depend on the column order of one query. ... Fix: `sqlite3.Row` and a small `Order` dataclass."
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.12112799999999999,
+ "judge_wall_ms": 20942,
+ "graded_at": "2026-09-03T11:16:03+0100"
+}

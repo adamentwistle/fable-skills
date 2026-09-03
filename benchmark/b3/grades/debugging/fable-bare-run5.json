@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "fable-bare-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "`_cache` is a module-level memo guarded only by `is None`, so the first parse is returned forever and the file is never looked at again \u2014 fix by storing the file's `os.stat` identity",
+  "A2": "Won't fix: a time-to-live \u2014 still stale for up to the TTL and re-parses on a clock regardless of whether the file changed",
+  "A3": "Won't fix: adding `reload_config()` or a manual `_cache = None` \u2014 data stays stale until some caller remembers to invoke it",
+  "A4": "`path` is ignored after the first call, so `get_config('other.json')` returns the first file's contents \u2014 key the cache by absolute path",
+  "A5": "If called from threads, wrap the stat-check-and-reload in a lock so two threads don't race on `_cache`",
+  "A6": "the shared mutable dict is returned directly, so any caller that mutates it poisons every later read \u2014 return a copy or a read-only mapping",
+  "A7": "",
+  "A8": "`None` doubles as the \"not loaded\" sentinel, so a file containing literal `null` re-parses every call \u2014 use a private sentinel object"
+ },
+ "score": 7,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.085428,
+ "judge_wall_ms": 13140,
+ "graded_at": "2026-09-03T11:19:33+0100"
+}

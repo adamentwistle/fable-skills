@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "haiku-bare-run1",
+ "items": {
+  "C1": true,
+  "C2": false,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing keys raise `KeyError` \u2014 validate keys exist or use `.get()` with defaults",
+  "C2": "",
+  "C3": "Empty strings raise `ValueError` \u2014 reject or handle explicitly",
+  "C4": "Currency symbols like \"$\" raise `ValueError` \u2014 preprocess to remove them",
+  "C5": "`int()` rejects fractional quantities like \"5.5\" \u2014 clarify whether fractional qty is allowed",
+  "C6": "Float accumulation causes precision loss for currency \u2014 use `Decimal` instead",
+  "C7": "Negative prices/quantities unchecked \u2014 add assertions for non-negative values",
+  "C8": "Special floats (inf, nan) pass silently to result \u2014 filter these values",
+  "C9": ""
+ },
+ "score": 7,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.081158,
+ "judge_wall_ms": 11102,
+ "graded_at": "2026-09-03T11:15:20+0100"
+}

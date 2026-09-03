@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`, which no longer exists",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` matches `status === 'paid'`, now `'settled'`, so paid invoices lose their badge.",
+  "P3": "inserting `Disputed` before `Paid` shifts Paid 2\u21923 and Void 3\u21924, but `invoices.state` is a persisted SMALLINT; every existing paid row now reads as Disputed",
+  "P4": "Zod ignores unknown keys, so `INVOICE_GRACE_DAYS: \"21\"` in `values.prod.yaml` (and `\"14\"` in staging) is discarded and the new 7-day default applies",
+  "P5": "`--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`, which are precisely the packages holding the broken call sites",
+  "P6": "The one test that would have caught #1 was skipped, not fixed \u2014 `it.skip('round-trips state values')` ... Un-skip and make it pass.",
+  "P7": "the platform-team assurance covers two consumers, not the contract",
+  "P8": "The serializer also feeds the `billing.invoice.updated` event via `events.ts`, so this is a wire-schema break for external subscribers no grep can enumerate",
+  "P9": "keep `total_cents`/`currency` alongside `total` for a deprecation window, or cut a `/v2` route",
+  "P10": "Require a full-repo `turbo run typecheck test` before merge.",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` and falls to the hardcoded `150`, while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.163638,
+ "judge_wall_ms": 26146,
+ "graded_at": "2026-09-03T16:41:53+0100"
+}

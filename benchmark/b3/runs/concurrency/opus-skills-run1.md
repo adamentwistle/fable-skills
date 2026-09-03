@@ -1,0 +1,11 @@
+1. Check-then-act race — `get` then `counts[user_id] = count + 1` is not atomic, so N threads can all read the same count and admit N over the limit; fix with a lock around read-modify-write or an atomic increment.
+2. Per-process state — each worker has its own `counts`, so the real limit is `limit × workers`; fix by moving the counter to a shared store (Redis `INCR`) since the guard must live where the contention is.
+3. No time window — counts never reset, so this is a lifetime quota, not a rate limit; fix with fixed/sliding windows keyed by `(user_id, window_start)`.
+4. Unbounded memory growth — one permanent entry per distinct `user_id`, so unauthenticated or spoofed IDs are a memory-exhaustion vector; fix with TTL expiry or a bounded LRU.
+5. Free-threaded/PyPy corruption — the GIL is the only thing preventing torn dict mutation today; fix as in (1), don't rely on the interpreter.
+6. Not fork-safe — with preloaded workers each child inherits a snapshot of `counts` and diverges silently; fix by initializing the store after fork, or use (2).
+7. `limit` is a caller-supplied parameter — two call sites with different limits mutate the same counter, and `limit<=0` or non-integer is unvalidated; fix by making the limit a property of the limiter, validated at construction.
+8. `user_id` unvalidated — `None` buckets every anonymous caller together, and an unhashable ID raises `TypeError` inside the hot path; fix by rejecting falsy/non-string IDs at the boundary.
+9. Bare `False` return — the caller can't emit `Retry-After` or distinguish "throttled" from "error"; fix by returning remaining quota and reset time.
+10. Denied requests aren't counted and successes can't be refunded — no way to back out a reservation when the downstream call fails; fix by exposing an explicit release/refund path if the count is meant to track work done.
+11. Module-global mutable state — untestable, unresettable, and impossible to run two independent limiters; fix by wrapping state and clock in a class with an injectable time source.

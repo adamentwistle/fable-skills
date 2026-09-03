@@ -1,0 +1,64 @@
+{
+  "area": "migration",
+  "title": "Schema change plus backfill review",
+  "discipline": "data-migration-safety",
+  "skills": [
+    "data-migration-safety",
+    "workmanship"
+  ],
+  "prompt_file": "prompt.md",
+  "answer_key_file": "answer-key.md",
+  "output_format": "numbered-findings",
+  "items": [
+    {
+      "id": "M1",
+      "short": "Drop column is a separate later deploy"
+    },
+    {
+      "id": "M2",
+      "short": "New code must keep writing status"
+    },
+    {
+      "id": "M3",
+      "short": "from_row/mark_paid break on NULL state"
+    },
+    {
+      "id": "M4",
+      "short": "CASE misses PAID/canceled/complete/NULL"
+    },
+    {
+      "id": "M5",
+      "short": "OFFSET over shrinking set skips rows"
+    },
+    {
+      "id": "M6",
+      "short": "Whole backfill in one transaction"
+    },
+    {
+      "id": "M7",
+      "short": "nightly_finance_export.py still reads status"
+    },
+    {
+      "id": "M8",
+      "short": "Concrete count reconciliation before drop"
+    },
+    {
+      "id": "M9",
+      "short": "Staging log 1055000 vs 2104377 unreconciled"
+    },
+    {
+      "id": "M10",
+      "short": "Downgrade cannot restore status values"
+    },
+    {
+      "id": "M11",
+      "short": "Prod backfill takes hours (61M rows vs staging rate)"
+    },
+    {
+      "id": "M12",
+      "short": "0143 SET NOT NULL full-scans under ACCESS EXCLUSIVE"
+    }
+  ],
+  "max_score": 12,
+  "design_notes": "The PR looks disciplined on the surface (concurrent index, batched script that filters on NULL, a four-step runbook), so bare runs tend to approve the shape and flag only what is visible on inspection: the CASE gap against the GROUP BY (M4) and the untouched export job (M7), sometimes the transaction scope (M6). The headroom is in the steps a careful engineer takes deliberately: tracing two iterations of the OFFSET loop against a shrinking filtered set (M5), comparing the two numbers in the author's own staging log instead of accepting 'tested on staging' (M9), asking what old pods and the previous build read while the new code has stopped writing status (M2), stepping a NULL-state row through from_row and mark_paid (M3), naming a numeric reconciliation predicate rather than 'verify' (M8), and reading 0143's downgrade to see the old values are unrecoverable (M10). Skeptic pass added M11 (extrapolate the staging rate to 61.4M rows: hours, not a deploy-window step) and M12 (a bare SET NOT NULL on PG 15 scans the whole table under ACCESS EXCLUSIVE; the fix is CHECK NOT VALID + VALIDATE first). M11 is a do-the-arithmetic process item; M12 is Postgres operational knowledge and is expected to be caught by bare runs that know it. The prompt's api/orders.py note now states the API keeps its lowercase strings, so a 'response field becomes SHIPPED' finding is off the table."
+}

@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "SQL injection \u2014 critical.** `query = \"... = '%s' ... '%s'\" % (user_id, status)` builds SQL from unsanitized request input.",
+  "S2": "Connection/cursor never closed \u2014 high (resource leak).** `conn`/`cur` are never closed, including on the exception path",
+  "S3": "`order[0]` (the `id` column) is an `int`; `\"Order #\" + order[0]` raises `TypeError: can only concatenate str`",
+  "S4": "Division by zero in `average_order_value` \u2014 high.** `total / len(orders)` raises `ZeroDivisionError` when `orders` is empty",
+  "S5": "Money stored/summed as `float` \u2014 high (data integrity).** Floats cannot represent currency exactly",
+  "S6": "A negative `pct` increases the price; `pct > 100` produces a negative amount. ... Fix: validate `0 <= pct <= 100`.",
+  "S7": "`status` should be checked against a known enum of order statuses",
+  "S8": "",
+  "S9": "",
+  "S10": "`str(order[1])` prints `$19.9` instead of `$19.90`. Fix: format to 2 decimal places.",
+  "S11": "",
+  "S12": "`apply_discount` doesn't round \u2014 low/medium.** Result can have many decimal places (e.g. `9.987`), which is invalid for a currency amount. Fix: quantize to cents.",
+  "S13": "No result bound/pagination \u2014 low.** A user with many orders returns everything in one shot",
+  "S14": ""
+ },
+ "score": 10,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.109708,
+ "judge_wall_ms": 17842,
+ "graded_at": "2026-09-03T11:16:26+0100"
+}

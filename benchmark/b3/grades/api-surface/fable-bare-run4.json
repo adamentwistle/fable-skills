@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "fable-bare-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `total_cents` (now undefined)",
+  "P2": "`InvoiceBadge.tsx:9` checks `'paid'` (now `'settled'`), so the Paid badge disappears",
+  "P3": "Inserting `Disputed` mid-enum renumbers `Paid` 2\u21923 and `Void` 3\u21924, so every existing SMALLINT `state` row is misread",
+  "P4": "Both helm values files still set `INVOICE_GRACE_DAYS`, which zod now strips, so prod grace silently drops from 21 to 7 days",
+  "P5": "`--filter='[origin/main]'` runs only changed packages, not their dependents, so notifier, reconciler-client and scripts were never typechecked against the new billing-core ... `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a bare number",
+  "P6": "The serializer test was reduced to `toBeTruthy`/`toBeDefined`, which pass for any output. Fix: restore exact assertions",
+  "P7": "The \"consumers handle both shapes\" claim is contradicted by the author's own sweep: `reconcile.py:64` matches `status == \"paid\"`",
+  "P8": "`events.ts` publishes the same serializer to `billing.invoice.updated`, so the shape change hits every event subscriber ... Fix: audit subscribers or version the event.",
+  "P9": "Fix: ship additively (`total_cents` plus `total`, keep `paid`) or land the reconciler change first.",
+  "P10": "Fix: `--filter='...[origin/main]'` and re-run.",
+  "P11": "`rateBps` defaults to a hardcoded 150 that duplicates config, and `invoiceRoutes.ts` omits it, so the fee shown on GET diverges from the fee dunning charges"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.167153,
+ "judge_wall_ms": 31926,
+ "graded_at": "2026-09-03T16:20:52+0100"
+}

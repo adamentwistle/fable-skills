@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-bare-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Module-level cache is never invalidated \u2014 fix: check file mtime/hash each call and reload if changed",
+  "A2": "a TTL still serves stale data between polls and adds unnecessary latency; only a change-detection or explicit invalidation actually addresses staleness",
+  "A3": "Tempting fix \"remove caching entirely, read the file every call\" fixes staleness but reintroduces the I/O-per-call cost the cache existed for",
+  "A4": "Cache is a global singleton shared across all `path` arguments \u2014 fix: key the cache dict by `path`",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 4,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.35781999999999997,
+ "judge_wall_ms": 9275,
+ "graded_at": "2026-09-03T11:14:32+0100"
+}

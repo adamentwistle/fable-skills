@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "haiku-skills-run2",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": false,
+  "C4": true,
+  "C5": false,
+  "C6": true,
+  "C7": true,
+  "C8": false,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing 'price'/'qty' keys cause KeyError: validate keys exist before accessing.",
+  "C2": "None values cause TypeError: check `is not None` before float()/int().",
+  "C3": "",
+  "C4": "Non-numeric strings raise ValueError unhandled: wrap parse in try-except ValueError.",
+  "C5": "",
+  "C6": "Float cannot exactly represent money (0.1 + 0.2 \u2260 0.3, precision loss): use Decimal for all calculations.",
+  "C7": "Negative prices/quantities silently pass: validate \u2265 0 after parsing, raise if violated.",
+  "C8": "",
+  "C9": ""
+ },
+ "score": 5,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.081743,
+ "judge_wall_ms": 15566,
+ "graded_at": "2026-09-03T11:27:29+0100"
+}

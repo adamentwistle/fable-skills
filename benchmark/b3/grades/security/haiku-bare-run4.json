@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-bare-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": false,
+  "S6": false,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": false,
+  "S12": false,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "Query uses string formatting (`%s`) with unsanitized user input. Attacker can inject SQL",
+  "S2": "Connection opened but never closed. If an error occurs during query execution, the connection leaks.",
+  "S3": "`order[0]` is an integer (id from database) but code tries to concatenate with string using `+`. Raises `TypeError`",
+  "S4": "If `orders` is empty, `len(orders)` is 0, raising `ZeroDivisionError`.",
+  "S5": "",
+  "S6": "",
+  "S7": "No validation that `user_id` is numeric or `status` is a valid enum value.",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "",
+  "S12": "",
+  "S13": "",
+  "S14": "Code uses `o[1]`, `order[0]`, `order[1]` with no documentation. If the SELECT statement changes, indices silently break"
+ },
+ "score": 6,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.098458,
+ "judge_wall_ms": 12366,
+ "graded_at": "2026-09-03T11:16:04+0100"
+}

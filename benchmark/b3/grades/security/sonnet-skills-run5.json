@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "builds SQL by string interpolation from HTTP-request-controlled values (`user_id`, `status`)",
+  "S2": "Resource leak: connection/cursor never closed",
+  "S3": "sqlite returns the `id` column as an `int`; `\"Order #\" + order[0]` raises `TypeError: can only concatenate str`",
+  "S4": "makes `total / len(orders)` raise `ZeroDivisionError`, crashing the handler",
+  "S5": "float arithmetic isn't exact for currency (`0.1 + 0.2 != 0.3`), so totals/discounts can be off by fractions of a cent",
+  "S6": "No check that `0 <= pct <= 100`. A negative `pct` increases the price silently",
+  "S7": "check against an allowlist (`{\"pending\", \"paid\", \"shipped\", \"cancelled\", ...}`) before querying",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "propagates raw out of the function into the HTTP handler, likely surfacing an internal stack trace / file path to the client... raise/return a sanitized error at the API boundary",
+  "S12": "round once at the display boundary with a stated policy",
+  "S13": "Unbounded result set \u2014 low. No `LIMIT`/pagination",
+  "S14": "Fragile positional tuple access... use `row_factory = sqlite3.Row`"
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.112933,
+ "judge_wall_ms": 17989,
+ "graded_at": "2026-09-03T11:28:24+0100"
+}

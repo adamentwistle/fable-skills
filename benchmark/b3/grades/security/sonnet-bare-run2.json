@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-bare-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": false,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection (critical)** \u2014 `\"... = '%s'\" % (user_id, status)`. Attacker-controlled request params go straight into SQL.",
+  "S2": "Connection/cursor never closed (medium)** \u2014 no `close()`, no `try/finally`, no context manager. Under load this leaks SQLite connections/file handles.",
+  "S3": "TypeError in `format_receipt` (high)** \u2014 `order[0]` (an `id`, an int) is concatenated with `+` to a string",
+  "S4": "Division by zero in `average_order_value` (high)** \u2014 a user with zero matching orders crashes the request",
+  "S5": "Money stored/summed as float (high for e-commerce)** ... Binary floats can't represent cents exactly",
+  "S6": "`apply_discount` doesn't validate `pct` (medium)** \u2014 negative or >100 values silently produce negative or nonsensical prices.",
+  "S7": "No input validation on `status` (medium)** ... Fix: validate against a known set of statuses (enum/allow-list)",
+  "S8": "Missing authorization / IDOR risk (critical...)** \u2014 nothing here confirms `user_id` is the authenticated caller's own ID.",
+  "S9": "",
+  "S10": "",
+  "S11": "a locked/corrupt DB or bad path raises a raw `sqlite3` exception up through the HTTP handler, potentially leaking internals in an error response",
+  "S12": "",
+  "S13": "Unbounded query / no pagination (medium)** \u2014 `fetchall()` with no `LIMIT`",
+  "S14": "Result rows are unnamed tuples (low)** \u2014 `order[0]`, `o[1]` etc. are fragile to any column reorder"
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.11099799999999999,
+ "judge_wall_ms": 18018,
+ "graded_at": "2026-09-03T11:16:25+0100"
+}

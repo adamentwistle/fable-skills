@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch user queries: fetch all actor_ids in one query before serialization, not one per event (N+1 problem).",
+  "F2": "Fix dedup: use `seen: set` not list (currently O(n\u00b2) on `in` checks).",
+  "F3": "Replace sync `requests.get()` in `lookup_geo()` with async HTTP client (aiohttp); sync call blocks event loop",
+  "F4": "Add index `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "Cap `_request_timings` list (rolling window or max size) to prevent unbounded growth.",
+  "F6": "Cap `_geo_cache` with `functools.lru_cache(maxsize=10000)`",
+  "F7": "",
+  "F8": "",
+  "F9": "**No**: don't ship on-call proposal \u2014 scaling workers and Redis cache don't fix sync blocking (pods restart), missing index, N+1 queries, or memory leak.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.13090800000000002,
+ "judge_wall_ms": 15021,
+ "graded_at": "2026-09-03T16:44:00+0100"
+}

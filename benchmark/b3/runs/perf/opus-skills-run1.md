@@ -1,0 +1,16 @@
+**No — do not ship the on-call proposal.** It makes both symptoms worse and fixes neither cause.
+
+1. Reject step 1 of the proposal: 16 workers × pool max 50 × 6 pods = up to 4,800 Postgres connections against a default `max_connections` of ~100, and 16 leaking workers per pod reach OOM faster, not slower.
+2. Reject step 2: `since` defaults to `datetime.now()`, so the cache key is unique on every request the mobile app sends — hit rate ≈ 0, and even on a hit the first miss still freezes the pod.
+3. Baseline first: record wall time and p95 for `GET /api/v2/orgs/4127/activity?limit=1000` five times warm, and separately time `/healthz` in a loop during one of those requests — that second number is the one that pages you.
+4. Run `EXPLAIN (ANALYZE, BUFFERS)` on the events SELECT with org 4127 to confirm the expected sequential scan.
+5. Finding: no index serves `org_id = $1 AND created_at >= $2`, so every call scans all 4.21M rows to return 1,912 — add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.
+6. Finding: the query has no `LIMIT` and fetches every row in the window with its JSONB payload before Python trims to 1,000 — push dedupe and limit into SQL (`DISTINCT ON (dedupe_key)` ordered newest-first, wrapped with `ORDER BY created_at DESC, id DESC LIMIT $3`).
+7. Finding: the dedupe loop tests `ev["dedupe_key"] in seen` against a list, which is O(n²) — ~1.8M comparisons at 1,912 rows and 4.6× that at 4,000 — use a set if it stays in Python at all.
+8. Finding: `serialize_event` issues one `SELECT ... FROM users` per event, so acme's request makes ~1,900 round-trips — fetch the distinct actor ids once with `WHERE id = ANY($1)` and map them, or join in the main query.
+9. Finding and root cause of the pod restarts: `lookup_geo` calls blocking `requests.get` with a 2 s timeout inside an async handler, so every cache-miss IP stalls the whole worker's event loop and `/healthz` cannot answer within the 3 s probe timeout — switch to an async client, cap total geo time per request, and treat a geo failure as `location: null` rather than a 500.
+10. Finding and root cause of the RSS climb: `_request_timings` appends one float per request forever across all routes (~8.6M entries in 20 h at 120 req/s) — replace it with a bounded structure (`deque(maxlen=...)` or fixed-bucket histogram); `/internal/metrics` also sorts that whole list on every call, which blocks the loop a second way.
+11. Finding: `_geo_cache` is a second unbounded dict keyed on client IP with no eviction — bound it (LRU with a max size and TTL) or move it to Redis, which is where a cache actually belongs here.
+12. Re-run the exact step-3 measurements after the index alone, then after the query and N+1 fixes, keeping only changes whose numbers move; target is p95 well under 1 s and `/healthz` never exceeding a few hundred ms.
+13. Only then revisit workers and pool size, sized from measured concurrency and the real `max_connections`, with pgbouncer if you need more than ~80 total connections.
+14. Add keyset pagination (`created_at, id` cursor) before the mobile client's `limit=1000` grows again — 1,000 rows per screen is already a client bug worth filing separately.

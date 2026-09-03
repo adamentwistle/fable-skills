@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "user_id and status from HTTP request are directly string-interpolated into SQL",
+  "S2": "**Database Connection Leak** (line 5): Connection is never closed. Repeated calls exhaust file descriptors.",
+  "S3": "`order[0]` is an integer (order ID), but code concatenates it with string using `+`, raising `TypeError`",
+  "S4": "If `orders` is empty, `len(orders)` is 0, raising `ZeroDivisionError`",
+  "S5": "Using binary floats for monetary amounts causes precision loss... Use `Decimal` type for all monetary calculations",
+  "S6": "Negative pct values increase price; pct > 100 produces negative results. No bounds checking.",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "return f\"Order #{order_id}: ${amount_dec:.2f}\"",
+  "S11": "`sqlite3.Error` propagates to HTTP handler, potentially leaking error details to client",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 8,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.112443,
+ "judge_wall_ms": 16839,
+ "graded_at": "2026-09-03T11:27:58+0100"
+}

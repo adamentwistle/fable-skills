@@ -1,0 +1,9 @@
+1. **Incomplete refactoring of `computeLateFee` calls**: Two call sites still use the old positional signature — `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` — and will crash at runtime. Update both to use the new `{ graceDays, ... }` options object.
+
+2. **Config key not updated in deployment**: `infra/helm/billing/values.prod.yaml` and `values.staging.yaml` still set `INVOICE_GRACE_DAYS`, but code now loads `BILLING_GRACE_PERIOD_DAYS`. Prod will silently fall back to the default (7 instead of 21); staging to 7 instead of 14. Update both Helm files to the new key.
+
+3. **API response breaking changes not propagated to consumers**: `apps/portal/src/client/hooks/useInvoice.ts:23` still accesses `total_cents` (now `total.amount`), and `InvoiceBadge.tsx:9` still checks `status === 'paid'` (now `'settled'`). Both will read undefined or fail client-side. Update field accesses to match the new response shape.
+
+4. **Database enum reordering breaks existing data**: Adding `Disputed` between `Open` and `Paid` shifts the numeric values of all later states (Paid: 2→3, Void: 3→4). Existing rows with state=2 (Paid) will deserialize as Disputed. The test that catches this was skipped instead of fixed. Either reorder the enum to append `Disputed` at the end, or run a data migration to rekey existing rows, and re-enable the test.
+
+5. **Python reconciler service still expects old response shape**: `services/reconciler/reconcile.py:64` accesses `total_cents` and checks `status == "paid"`. Update field names to match, or confirm the external service is genuinely decoupled (the author's note covered only the mobile app and "the reconciler service", not which one this is).

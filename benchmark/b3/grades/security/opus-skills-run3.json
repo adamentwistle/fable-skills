@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection \u2014 critical.** `query = \"... user_id = '%s' AND status = '%s'\" % (user_id, status)` interpolates two request-controlled strings straight into SQL",
+  "S2": "Connection leaked on every call \u2014 high.** `conn` is never closed and there is no `try/finally`",
+  "S3": "`format_receipt` always raises `TypeError` \u2014 high.** `\"Order #\" + order[0]` concatenates `str` and `int`",
+  "S4": "`average_order_value` raises `ZeroDivisionError` on an empty list \u2014 high",
+  "S5": "Money held in binary floats \u2014 high, data integrity.** `total = 0.0`, `total += o[1]`, and `amount * pct / 100` all use floats",
+  "S6": "`apply_discount` accepts any `pct` \u2014 high.** `pct = -50` raises the price by 50%; `pct = 150` returns a negative amount",
+  "S7": "`status` is not validated against an allowlist \u2014 medium.** Any string reaches the query.",
+  "S8": "Missing authorization (IDOR) \u2014 critical.** `user_id` arrives from the request and is used verbatim as the ownership filter",
+  "S9": "A NULL `amount` crashes with an opaque `TypeError` \u2014 medium.** `total += o[1]` on `None`",
+  "S10": "`str(order[1])` renders money wrong \u2014 medium.** Produces `$12.5` or `$12.340000000000001`, never `$12.50`",
+  "S11": "Raw `sqlite3.Error` escapes to the HTTP handler \u2014 medium.** The exception text can carry the database file path and SQL fragments into a 500 page.",
+  "S12": "No rounding policy on the discount \u2014 medium.** `amount - amount * pct / 100` on 1999 cents at 15% gives 1699.15 \u2014 a fraction of a cent",
+  "S13": "Unbounded `fetchall()` \u2014 medium.** A bulk-order account pulls its whole history into memory in one request. Fix: `LIMIT`/`OFFSET`",
+  "S14": "Positional tuple indices couple three functions invisibly \u2014 medium.** `o[1]` and `order[0]` silently break if the `SELECT` column order changes"
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.137843,
+ "judge_wall_ms": 14418,
+ "graded_at": "2026-09-03T11:28:04+0100"
+}

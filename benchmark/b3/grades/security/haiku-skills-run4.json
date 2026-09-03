@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": false,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "**SQL Injection (Line 6)** \u2014 String formatting with user-supplied `user_id` and `status`.",
+  "S2": "**Resource Leak (Lines 5\u20137)** \u2014 Connection and cursor never close.",
+  "S3": "**Type Error in format_receipt (Line 16)** \u2014 `order[0]` is an integer, but code tries to concatenate it as a string",
+  "S4": "**Division by Zero (Line 11)** \u2014 `average_order_value()` crashes if `orders` is empty.",
+  "S5": "**Money as Float (Line 10)** \u2014 Summing floats causes rounding errors in financial calculations.",
+  "S6": "",
+  "S7": "**Fix:** Validate `status` against an allowlist of valid statuses.",
+  "S8": "",
+  "S9": "",
+  "S10": "**Currency Formatting Missing (Line 16)** \u2014 Receipt shows raw float (e.g., `$10.5` instead of `$10.50`).",
+  "S11": "**No Error Handling** \u2014 Database errors (missing DB, schema mismatch, query failure) propagate unhandled.",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 8,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.103828,
+ "judge_wall_ms": 17528,
+ "graded_at": "2026-09-03T11:28:00+0100"
+}

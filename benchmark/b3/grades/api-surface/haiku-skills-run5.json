@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads removed `total_cents` field",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` checks for removed `status === 'paid'` value",
+  "P3": "adding `Disputed` between `Open` and `Paid` shifts indices: state value 2 (currently Paid in DB) reads as Disputed, value 3 (currently Void) reads as Paid; ... must append `Disputed` at end of enum or run a data migration",
+  "P4": "`infra/helm/billing/values.prod.yaml`, `values.staging.yaml`, and `docs/runbooks/dunning.md` use old key; ... must update all three to `BILLING_GRACE_PERIOD_DAYS`",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` call `computeLateFee` with old signature \u2014 still passing second positional arg instead of options object; both packages were skipped by CI",
+  "P6": "changed from specific field value checks (`expect(res.status).toBe('paid')`) to existence checks (`expect(res.status).toBeTruthy()`); no longer verify response correctness; must restore or add value assertions",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171838,
+ "judge_wall_ms": 33500,
+ "graded_at": "2026-09-03T16:42:00+0100"
+}

@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Race on read-modify-write of `counts[user_id]` across threads/processes",
+  "B2": "",
+  "B3": "fix with an atomic increment (lock, or `INCR` in Redis)",
+  "B4": "No time window \u2014 once `limit` is hit, user is blocked forever",
+  "B5": "Unbounded growth of `counts` \u2014 every distinct `user_id` stays forever, memory leak",
+  "B6": "Multi-worker processes each hold separate `counts` dicts \u2014 limit is per-process, not global",
+  "B7": "No input validation on `user_id` \u2014 `None`, unhashable, or hostile values crash"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.078238,
+ "judge_wall_ms": 14653,
+ "graded_at": "2026-09-03T11:26:50+0100"
+}

@@ -1,0 +1,9 @@
+1. Root cause: the module-level `_cache` is written once on first call and then read unconditionally, so file changes are never re-read; fix by keying the cache on the file's mtime (or size+mtime) via `os.stat` and reloading when it changes.
+2. `path` is ignored once cached, so `get_config('other.json')` returns the first file's data; fix by keying the cache by resolved path, not a single global.
+3. Deleting the cache (`_cache = None`) after writing is not a fix: it only works for writers inside this process and misses external edits, other processes, and deploy tooling.
+4. Removing the cache entirely and re-reading every call is not the right fix: it trades stale reads for a disk read plus JSON parse on every hot-path call and still races a half-written file.
+5. Adding a TTL (re-read every N seconds) is not a proper fix: it caps staleness rather than eliminating it and still re-reads when nothing changed; mtime check is both cheaper and exact.
+6. A file watcher (`watchdog`/inotify) is overkill and fragile here: it needs a background thread, misses events during startup, and behaves differently across platforms; stat-on-read is sufficient.
+7. Mutable shared dict returned by reference lets callers corrupt the cache in place; fix by returning a copy or a read-only mapping.
+8. No locking around the check-and-load, so concurrent first calls under threads can each load and race on assignment; fix by guarding the reload with a `threading.Lock`.
+9. mtime alone can miss same-second rewrites on coarse filesystems; fix by comparing `st_mtime_ns` together with `st_size`, or by hashing content if that matters.

@@ -1,0 +1,5 @@
+1. Module-level cache is never invalidated — fix: check file mtime/hash each call and reload if changed, or provide explicit `invalidate_config()`.
+2. Cache is a global singleton shared across all `path` arguments — fix: key the cache dict by `path`, not one shared `_cache`.
+3. Tempting fix "just reduce cache lifetime with a TTL poll" doesn't fix it — a TTL still serves stale data between polls and adds unnecessary latency; only a change-detection or explicit invalidation actually addresses staleness.
+4. Tempting fix "call `get_config()` again after writing the new config" doesn't help other processes/readers that already cached it — the root cause is in-memory caching with no invalidation signal, not the read path.
+5. Tempting fix "remove caching entirely, read the file every call" fixes staleness but reintroduces the I/O-per-call cost the cache existed for — acceptable only if config reads are rare/cheap, otherwise use mtime-check caching instead.

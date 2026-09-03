@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "fable-bare-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `data.total_cents` (now undefined)",
+  "P2": "`InvoiceBadge.tsx:9` matches `'paid'` (never renders), and `reconcile.py:64` checks `\"paid\"` and `total_cents` so settled invoices never reconcile",
+  "P3": "Inserting `Disputed` mid-enum renumbers `Paid` 2\u21923 and `Void` 3\u21924 while `invoices.state` stores the raw SMALLINT, so every existing Paid row reads back as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set `INVOICE_GRACE_DAYS`, which is now ignored, so prod grace silently drops from 21 to 7 days on deploy",
+  "P5": "`services/notifier/src/reminders.ts:57` still passes `cfg.INVOICE_GRACE_DAYS` positionally ... CI is not green for this change: `--filter='[origin/main]'` skips dependents, so notifier, reconciler-client and scripts were never typechecked or tested",
+  "P6": "`serializes a paid invoice` was gutted to `toBeTruthy`/`toBeDefined`; restore exact assertions ... un-skip it and make it pass",
+  "P7": "The \"consumers handle both shapes\" claim is contradicted by the author's own sweep",
+  "P8": "`toInvoiceResponse` also builds the `billing.invoice.updated` event payload in `events.ts`, so the shape break reaches every event subscriber ... enumerate subscribers",
+  "P9": "so fix these or version the endpoint ... or keep the event on the old serializer",
+  "P10": "change to `--filter='...[origin/main]'` and re-run",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps`, so the displayed `late_fee_cents` uses the hardcoded 150 while dunning uses `LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.45035,
+ "judge_wall_ms": 30157,
+ "graded_at": "2026-09-03T16:20:50+0100"
+}

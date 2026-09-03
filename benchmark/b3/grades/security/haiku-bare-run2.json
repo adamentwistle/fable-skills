@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-bare-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": false,
+  "S6": false,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL Injection vulnerability** (CRITICAL)  \n   String formatting allows attacker-controlled input directly into SQL.",
+  "S2": "Database connection leak** (HIGH)  \n   `conn.close()` is never called.",
+  "S3": "`order[0]` is an integer, but the code attempts string concatenation: `\"Order #\" + order[0]` crashes with `TypeError`.",
+  "S4": "Division by zero in average_order_value** (HIGH)  \n   Empty order list causes `ZeroDivisionError`",
+  "S5": "",
+  "S6": "",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "No error handling** (MEDIUM)  \n   Missing database file, corrupted database, or locked database crashes the caller with an uncaught exception.",
+  "S12": "",
+  "S13": "",
+  "S14": "Fragile tuple unpacking with magic indices** (MEDIUM)  \n   Code depends on tuple order (`order[0]`, `order[1]`) with no named fields."
+ },
+ "score": 6,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.10756299999999999,
+ "judge_wall_ms": 20126,
+ "graded_at": "2026-09-03T11:16:03+0100"
+}

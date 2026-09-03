@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing key `r['price']`/`r['qty']` \u2192 KeyError; catch/validate and skip or raise a named row error.",
+  "C2": "`price`/`qty` as `None` (null CSV cell) \u2192 TypeError in `float()/int()`; treat None as missing/invalid.",
+  "C3": "Non-numeric `price` (`\"abc\"`, `\"\"`) \u2192 ValueError from `float()`; validate/catch per row.",
+  "C4": "Currency symbols/commas in price (`\"$1,200.00\"`) \u2192 ValueError; strip formatting or reject with clear error.",
+  "C5": "`qty` as `\"3.0\"` string \u2192 `int()` throws on decimal strings; use `int(float(r['qty']))` or regex-validate.",
+  "C6": "`float` binary rounding error accumulating over many rows \u2192 money drifts from true sum; use `Decimal` (from `str`, not `float`) for all money math.",
+  "C7": "Negative price or qty (refunds/data errors) \u2192 silently flips total; decide policy (allow refunds vs reject negatives) explicitly.",
+  "C8": "`NaN`/`Infinity` strings (`\"nan\"`, `\"inf\"`) \u2192 `float()` accepts them, poisoning the sum; reject non-finite values explicitly.",
+  "C9": "no partial result, no indication which row) \u2192 wrap per-row parsing, collect errors with row index"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.09146300000000002,
+ "judge_wall_ms": 15664,
+ "graded_at": "2026-09-03T11:27:48+0100"
+}

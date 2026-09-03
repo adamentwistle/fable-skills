@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `counts` races across threads/workers \u2014 two concurrent requests can both read the same count and both pass, exceeding the limit",
+  "B2": "",
+  "B3": "use an atomic increment or per-key lock (e.g. `threading.Lock`, or a store with atomic INCR)",
+  "B4": "No sliding/fixed window or reset \u2014 once a user hits `limit` they're blocked forever, not per-interval",
+  "B5": "Unbounded growth of `counts` \u2014 entries are never evicted, so memory grows forever with new user_ids",
+  "B6": "with multiple workers/processes, each has its own counter, so the real limit is `limit * num_workers`",
+  "B7": "No input validation on `user_id`/`limit` \u2014 `None`, non-hashable, or negative/zero `limit` aren't handled"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07897299999999999,
+ "judge_wall_ms": 15245,
+ "graded_at": "2026-09-03T11:19:29+0100"
+}

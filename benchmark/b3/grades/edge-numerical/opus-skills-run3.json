@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-skills-run3",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `price`/`qty` key raises bare `KeyError` with no row number",
+  "C2": "`None` value (empty CSV cell parsed as None) raises `TypeError: float() argument must be...`",
+  "C3": "`\"\"` empty cell raises `ValueError: could not convert string to float: ''`",
+  "C4": "`\"$1,234.56\"`, `\"1 234,56\"`, trailing `%`, or a locale comma decimal all raise",
+  "C5": "`int(\"3.0\")` raises even though it's a plausible qty from a spreadsheet export",
+  "C6": "Money in binary floats \u2014 `float(price)` misprices; parse to `Decimal` (or integer cents)",
+  "C7": "Negative price or qty passes silently and reduces the total \u2014 validate sign",
+  "C8": "`float(\"nan\")` parses silently and poisons the total into `nan`",
+  "C9": "Bad-value errors carry no row identity \u2014 wrap parsing so the message is like `row 42: price='abc' is not a number`"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.084338,
+ "judge_wall_ms": 11654,
+ "graded_at": "2026-09-03T11:27:38+0100"
+}

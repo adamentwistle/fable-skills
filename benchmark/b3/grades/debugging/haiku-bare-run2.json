@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-bare-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never invalidates when file changes; check file's mtime and reload if changed.",
+  "A2": "TTL-based invalidation still returns stale data if the file changes before the TTL expires.",
+  "A3": "Removing the cache check re-reads every call, defeating caching's purpose.",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 3,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07342299999999999,
+ "judge_wall_ms": 10561,
+ "graded_at": "2026-09-03T11:19:31+0100"
+}

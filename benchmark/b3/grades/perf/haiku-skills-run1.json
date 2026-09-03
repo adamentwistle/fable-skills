@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 user queries: serialize_event independently fetches one user per event (~1000 round-trips) \u2192 batch into one query.",
+  "F2": "O(n\u00b2) dedupe: checking `in seen` on a list for 1.9k events \u2192 use set.",
+  "F3": "Blocking geo lookups: requests.get() in async handler stalls event loop, breaks /healthz \u2192 use async httpx.AsyncClient.",
+  "F4": "Missing DB index: query does full table scan of 4.2M rows for ~1.9k result \u2192 create (org_id, created_at DESC) index.",
+  "F5": "",
+  "F6": "Unbounded geo_cache: no eviction, grows to 2.1GB in 20h \u2192 add LRU or size-limit eviction.",
+  "F7": "",
+  "F8": "",
+  "F9": "No: proposal doesn't fix root causes (N+1 queries, blocking I/O, missing index, unbounded memory); spend resources on fixes 1\u201310 instead.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.159733,
+ "judge_wall_ms": 30946,
+ "graded_at": "2026-09-03T16:44:12+0100"
+}

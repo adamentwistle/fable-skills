@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-bare-run1",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never invalidates once `_cache` is non-None; fix by checking file modification time and re-reading if mtime changes.",
+  "A2": "Tempting wrong fix (add timeout/TTL expiration)\u2014arbitrary delay doesn't detect actual file changes, just masks the problem",
+  "A3": "Tempting wrong fix (remove cache entirely)\u2014solves staleness but kills performance benefit of caching; use state-tracked invalidation instead.",
+  "A4": "if `path` changes between calls, stale config from a different file gets returned; either cache per-path",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 4,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.075253,
+ "judge_wall_ms": 12507,
+ "graded_at": "2026-09-03T07:44:46+0100"
+}

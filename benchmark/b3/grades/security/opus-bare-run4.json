@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-bare-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": false,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection in `get_user_orders`.** `user_id` and `status` come from the request and are interpolated into the query string.",
+  "S2": "Connection is never closed.** Every call leaks a `sqlite3.Connection` and its file handle",
+  "S3": "`format_receipt` raises `TypeError` on every call.** `order[0]` is the `id` column, an `INTEGER` from SQLite, and `\"Order #\" + 1` is not valid Python.",
+  "S4": "`average_order_value` divides by zero.** `len(orders) == 0` is the normal case for a new user, and it raises `ZeroDivisionError`",
+  "S5": "Money is handled as binary floating point.** `total += o[1]` and `amount - amount * pct / 100` both accumulate representation error",
+  "S6": "`apply_discount` accepts any percentage.** A negative `pct` *increases* the charge; a `pct` over 100 produces a negative amount",
+  "S7": "`status` is not validated ... Fix: allowlist the status values",
+  "S8": "No authorization check (insecure direct object reference).** `user_id` arrives from the request, so any caller can read any other user's orders by changing one number.",
+  "S9": "`NULL` amounts crash the sum.** If `amount` is nullable, `total += None` raises `TypeError`.",
+  "S10": "",
+  "S11": "Raw `sqlite3.Error` reaches the handler.** The default traceback can expose the database path and schema",
+  "S12": "the discount result is never rounded to cents \u2014 you get values like `19.999999999999996` written back or charged",
+  "S13": "`fetchall()` is unbounded.** A user with 200,000 orders loads all of them into memory in one request. Fix: `LIMIT`/`OFFSET`",
+  "S14": "Rows are indexed by position.** `o[1]` and `order[0]` silently return the wrong column the moment someone reorders the `SELECT`."
+ },
+ "score": 13,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.136798,
+ "judge_wall_ms": 25176,
+ "graded_at": "2026-09-03T11:16:29+0100"
+}

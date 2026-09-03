@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`",
+  "P2": "`InvoiceBadge.tsx:9` checks `status === 'paid'`",
+  "P3": "`repo.ts` writes `state` directly to a SMALLINT column, so any row written before this deploy has old integer values that now decode to the wrong enum/status",
+  "P4": "still set in `infra/helm/billing/values.prod.yaml:31` (21) and `values.staging.yaml:29` (14) \u2014 after deploy, `BILLING_GRACE_PERIOD_DAYS` falls back to its new default of 7, silently changing prod grace period from 21 to 7 days",
+  "P5": "both compile only because `notifier`/`scripts` were skipped by CI's `[origin/main]` filter, not because they're compatible",
+  "P6": "Tests were weakened, not fixed: `expect(res.status).toBe('paid')`/`total_cents`/`currency` assertions replaced with `toBeTruthy()`/`toBeDefined()` ... Restore real value assertions.",
+  "P7": "both are in-repo, in-scope consumers that break, contradicting the \"consumer compatibility is covered\" claim (that note only addressed external mobile/reconciler)",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17040299999999997,
+ "judge_wall_ms": 24065,
+ "graded_at": "2026-09-03T16:21:28+0100"
+}

@@ -1,0 +1,11 @@
+1. **Root cause:** `_cache` is a module global that is filled once and the only reload condition is `_cache is None`, which is never true again, so the cache is never compared to the file's state and only a restart (which discards the global) resets it; fix by caching `os.stat(path).st_mtime_ns` and `st_size` alongside the parsed data and reloading whenever the current stat differs.
+2. `path` is ignored after the first call, so `get_config('other.json')` returns the first file's contents; key the cache by resolved absolute path.
+3. Compare the stored stat with `!=`, not `>`; a restored backup or `git checkout` can give the file an older mtime and a `>` check would keep serving the stale copy.
+4. Use `st_mtime_ns` plus size, not `os.path.getmtime`; second-resolution mtime misses two writes in the same second and mtime-preserving copies.
+5. **Non-fix:** a `reload_config()` that sets `_cache = None` is manual invalidation that only helps callers who know to call it; it leaves the bug in place for everyone else.
+6. **Non-fix:** `functools.lru_cache` or any memoize decorator is the same unconditional cache in a different spot, keyed on the path string rather than file contents, so it is equally stale.
+7. **Non-fix:** a TTL still serves stale values for up to the TTL and re-parses unchanged files needlessly; it narrows the window instead of removing the cause.
+8. Reading and parsing on every call does cure staleness but costs a parse per call and can read a half-written file; acceptable only if the config is tiny and calls are rare.
+9. A stat-then-open can land mid-write and see truncated JSON; on `JSONDecodeError` keep serving the previous cache, and have writers write to a temp file and `os.replace` it.
+10. Callers get the shared dict by reference, so one caller mutating it changes config for all others, which looks like "wrong values"; return a deep copy or a `MappingProxyType`.
+11. The check-then-load has no lock, so concurrent first calls parse twice and can interleave; wrap it in a `threading.Lock` (hygiene, not the staleness cause).

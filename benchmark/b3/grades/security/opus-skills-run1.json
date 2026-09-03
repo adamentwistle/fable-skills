@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "**SQL injection \u2014 critical.** `user_id` and `status` are interpolated into the query string with `%`.",
+  "S2": "**Connection is never closed \u2014 high.** No `try/finally` or context manager",
+  "S3": "**`format_receipt` raises `TypeError` on every call \u2014 high.** `order[0]` is the `id` column, an integer, and `\"Order #\" + 1` is not concatenable.",
+  "S4": "**`ZeroDivisionError` in `average_order_value` \u2014 high.** `len(orders)` is zero whenever the query matches nothing",
+  "S5": "**Money held in binary floats \u2014 high.** `total = 0.0`, `total += o[1]`, and `amount * pct / 100` all accumulate representation error",
+  "S6": "**No discount validation \u2014 high.** `apply_discount(100, 150)` returns `-50` ... Fix: require `0 <= pct <= 100`",
+  "S7": "**No status allowlist \u2014 high.** Even parameterized, an arbitrary `status` string is an unvalidated filter",
+  "S8": "**Missing authorization (IDOR) \u2014 critical.** The function filters by whatever `user_id` the request supplied.",
+  "S9": "**`NULL` amount crashes the sum \u2014 medium.** If `amount` is nullable, `total += None` raises `TypeError`",
+  "S10": "**Hardcoded `$` and no fixed decimals \u2014 medium.** `str(12.5)` renders as `12.5` ... Fix: format to exactly two decimals",
+  "S11": "**No error handling \u2014 medium.** ... a default framework error page can echo the message, leaking the schema or the database path.",
+  "S12": "**No rounding policy \u2014 medium.** `total / len(orders)` and the discount both produce values with more precision than a currency has, and nothing rounds them.",
+  "S13": "**Unbounded `fetchall` \u2014 medium.** No `LIMIT`.",
+  "S14": "**Positional tuple indexing \u2014 medium.** `o[1]` and `order[0]` encode the `SELECT` column order at three call sites."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14070300000000002,
+ "judge_wall_ms": 17831,
+ "graded_at": "2026-09-03T11:28:06+0100"
+}

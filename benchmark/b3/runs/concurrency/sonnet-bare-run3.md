@@ -1,0 +1,8 @@
+1. Read-then-write on `counts[user_id]` races across threads — under concurrency two requests can both pass the check before either increments, over-admitting; use a per-user lock or an atomic increment (e.g. `Lock`, `itertools.count`, or a `threading`-safe counter/Redis `INCR`).
+2. `counts` is a plain dict shared across threads with no synchronization — dict mutation isn't guaranteed atomic for this compound op; wrap increments in a lock or use `collections.Counter` with a lock/atomic primitive.
+3. State is in-process memory only — separate worker processes (gunicorn/uwsgi workers) each get their own `counts`, so the real limit is `limit * num_workers`; move state to a shared store like Redis.
+4. No time window — once a user hits `limit` they're blocked forever, not per minute/hour; add a window (fixed or sliding) with expiry/reset logic.
+5. `counts` grows unboundedly for every distinct `user_id` seen, with no eviction — memory leak; use a TTL/expiring store or periodic cleanup.
+6. No input validation on `user_id` — `None`, unhashable types, or malicious values aren't guarded; validate/normalize before using as a dict key.
+7. `limit` is caller-supplied per call and not tied to the user's stored state — inconsistent limits across calls for the same user produce undefined behavior; fix limit at user/config level, not per-call argument.
+8. Restart/deploy resets all counts to zero — no persistence, so a bad actor can bypass limits via forced restarts; back with persistent/shared storage if that matters for the use case.

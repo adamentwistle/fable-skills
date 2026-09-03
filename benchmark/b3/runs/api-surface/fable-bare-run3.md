@@ -1,0 +1,16 @@
+Do not merge. Items 1 to 10 block.
+
+1. BLOCKER: inserting `Disputed` mid-enum renumbers `Paid` 2→3 and `Void` 3→4 while `invoices.state` is a SMALLINT, so every existing paid row now reads as disputed, every void row as settled, and new paid writes (3) read as void to anything still on the old enum; append `Disputed` last or give every member an explicit value.
+2. BLOCKER: the `it.skip` round-trip test is not flaky, it is the test that catches item 1 (seeds 2 and 3, expects Paid and Void); un-skip it.
+3. BLOCKER: `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a number (or `undefined`, since `cfg.INVOICE_GRACE_DAYS` is now stripped) as `opts`, producing a TypeError or `NaN` fees; migrate both callers to the options object.
+4. BLOCKER: CI used `--filter='[origin/main]'`, which excludes dependents, so `@acme/notifier`, `@acme/scripts`, and `@acme/reconciler-client` were never typechecked or tested and "green" proves nothing about them; switch to `--filter='...[origin/main]'` and re-run.
+5. BLOCKER: `infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: "21"`, zod silently drops the unknown key, so prod falls to the 7-day default and customers 8 to 21 days overdue get late fees on the next dunning run; rename the key in prod and staging values (plus any gitignored `.env`/compose files rg cannot see) and make `ConfigSchema` fail when the old key is present.
+6. BLOCKER: the portal's own client reads `data.total_cents` (`useInvoice.ts:23`, now `undefined`) and tests `status === 'paid'` (`InvoiceBadge.tsx:9`, never true for `'settled'`); this is in-diff scope, not downstream; fix both and add a client test.
+7. BLOCKER: `services/reconciler/reconcile.py:64` checks `status == "paid"` and `total_cents`, so reconciliation silently matches no settled invoice after this ships; this contradicts the reviewer note's claim, so the mobile-app assurance cannot be taken on trust either.
+8. BLOCKER: `toInvoiceResponse` also feeds `billing.invoice.updated` in `events.ts`, so the event contract changes too, and the sweep covered only `apps services` with exact-match patterns; ship additively (keep `total_cents`, `currency`, and `paid`, or version the endpoint and event) and re-sweep `packages`, event subscribers, and looser patterns.
+9. BLOCKER: the serializer test was reduced to `toBeTruthy()`/`toBeDefined()`, which pass for any output; assert `'settled'`, `'125.00'`, `'GBP'`, and add a Disputed case.
+10. BLOCKER: `docs/runbooks/dunning.md:18` tells on-call to raise `INVOICE_GRACE_DAYS` to pause late fees, which now silently does nothing mid-incident; update the runbook in this PR.
+11. `invoiceRoutes.ts:88` omits `rateBps`, so the displayed `late_fee_cents` uses the hardcoded 150 while dunning charges `LATE_FEE_RATE_BPS`; pass the config value there and make `rateBps` required instead of duplicating the default in `lateFee.ts`.
+12. `Disputed` gets only a label; nothing shows whether dunning or reminders skip disputed invoices and no test covers the state; add explicit handling and a test.
+13. `total.amount` is a string from `toFixed(2)` while `late_fee_cents` stays an integer in cents in the same response; pick one representation and document the type.
+14. Signature, config key, enum values, and wire shape are all breaking, so `2.4.0` is wrong; bump to `3.0.0`.

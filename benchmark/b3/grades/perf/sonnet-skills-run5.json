@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "N+1 query: `serialize_event` does a per-row `SELECT ... FROM users` \u2014 for 1000 events that's 1000 round trips. Batch with one `WHERE id = ANY($1)` or a join.",
+  "F2": "O(n\u00b2) dedupe: ... Python dedupes with `if ev[\"dedupe_key\"] in seen` (list scan)",
+  "F3": "`lookup_geo` uses synchronous `requests.get` inside an `async def` handler, blocking the whole event loop",
+  "F4": "no index on `events(org_id, created_at)` \u2014 Postgres is scanning/sorting against 4.2M rows for every call",
+  "F5": "`_request_timings` is also appended to forever and never trimmed \u2014 bound it (ring buffer or reservoir)",
+  "F6": "`_geo_cache` is an unbounded dict that never evicts ... Bound it (LRU/TTL/max size).",
+  "F7": "After 2\u20137 land, re-measure p50/p95 for acme and northwind before deciding whether workers/pool size need to move at all.",
+  "F8": "",
+  "F9": "On-call's worker/pool bump: reject \u2014 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 DB connections ... only add it once the endpoint itself is fast",
+  "F10": "",
+  "F11": "`since` defaults to `datetime.now(timezone.utc) - 30d` computed fresh per request, so the cache key is different on almost every call and will essentially never hit"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.152703,
+ "judge_wall_ms": 22071,
+ "graded_at": "2026-09-03T16:45:14+0100"
+}

@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-bare-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": false,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "the cache is never invalidated \u2014 `_cache` is set once and no code path clears it, so disk changes are invisible for the process lifetime; fix by storing the file's mtime (and size) alongside the data and reloading when it differs",
+  "A2": "NOT a fix: adding a TTL/expiry timer \u2014 it only shortens the staleness window, still serves wrong values inside it",
+  "A3": "",
+  "A4": "Cache key ignores `path` \u2014 a second call with a different file returns the first file's data; fix by keying the cache dict on the resolved absolute path.",
+  "A5": "No thread safety \u2014 concurrent first calls can each load and race on assignment; fix by guarding the load with a module-level `threading.Lock`.",
+  "A6": "",
+  "A7": "",
+  "A8": "`if _cache is None` also re-reads on every call when the file legitimately holds `null` ... fix by using a sentinel object rather than `None` for \"unset\""
+ },
+ "score": 5,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.085123,
+ "judge_wall_ms": 14037,
+ "graded_at": "2026-09-03T11:19:45+0100"
+}

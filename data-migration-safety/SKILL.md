@@ -49,4 +49,6 @@ Migrations live wherever THIS project keeps them (some repos gitignore the migra
 
 ## Report
 
+When the deliverable is a review of someone else's migration, do the arithmetic on their own numbers (row counts, batch sizes, a staging rate scaled to production volume, a log's final count against the before-count) and report the result as a finding. A count that does not reconcile or a duration that does not fit the window is the finding; "might be slow on prod" is not.
+
 Include: the reader/writer list, before-count, dry-run count, after-count reconciliation (migrated/remaining/errored), sample IDs verified through the read path, where it ran, and the rollback path.

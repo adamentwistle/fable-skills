@@ -38,7 +38,7 @@ Then try to break it: if this were true, what else would be broken, and what wou
 
 Re-run the exact stage-1 command and compare the output to the recorded expectation. Then run the surrounding suite for collateral damage. "The code looks right now" and "the new test passes" are not verification — the original repro passing is.
 
-Report: the cause sentence, the repro command, before/after output, and any mitigation or unreproduced behavior.
+Report: the cause sentence, the repro command, before/after output, and any mitigation or unreproduced behavior. When the deliverable is a findings list rather than a fix, the reproduction-and-verification step is one of the findings, on its own line: name the exact action that shows the failure and the check that proves the fix. A list of causes with no way to confirm them is a hypothesis list.
 
 ## When a fix attempt fails
 

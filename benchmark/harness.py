@@ -518,22 +518,36 @@ def cmd_init_legacy(args):
     suite_dir = BENCH / args.suite
     for area, (title, discipline) in LEGACY.items():
         src = BENCH / "tasks" / area
-        key = (src / "answer-key.md").read_text(encoding="utf-8")
+        key = strip_provenance((src / "answer-key.md").read_text(encoding="utf-8"))
         ids = re.findall(r"^- ([A-Z]+\d+)\b(.*)$", key, re.M)
+        numbered = [] if ids else re.findall(r"^(\d+)\.\s+(.*)$", key, re.M)
         apply_block = (src / "prompt-skills.md").read_text(encoding="utf-8")
-        skills = re.findall(r"^- ([a-z-]+):", apply_block, re.M)
+        skills = (re.findall(r"^- ([a-z-]+):", apply_block, re.M)
+                  or re.findall(r"^=+ SKILL: ([a-z-]+) =+", apply_block, re.M))
         if not skills:
             skills = [discipline, "workmanship"]
             say(f"  {area}: no skill list found in prompt-skills.md, using {skills}")
-        items = [{"id": i, "short": re.sub(r"\s+", " ", d).strip(" :-")[:60]} for i, d in ids]
         out = suite_dir / "tasks" / area
         out.mkdir(parents=True, exist_ok=True)
         rel = os.path.relpath(src, out).replace(os.sep, "/")
+        note = "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+        key_file = f"{rel}/answer-key.md"
+        if numbered:
+            # Benchmark 1's key is a plain numbered list; give each line a stable id without changing its wording.
+            prefix = area[0].upper()
+            items = [{"id": f"{prefix}{n}", "short": re.sub(r"\s+", " ", d).strip()[:60]} for n, d in numbered]
+            lines = [f"ANSWER KEY - {len(items)} items. Mark an item Y only if the output genuinely identifies that specific point."]
+            lines += [f"- {prefix}{n} {d.strip()}" for n, d in numbered]
+            (out / "answer-key.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+            key_file = "answer-key.md"
+            note += f" Answer key normalised from the recovered numbered list into id'd bullets ({prefix}1..{prefix}{len(items)}); wording verbatim."
+        else:
+            items = [{"id": i, "short": re.sub(r"\s+", " ", d).strip(" :-")[:60]} for i, d in ids]
         (out / "task.json").write_text(json.dumps({
             "area": area, "title": title, "discipline": discipline, "skills": skills,
-            "prompt_file": f"{rel}/prompt-bare.md", "answer_key_file": f"{rel}/answer-key.md",
+            "prompt_file": f"{rel}/prompt-bare.md", "answer_key_file": key_file,
             "output_format": "numbered-findings", "items": items, "max_score": len(items),
-            "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task.",
+            "design_notes": note,
         }, indent=1) + "\n", encoding="utf-8")
         say(f"  {area}: {len(items)} items, skills={skills}")
 

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "`Order.from_row` calls `OrderState(row[\"state\"])` unconditionally; every existing order is `state=NULL` right after the app deploy until backfill finishes, so every order read (API GET/list) throws for that whole window",
+  "M4": "`MAPPING` CASE has no branch for `'PAID'`, `'canceled'`, `'complete'`, or NULL status (7,764 prod rows) \u2014 those rows stay `state=NULL` forever, so 0143's `NOT NULL` will fail",
+  "M5": "against a `WHERE state IS NULL` set that shrinks every batch, so each OFFSET skips rows ... paginate by last-seen id instead of OFFSET",
+  "M6": "prod is 61.4M rows (~29x) inside one single `conn.transaction()` \u2014 a multi-hour transaction holds locks and bloats, lagging both streaming replicas the whole time \u2014 commit per batch",
+  "M7": "`jobs/nightly_finance_export.py` (unchanged, lives under `jobs/` not `app/`) still selects `o.status`, which 0143 drops \u2014 the 02:00 UTC job breaks the next morning",
+  "M8": "confirm `count(*) WHERE state IS NULL = 0` before trusting any run",
+  "M9": "staging's own log proves it (2,104,377 to backfill, only 1,055,000 updated, no error, script reported \"done\")",
+  "M10": "0143's `downgrade()` recreates `status` as empty/nullable with no data restored \u2014 rollback after 0143 is not actually reversible",
+  "M11": "Staging backfill took 11 min for 2.1M rows; prod is 61.4M rows (~29x) ... a multi-hour transaction",
+  "M12": ""
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.176458,
+ "judge_wall_ms": 21478,
+ "graded_at": "2026-09-03T21:34:10+0100"
+}

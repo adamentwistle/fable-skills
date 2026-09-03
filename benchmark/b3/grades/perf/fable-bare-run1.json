@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "fable-bare-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": true,
+  "F9": true,
+  "F10": true,
+  "F11": true
+ },
+ "citations": {
+  "F1": "N+1: one `users` fetchrow per event, awaited sequentially, is ~1,000 round trips per request",
+  "F2": "Dedupe uses a list for `seen`, so it's O(n\u00b2) per request",
+  "F3": "`lookup_geo` calls blocking `requests.get` (2 s timeout) inside the async handler ... freezing the event loop for the whole worker; switch to `httpx.AsyncClient`",
+  "F4": "no index on `(org_id, created_at)`, so every call seq-scans 4.2M rows; `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` grows forever ... replace with a bounded `deque(maxlen=...)` or a proper histogram",
+  "F6": "`_geo_cache` is unbounded and per worker, so every unique client IP ever seen is held 4\u00d7 per pod; replace with a size-capped TTL cache",
+  "F7": "Verify the fix under load: acme p95 under 0.5 s in Datadog, `/healthz` answers during a 1,000-event request",
+  "F8": "is ~1,000 round trips per request and most of the gap between the 1.4 s query and the 6 s p50",
+  "F9": "Do not ship the proposal: 16 workers \u00d7 50 conns \u00d7 6 pods = 4,800 Postgres connections ... Revisit caching only after 3 to 9 land and only if the numbers still demand it",
+  "F10": "Confirm the leak split before closing: expose `len(_geo_cache)` and `len(_request_timings)` temporarily, or run tracemalloc on one pod",
+  "F11": "the Redis key includes `since`, which for the mobile client is `now() - 30d` at microsecond precision, so it would never hit"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171583,
+ "judge_wall_ms": 26539,
+ "graded_at": "2026-09-03T21:34:46+0100"
+}

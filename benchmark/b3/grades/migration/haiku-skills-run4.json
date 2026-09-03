@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run4",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "Production data contains 7,764 rows with status values not in the MAPPING: 5,210 'PAID' (uppercase), 1,988 'canceled' (variant), 417 'complete' (unknown), 149 NULL. These will remain state=NULL after the backfill. Migration 0143's `ALTER COLUMN state NOT NULL` will fail.",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py will crash**: The export SQL still selects `o.status` (line 5), which doesn't exist after migration 0143 drops it.",
+  "M8": "After backfill, require `SELECT count(*) FROM orders WHERE state IS NULL` to return 0. This gate is missing from the rollout plan.",
+  "M9": "Output shows \"done: 1055000 rows updated\" from 2,104,377 rows (~50%). Why was only half the table backfilled?",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 4,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.150983,
+ "judge_wall_ms": 15099,
+ "graded_at": "2026-09-03T21:33:17+0100"
+}

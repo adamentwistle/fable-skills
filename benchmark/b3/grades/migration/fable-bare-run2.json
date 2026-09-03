@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "fable-bare-run2",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Required before 0143 at all: ship the app switched to state with dual-write for a full release, including the finance export, then drop status in release 2026.37 or later.",
+  "M2": "New code inserts without `status`, so old pods during the rolling deploy, the replicas, and any status reader see NULL for new orders; dual-write status and state in this release.",
+  "M3": "New code reads `OrderState(row[\"state\"])` while most rows still have NULL state (step 2 precedes step 3), so every get_order on an existing order raises; read state with fallback to mapped status until the backfill is verified.",
+  "M4": "MAPPING returns NULL for `PAID`, `canceled`, `complete`, and null status (7,764 rows), so 0143's SET NOT NULL fails on prod",
+  "M5": "Backfill OFFSET over a shrinking `state IS NULL` set skips every other batch ... paginate by keyset (`WHERE id > last_id`) or drop OFFSET and always take the first batch.",
+  "M6": "Backfill runs 61M updates in one transaction, holding xmin for hours, bloating, lagging both replicas, and rolling back entirely if the pod dies; commit per batch",
+  "M7": "jobs/nightly_finance_export.py reads `o.status`; the grep was app/ only, so 0143 breaks the 02:00 Friday export and Finance's Looker load",
+  "M8": "Required between steps 3 and 4: verify `count(*) WHERE state IS NULL` is 0 on the primary, compare a status/state crosstab",
+  "M9": "the staging log proves it (1,055,000 of 2,104,377 updated, half left NULL)",
+  "M10": "0143 drops `status` with its data, and the downgrade recreates it empty, so there is no rollback; keep the column for at least one release after readers are switched and verified.",
+  "M11": "Backfill runtime on prod extrapolates to roughly 10 hours from the staging rate, so it cannot sit inside the Thursday window",
+  "M12": "0143 `SET NOT NULL` takes ACCESS EXCLUSIVE and scans 61M rows; add `CHECK (state IS NOT NULL) NOT VALID`, VALIDATE it, then SET NOT NULL"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171913,
+ "judge_wall_ms": 18315,
+ "graded_at": "2026-09-03T21:32:43+0100"
+}

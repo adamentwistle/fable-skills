@@ -1,0 +1,12 @@
+1. Do not ship the on-call proposal: 16 workers × 50 connections × 6 pods is 4,800 Postgres connections, and more workers multiplies the per-worker memory leak so pods OOM sooner; the Redis cache never hits because `since` defaults to `now() - 30d` with microsecond precision and the mobile client omits it, so every key is unique.
+2. Confirm the plan with `EXPLAIN (ANALYZE, BUFFERS)` on the logged query for org 4127: there is no index on `(org_id, created_at)`, so every call sequential-scans 4.2M rows, which is the whole 1.2-1.6 s.
+3. Ship first, no code change: `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC)`; re-check the slow-query log goes quiet.
+4. `/healthz` stalls and probe restarts: `lookup_geo` calls sync `requests.get` (2 s timeout) inside the async handler, once per uncached IP, blocking the event loop for the whole worker; switch to an async client or `run_in_threadpool`, and resolve the distinct IPs of the page once, not per event.
+5. Better: resolve geo at ingest and store city/country on the row, so the read path never calls a third party at all.
+6. Memory leak: `_request_timings` appends a float for every request forever (120 req/s × 20 h ≈ 8.6M entries per worker × 4 workers) and `_geo_cache` grows unbounded per IP; replace with `collections.deque(maxlen=N)` or a real histogram, and a TTL/LRU cache for geo.
+7. `/internal/metrics` sorts a copy of that whole list on every scrape, doubling memory transiently and blocking the loop; fixed by step 6.
+8. N+1: one `users` query per event, up to 1000 sequential round trips per request; fetch all actors in one `WHERE id = ANY($1)` query or JOIN in the main SELECT.
+9. Dedupe is O(n²) (`seen` is a list) and `limit` is applied in Python after fetching every row in the window; do `DISTINCT ON (dedupe_key)` in a subquery, then `ORDER BY created_at DESC LIMIT $3`, and make `seen` a set if any Python dedupe remains.
+10. Reject naive `since` values (or normalize to UTC) so asyncpg cannot fail comparing them with `timestamptz`.
+11. Verify: load-test org 4127 at limit=1000 targeting sub-200 ms p95, hit `/healthz` during the run with the probe's 3 s timeout, and watch pod RSS stay flat over 24 h before closing.
+12. Only after that, revisit pool and worker sizes with actual numbers; nothing in this ticket needs them raised.

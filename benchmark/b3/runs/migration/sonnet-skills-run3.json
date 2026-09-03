@@ -1,0 +1,59 @@
+{
+ "area": "migration",
+ "model_alias": "sonnet",
+ "canonical_models": [
+  "claude-sonnet-5"
+ ],
+ "condition": "skills",
+ "run": 3,
+ "skills": [
+  "data-migration-safety",
+  "workmanship"
+ ],
+ "skills_mode": "system-prompt",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.1318392,
+ "duration_api_ms": 102423,
+ "wall_ms": 106225,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 8687,
+  "cache_read_input_tokens": 37836,
+  "output_tokens": 8952,
+  "output_tokens_details": {
+   "thinking_tokens": 7679
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 8687,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 8952,
+    "cache_read_input_tokens": 37836,
+    "cache_creation_input_tokens": 8687,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 8687
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "119631b0-cdcb-404b-9c23-5da4111e1ad0",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T21:28:52+0100"
+}

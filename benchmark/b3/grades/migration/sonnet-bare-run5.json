@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "M1": false,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": false,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "new pod's `INSERT` never sets `status` at all ... fix by dual-writing both columns until 0143 drops the old one",
+  "M3": "`Order.from_row` calls `OrderState(row[\"state\"])` with no None-handling \u2014 any order whose `state` is still NULL (every unbackfilled row, right after step 2 deploys) raises immediately",
+  "M4": "prod has `PAID`, `canceled`, `complete`, and NULL status (7,764 rows per the query in the description) \u2014 those rows get `state = NULL` forever",
+  "M5": "the `WHERE state IS NULL` set it's paging over shrinks with every UPDATE \u2014 OFFSET silently skips whole batches of never-processed rows; fix by keyset pagination",
+  "M6": "The whole backfill runs inside one `conn.transaction()` wrapping every batch ... any mid-run failure loses all progress; fix by committing per batch, not once at the end.",
+  "M7": "`jobs/nightly_finance_export.py` still reads `o.status` and filters on it, but the author's grep was scoped to `app/` and missed `jobs/`",
+  "M8": "assert `SELECT count(*) FROM orders WHERE state IS NULL` returns 0 (and reconcile any stragglers) \u2014 the plan currently goes straight from \"run backfill\" to \"drop status,\" with no verification gate",
+  "M9": "",
+  "M10": "",
+  "M11": "at staging's measured rate (11 min / 2.1M rows) prod's 61M rows is ~5+ hours in a single open transaction",
+  "M12": "it's a blocking full-table scan under `ACCESS EXCLUSIVE` on 61M rows \u2014 fix by using a `NOT VALID` check constraint + `VALIDATE CONSTRAINT` first"
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.19389299999999998,
+ "judge_wall_ms": 30410,
+ "graded_at": "2026-09-03T21:34:23+0100"
+}

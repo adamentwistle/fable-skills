@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "M1": false,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "make `mark_paid` write/check both columns until 0143 lands",
+  "M3": "`WHERE status='pending'` and `WHERE state=PENDING` both silently match 0 rows), and `mark_paid` doesn't check rowcount, so the webhook gets a false 2xx and the provider never retries \u2014 payment gets stuck",
+  "M4": "Backfill's CASE has no branch for 'PAID', 'canceled', 'complete', or NULL status (7,764 prod rows) \u2014 they map to NULL forever and block step 4's NOT NULL",
+  "M5": "paginates with LIMIT/OFFSET against a `state IS NULL` filter that shrinks as rows get updated \u2014 later offsets skip rows outright",
+  "M6": "",
+  "M7": "`jobs/nightly_finance_export.py` (outside `app/`, missed by the grep) still selects `o.status` \u2014 it hard-fails at 02:00 UTC the first night after `0143` drops the column",
+  "M8": "Before step 4: query `SELECT count(*) FROM orders WHERE state IS NULL` and require 0",
+  "M9": "",
+  "M10": "`0143`'s `downgrade()` re-adds `status` but never repopulates it from `state` \u2014 a rollback after 0143 has run leaves old code reading a permanently empty `status`",
+  "M11": "scaled to prod's 61.4M rows is 5+ hours, and OFFSET cost grows with table size so it'll be worse \u2014 this doesn't fit Thursday's window",
+  "M12": "`ALTER COLUMN state SET NOT NULL` forces a full-table scan on a live 61M-row table every order write touches \u2014 add a `NOT VALID` CHECK constraint"
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.219263,
+ "judge_wall_ms": 44967,
+ "graded_at": "2026-09-03T21:34:45+0100"
+}

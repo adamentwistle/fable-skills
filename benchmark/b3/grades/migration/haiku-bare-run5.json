@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-bare-run5",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "Backfill script MAPPING doesn't handle 'PAID' (5,210 prod rows), 'canceled' (1,988 rows), 'complete' (417 rows), or NULL (149 rows); these will remain state=NULL and cause migration 0143's ALTER NOT NULL to fail.",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py still queries `o.status` (unchanged file, line 5). After 0143 drops the column, this nightly job will crash.",
+  "M8": "Before running 0143 in prod, add a verification step: `SELECT COUNT(*) FROM orders WHERE state IS NULL` must return 0.",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 3,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.153638,
+ "judge_wall_ms": 14454,
+ "graded_at": "2026-09-03T21:33:07+0100"
+}

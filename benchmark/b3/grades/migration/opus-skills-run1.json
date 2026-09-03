@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run1",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "`0143` is the contract step and belongs in a later release, not the same window as the expand \u2014 ship it days after `state` has run in production",
+  "M2": "No expand phase: during the ~6-min rolling deploy old pods write `status` only (state NULL, missed by a completed backfill) and new pods write `state` only ... write both columns for one full release, read either.",
+  "M3": "`mark_paid` silently no-ops while a row has `state` NULL and `status='pending'`: the UPDATE matches 0 rows, the handler still returns 2xx, the provider does not retry",
+  "M4": "The `CASE` has no `ELSE`, so `PAID` (5210), `canceled` (1988), `complete` (417) and NULL (149) \u2014 7,764 rows ... silently map to NULL",
+  "M5": "The backfill skips about half the rows: `OFFSET` advances by 5000 while the `state IS NULL` set shrinks by 5000 each batch \u2014 switch to keyset paging",
+  "M6": "The entire loop is inside one `conn.transaction()` \u2014 commit per batch, or nothing is resumable and a multi-hour transaction on the primary blocks vacuum",
+  "M7": "`jobs/nightly_finance_export.py` selects `o.status` and filters `o.status IN ('paid','shipped')`; step 4 breaks the 02:00 UTC export",
+  "M8": "add a gate between steps 3 and 4: `SELECT count(*) FROM orders WHERE state IS NULL` must return 0.",
+  "M9": "The staging log is that bug, not a success: it stops at 211 batches (`done: 1055000`) ... leaving ~1,049,377 staging rows NULL and unnoticed",
+  "M10": "`0143`'s downgrade recreates an empty `status` column, so the free-text values are gone for good \u2014 snapshot `id, status` into a backup table",
+  "M11": "staging did 1,000,000 rows in 627s \u2248 1,600 rows/s, so 61,437,902 rows is ~10.7 hours at best",
+  "M12": "`SET NOT NULL` takes ACCESS EXCLUSIVE and full-scans 61M rows \u2014 add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17440799999999998,
+ "judge_wall_ms": 16753,
+ "graded_at": "2026-09-03T21:33:40+0100"
+}

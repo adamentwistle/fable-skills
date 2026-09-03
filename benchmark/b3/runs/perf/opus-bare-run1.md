@@ -1,0 +1,15 @@
+1. Do not ship the on-call proposal as written — both halves make things worse; the index and the blocking-call fix below are the actual ship-today items.
+2. Workers 4→16 with pool max 10→50 gives 16×50×6 = 4,800 possible Postgres connections against a typical max_connections of 100; it also multiplies the per-process leak, so the OOM arrives sooner, not later.
+3. The Redis cache keys on `since`, which the mobile client never sends, so the handler resolves it to `datetime.now()` — every request produces a fresh key and the hit rate is ~0 unless you key on the *unresolved* param.
+4. `_request_timings` grows forever, one float per request across all routes — 120 req/s for 20 h is ~8.6M entries and hundreds of MB; that is your RSS curve. Replace with a fixed-size `collections.deque(maxlen=...)` or running histogram buckets.
+5. `_geo_cache` is a second unbounded leak keyed on client IP with no eviction — cap it with an LRU or TTL.
+6. `/internal/metrics` sorts that entire list on every scrape, synchronously — bounding the deque fixes this too, but the sort still belongs off the event loop or in precomputed buckets.
+7. `lookup_geo` calls `requests.get` (blocking, 2 s timeout) from inside an `async def` handler, so every cache miss freezes the whole worker's event loop — that is why `/healthz` stops answering and the 3 s liveness probe restarts pods. Switch to `httpx.AsyncClient`, or drop geo from the hot path entirely.
+8. Worst case that handler makes 1,000 sequential external HTTP calls at 2 s each on a cold cache; batch them, or resolve geo at write time and store it on the row.
+9. `events` has no index supporting `WHERE org_id = $1 AND created_at >= $2 ORDER BY created_at DESC` — it scans 4.2M rows for 1,912. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.
+10. The SQL has no `LIMIT`: it pulls every row in the window (including `payload` JSONB) and then slices to `limit` in Python. Push dedupe and limit into the query — `DISTINCT ON (dedupe_key)` ordered appropriately, or a `row_number()` window — with `LIMIT $3`.
+11. Dedupe uses `if ev["dedupe_key"] in seen` against a *list*, which is O(n²) — make `seen` a `set` (moot once step 10 lands).
+12. `serialize_event` issues one `fetchrow` per event, so limit=1000 is 1,000 extra round trips on one pooled connection — join `users` in the main query, or batch with `WHERE id = ANY($1)`.
+13. `org_id` comes straight off the path with no check that the caller belongs to that org — any authenticated user can read any org's activity feed.
+14. `since` is unbounded, so `?since=1970-01-01&limit=1000` scans the full 4.2M-row table — clamp the window and move to keyset pagination on `(created_at, id)`.
+15. After the index and the SQL limit land, re-run `EXPLAIN (ANALYZE, BUFFERS)` on the acme parameters and confirm the slow-query log goes quiet before touching worker or pool counts at all.

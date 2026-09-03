@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run2",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "Prod data has unmapped statuses (PAID uppercase, canceled American spelling, complete, null totaling 7,764 rows) not covered by the CASE mapping",
+  "M5": "Backfill script uses OFFSET-based pagination; ... rows are skipped ... rewrite with id-based pagination (`WHERE id > last_id`)",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py references `o.status` which migration 0143 drops",
+  "M8": "Before running migration 0143, verify: `SELECT status, COUNT(*) FROM orders WHERE state IS NULL GROUP BY status;` must return empty.",
+  "M9": "staging shows ~50% completion",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 5,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.153723,
+ "judge_wall_ms": 16800,
+ "graded_at": "2026-09-03T21:33:16+0100"
+}

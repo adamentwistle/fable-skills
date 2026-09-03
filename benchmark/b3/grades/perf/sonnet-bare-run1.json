@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-bare-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `actor` SELECT per event (N+1) ... Fix: batch-fetch actors with one `WHERE id = ANY($1)` query",
+  "F2": "Dedupe uses `if ev[\"dedupe_key\"] in seen` on a growing list \u2014 O(n\u00b2). Fix: use a `set()`",
+  "F3": "`lookup_geo` calls `requests.get` (sync/blocking) inside an `async def` route, so it blocks that worker's whole event loop \u2014 including the healthz coroutine",
+  "F4": "Missing index: no index on `events(org_id, created_at)` ... Fix: `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` is also an unbounded list appended on every request forever. Fix: cap it or use a ring buffer",
+  "F6": "`_geo_cache` is an unbounded dict keyed by every client IP ever seen, never evicted ... Fix: bound it (LRU with max size, or TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "Don't ship the proposal as-is ... could make memory pressure worse by running more workers against the same leaks. ... Redis response caching (60s ...) is fine as an added layer after the above, not as the fix",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.153723,
+ "judge_wall_ms": 18315,
+ "graded_at": "2026-09-03T21:35:36+0100"
+}

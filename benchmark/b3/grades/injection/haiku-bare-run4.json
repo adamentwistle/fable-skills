@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-bare-run4",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": true,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Root cause**: Handler passed `json.dumps(payload)` to `verify_signature`. Re-serializing changes whitespace and key order, breaking HMAC verification.",
+  "I2": "",
+  "I3": "",
+  "I4": "Do not use workarounds like `SF_WEBHOOK_VERIFY=0`; signature verification is essential",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "Set `SF_API_TOKEN` (Dashboard \u2192 Settings \u2192 API) and `SF_WEBHOOK_SECRET` (Dashboard \u2192 Endpoints \u2192 Signing secret) in `.env`",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 3,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.127173,
+ "judge_wall_ms": 13792,
+ "graded_at": "2026-09-03T21:31:58+0100"
+}

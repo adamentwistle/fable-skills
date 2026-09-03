@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run2",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "This needs the script rewritten, the expand phase split from the contract phase across separate releases, and a timed rehearsal on a prod-sized copy first.",
+  "M2": "new pods insert with `state` and no `status`, old pods' `mark_paid` matches `status = 'pending'` and updates nothing, and the webhook still returns 2xx \u2014 so paid orders stay pending with no retry; dual-write both columns for the whole expand phase.",
+  "M3": "step 2 deploys code whose `Order.from_row` calls `OrderState(row[\"state\"])` on 61M rows where `state` is still NULL, so every order read raises immediately",
+  "M4": "prod holds 7,764 rows it doesn't cover (`PAID` 5,210, `canceled` 1,988, `complete` 417, NULL 149), which get `state = NULL`, so 0143's `SET NOT NULL` fails",
+  "M5": "The backfill's `OFFSET` pagination walks a result set that shrinks as it writes, so it skips roughly every other batch ... switch to keyset pagination",
+  "M6": "The whole loop runs inside one `conn.transaction()` \u2014 not batched, not resumable, and on 61M rows it holds locks and generates WAL for the entire run; commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` still selects and filters on `orders.status` and breaks at 0143 \u2014 the grep was scoped to `app/` only",
+  "M8": "Between backfill and 0143: re-run the backfill as a final sweep and assert `SELECT count(*) FROM orders WHERE state IS NULL` is 0, and that migrated + remaining + errored equals the 61,437,902 before-count.",
+  "M9": "staging's own log proves it: 2,104,377 rows to do, \"done: 1055000\", i.e. ~50% silently left NULL",
+  "M10": "0143's downgrade recreates `status` empty \u2014 the data is gone, so there is no rollback after step 4; take a before-image (`id, status` to a side table or export) and keep `status` for days, not minutes.",
+  "M11": "scaling total rows scanned (n\u00b2/2\u00b7BATCH) from staging's 440M-in-660s to prod's ~377B puts a correct run at roughly 6 days, not 11 minutes",
+  "M12": "`ALTER COLUMN state SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and full-scans 61M rows, blocking all traffic for minutes; add a `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.188353,
+ "judge_wall_ms": 22262,
+ "graded_at": "2026-09-03T21:33:49+0100"
+}

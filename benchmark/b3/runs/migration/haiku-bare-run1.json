@@ -1,0 +1,56 @@
+{
+ "area": "migration",
+ "model_alias": "haiku",
+ "canonical_models": [
+  "claude-haiku-4-5-20251001"
+ ],
+ "condition": "bare",
+ "run": 1,
+ "skills": [],
+ "skills_mode": "none",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.076193,
+ "duration_api_ms": 113368,
+ "wall_ms": 120902,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 9,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 35390,
+  "output_tokens": 14529,
+  "output_tokens_details": {
+   "thinking_tokens": 14258
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 0,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 9,
+    "output_tokens": 14529,
+    "cache_read_input_tokens": 35390,
+    "cache_creation_input_tokens": 0,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 0
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "1898b1d9-5d8b-401f-b88b-bc5297d93e52",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T21:23:28+0100"
+}

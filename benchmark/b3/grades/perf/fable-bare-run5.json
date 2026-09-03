@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "fable-bare-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "N+1: one `users` query per event, up to 1000 sequential round trips per request; fetch all actors in one `WHERE id = ANY($1)` query or JOIN in the main SELECT.",
+  "F2": "Dedupe is O(n\u00b2) (`seen` is a list) and `limit` is applied in Python after fetching every row in the window; ... make `seen` a set if any Python dedupe remains.",
+  "F3": "`lookup_geo` calls sync `requests.get` (2 s timeout) inside the async handler, once per uncached IP, blocking the event loop for the whole worker; switch to an async client or `run_in_threadpool`",
+  "F4": "there is no index on `(org_id, created_at)`, so every call sequential-scans 4.2M rows ... `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` appends a float for every request forever (120 req/s \u00d7 20 h \u2248 8.6M entries per worker \u00d7 4 workers) ... replace with `collections.deque(maxlen=N)` or a real histogram",
+  "F6": "`_geo_cache` grows unbounded per IP; ... and a TTL/LRU cache for geo",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal: 16 workers \u00d7 50 connections \u00d7 6 pods is 4,800 Postgres connections, and more workers multiplies the per-worker memory leak so pods OOM sooner; the Redis cache never hits",
+  "F10": "",
+  "F11": "the Redis cache never hits because `since` defaults to `now() - 30d` with microsecond precision and the mobile client omits it, so every key is unique"
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.177718,
+ "judge_wall_ms": 30644,
+ "graded_at": "2026-09-03T21:35:14+0100"
+}

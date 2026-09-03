@@ -1,0 +1,19 @@
+1. `MAPPING` CASE has no ELSE, so `PAID`, `canceled`, `complete`, and NULL status (7,764 prod rows) map to `state = NULL` forever — add an explicit else branch and get a product decision on what `complete` maps to.
+2. Those same NULL-state rows will make 0143's `ALTER COLUMN state SET NOT NULL` fail outright — fix the mapping and drive `state IS NULL` to 0 before running 0143.
+3. Backfill paginates with `OFFSET` over `WHERE state IS NULL`, a set that shrinks as rows are updated mid-run, so later batches skip rows — switch to keyset pagination (`WHERE id > :last_id AND state IS NULL`).
+4. The pasted staging log proves this: total was 2,104,377 but the run printed "done: 1055000 rows updated" — roughly half the rows were never touched, this isn't a clean staging pass.
+5. `done += BATCH` increments regardless of how many rows the UPDATE actually touched, so the completion count is fabricated — use `cur.rowcount` and reconcile migrated + remaining + errored against the starting total.
+6. The whole backfill runs inside one `conn.transaction()`, so any mid-run failure rolls back everything already done, contradicting "safe to re-run" — commit per batch.
+7. Staging (2.1M rows) to prod (61.4M rows) is a ~29x jump; even a naive linear extrapolation of the claimed 11 min is 5+ hours, before the OFFSET-skip and single-transaction issues make it worse — get a real prod-scale timing run, not a staging one, before scheduling a window.
+8. `alter_column("state", nullable=False)` on 61M rows takes a full-table scan under an ACCESS EXCLUSIVE lock, blocking all reads/writes to `orders` — add `CHECK (state IS NOT NULL) NOT VALID`, validate it separately, then the NOT NULL alter becomes metadata-only.
+9. `service.py` now inserts orders with only `state` set, never `status` — between step 2 (app deployed) and step 4 (status dropped), every new order has `status = NULL`, and `jobs/nightly_finance_export.py` filters `WHERE o.status IN ('paid','shipped')`, so Finance's 02:00 UTC export silently drops all orders created after Thursday's deploy.
+10. After 0143 drops `status` entirely, that same nightly job's query breaks outright (column doesn't exist) — migrate it to `state` and deploy it before 0143, not after.
+11. The reader grep was scoped to `app/`, which is exactly why `jobs/nightly_finance_export.py` was missed — re-grep `status` repo-wide (and any other service touching `orders` directly) before trusting the reader list.
+12. `app/api/orders.py` maps `status` to `OrderState` by name; confirm it has explicit handling for `complete`, since that value exists in prod with no matching enum member.
+13. 0143's `downgrade()` re-adds `status` as an empty column with no data restored, so rollback after cutover doesn't actually recover anything — document that this migration isn't meaningfully reversible once traffic has moved.
+14. No dry-run mode and no count-reconciliation step in the backfill script — add both; right now the script's own output (see #4) can't be trusted as proof of a correct run.
+15. Required before step 3: fix the mapping (finding 1), switch to keyset pagination and per-batch commits (findings 3, 6), and re-test against a prod-sized/prod-shaped dataset including the dirty status values.
+16. Required between step 3 and step 4: confirm `SELECT count(*) FROM orders WHERE state IS NULL` is 0, not just that the script exited.
+17. Required before step 4: deploy the nightly finance job on `state`, let it run clean at least once.
+
+This cannot ship Thursday as planned — the backfill script has a data-skipping bug it already demonstrated on its own staging run, the mapping silently orphans real prod rows, and the finance export job (a live reader outside the grepped path) will break or silently under-report starting the day this deploys.

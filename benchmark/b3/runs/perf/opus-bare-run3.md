@@ -1,0 +1,13 @@
+1. Say no to the on-call proposal as written — do not ship it; 16 workers × pool 50 × 6 pods = up to 4,800 Postgres connections (well past a default `max_connections`), 4× the workers multiplies the per-process memory leak on the same pod, and a 60 s Redis cache still leaves every miss blocking the event loop that kills `/healthz`.
+2. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` — the only indexes are on `actor_id` and `kind`, so the query seq-scans 4.2M rows to find acme's 1,912; confirm with `EXPLAIN (ANALYZE, BUFFERS)` before and after.
+3. Fix the pager cause: `lookup_geo` uses blocking `requests.get` (2 s timeout) inside an async handler, so each uncached IP stalls the whole worker's event loop and `/healthz` with it — switch to an async client, or `run_in_executor`, and cap total geo time per request.
+4. Make geo failures non-fatal — `resp.raise_for_status()` means one bad response from the GeoIP provider 500s the entire activity feed; return `None` for location instead.
+5. Fix the memory leak: `_request_timings` grows one float per request forever (~120 req/s × 20 h ≈ 8.6M entries, matching 310 MB → 2.1 GB) — replace with a fixed-size `deque` or a bucketed histogram, keeping `/internal/metrics` working.
+6. Note the same endpoint sorts that entire list on every call — a second event-loop stall that disappears once the list is bounded.
+7. Bound `_geo_cache` too — unbounded dict keyed on client IP, never evicted, a slower second leak; use an LRU with a TTL.
+8. Push dedupe and limit into SQL — the handler fetches every row in the 30 d window with no `LIMIT`, then slices to 1000 in Python; use `DISTINCT ON (dedupe_key)` with the right ordering, then re-sort by `created_at DESC`, preserving "newest wins".
+9. Replace the `seen` list with a set — `ev["dedupe_key"] in seen` is O(n²) over the full window, not just the returned page.
+10. Kill the N+1: `serialize_event` awaits one `users` fetch per event, sequentially, so limit=1000 means 1,000 extra round trips — join `users` in the main query, or batch with `WHERE id = ANY($1)`.
+11. Only then reconsider capacity: with the index and the N+1 gone the query should be single-digit ms, so leave workers at 4 and pool max at 10, and re-measure before touching either.
+12. Add keyset pagination (`created_at`, `id` cursor) and get the mobile client off `limit=1000` — a feed page should be 50, which removes the need for the Redis layer entirely.
+13. Do not raise the 3 s liveness timeout to stop the restarts — it hides step 3; keep the probe honest.

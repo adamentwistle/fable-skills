@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-bare-run1",
+ "items": {
+  "F1": false,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "",
+  "F2": "Change deduplication from O(n\u00b2) list scan to set lookup",
+  "F3": "Replace blocking requests.get() in lookup_geo() with httpx async client \u2014 currently blocks event loop for 200-500ms per miss",
+  "F4": "Add compound index events(org_id, created_at DESC) \u2014 query scans 4.2M rows for ~2k matches",
+  "F5": "",
+  "F6": "Replace unbounded _geo_cache dict with functools.lru_cache(maxsize=10000)",
+  "F7": "",
+  "F8": "",
+  "F9": "Do NOT ship the proposal as-is: worker increase (4\u219216) masks the blocking call without fixing it; pool increase (10\u219250) doesn't address the slow query; only the Redis cache has value, but it shouldn't replace root-cause fixes. Deploy the index first, then reassess whether caching is needed.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 5,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.148113,
+ "judge_wall_ms": 18802,
+ "graded_at": "2026-09-03T21:35:04+0100"
+}

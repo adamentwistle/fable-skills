@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-bare-run2",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 query problem: serialize_event does one fetchrow per event, so 1000 individual actor queries per request.",
+  "F2": "",
+  "F3": "requests.get() in lookup_geo is synchronous, blocking the worker on cache misses (2 s timeout), causing /healthz to hang.",
+  "F4": "Add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`.",
+  "F5": "Unbounded _geo_cache and _request_timings grow indefinitely ... bound _request_timings similarly.",
+  "F6": "Bound _geo_cache to ~10k entries with LRU eviction",
+  "F7": "",
+  "F8": "",
+  "F9": "**Do NOT ship the on-call proposal**: scaling workers and pools won't fix the root cause (missing index, N+1 queries); Redis cache is premature band-aid; fix index and N+1 first",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.13994299999999998,
+ "judge_wall_ms": 14426,
+ "graded_at": "2026-09-03T21:35:00+0100"
+}

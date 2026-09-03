@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "`MAPPING` CASE has no ELSE, so `PAID`, `canceled`, `complete`, and NULL status (7,764 prod rows) map to `state = NULL` forever",
+  "M5": "Backfill paginates with `OFFSET` over `WHERE state IS NULL`, a set that shrinks as rows are updated mid-run, so later batches skip rows \u2014 switch to keyset pagination",
+  "M6": "The whole backfill runs inside one `conn.transaction()`, so any mid-run failure rolls back everything already done, contradicting \"safe to re-run\" \u2014 commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` filters `WHERE o.status IN ('paid','shipped')`, so Finance's 02:00 UTC export silently drops all orders created after Thursday's deploy",
+  "M8": "Required between step 3 and step 4: confirm `SELECT count(*) FROM orders WHERE state IS NULL` is 0, not just that the script exited.",
+  "M9": "total was 2,104,377 but the run printed \"done: 1055000 rows updated\" \u2014 roughly half the rows were never touched",
+  "M10": "0143's `downgrade()` re-adds `status` as an empty column with no data restored, so rollback after cutover doesn't actually recover anything",
+  "M11": "Staging (2.1M rows) to prod (61.4M rows) is a ~29x jump; even a naive linear extrapolation of the claimed 11 min is 5+ hours",
+  "M12": "`alter_column(\"state\", nullable=False)` on 61M rows takes a full-table scan under an ACCESS EXCLUSIVE lock, blocking all reads/writes to `orders`"
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.19585799999999998,
+ "judge_wall_ms": 31758,
+ "graded_at": "2026-09-03T21:34:43+0100"
+}

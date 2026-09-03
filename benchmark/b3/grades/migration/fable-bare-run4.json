@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "fable-bare-run4",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "drop the trigger and `status` only in the following release",
+  "M2": "add a `status`\u2194`state` sync trigger in 0142 (or dual-write in the app) so both columns are always populated during the transition",
+  "M3": "after step 2 every existing order has `state` NULL, so `Order.from_row` raises `ValueError` and every read of a pre-existing order 500s until the backfill finishes",
+  "M4": "Unmapped values (`PAID`, `canceled`, `complete`, NULL: 7,764 rows) map to NULL, so 0143's SET NOT NULL fails",
+  "M5": "`OFFSET` advances while the `state IS NULL` set shrinks, so it skips half the rows",
+  "M6": "Backfill runs in one transaction: hours of row locks on 61M rows blocking `mark_paid`, vacuum starvation, and a pod eviction rolls back everything; commit per batch",
+  "M7": "Dropping `status` breaks `jobs/nightly_finance_export.py`, which still selects and filters on `o.status`; the grep only covered `app/`",
+  "M8": "confirm the same NULL count is 0, `ix_orders_state` is valid, and the sync trigger is still installed; do not run 0143 otherwise",
+  "M9": "staging proves it (1,055,000 of 2,104,377 updated)",
+  "M10": "0143 is irreversible: the downgrade recreates `status` empty; keep the column for one release after readers are switched",
+  "M11": "61M rows at staging's rate is roughly 5 hours even after the fix; the backfill cannot fit in a 14:00 deploy window",
+  "M12": "`SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and scans 61M rows, blocking all traffic"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.174178,
+ "judge_wall_ms": 20075,
+ "graded_at": "2026-09-03T21:32:59+0100"
+}

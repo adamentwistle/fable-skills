@@ -1,0 +1,17 @@
+1. Not shippable Thursday: the backfill skips half the rows, the app breaks on NULL state during rollout, and 0143 drops a column the finance export still reads; split into expand (this release) and contract (a later one).
+2. Backfill OFFSET over a shrinking `state IS NULL` set skips every other batch; the staging log proves it (1,055,000 of 2,104,377 updated, half left NULL); paginate by keyset (`WHERE id > last_id`) or drop OFFSET and always take the first batch.
+3. Backfill runs 61M updates in one transaction, holding xmin for hours, bloating, lagging both replicas, and rolling back entirely if the pod dies; commit per batch and sleep between batches.
+4. Backfill runtime on prod extrapolates to roughly 10 hours from the staging rate, so it cannot sit inside the Thursday window; start it well before, and make the release not depend on it finishing.
+5. MAPPING returns NULL for `PAID`, `canceled`, `complete`, and null status (7,764 rows), so 0143's SET NOT NULL fails on prod; normalise with lower(trim(status)), map `canceled`, get a product decision for `complete` and null, and make the script fail loudly on any unmapped value.
+6. Backfill's `done` counter adds BATCH regardless of rows touched and never verifies; use rowcount and finish with a `count(*) WHERE state IS NULL` that exits non-zero if not 0.
+7. New code reads `OrderState(row["state"])` while most rows still have NULL state (step 2 precedes step 3), so every get_order on an existing order raises; read state with fallback to mapped status until the backfill is verified.
+8. mark_paid filters `state = 0`, which matches nothing on pre-backfill rows, so the webhook returns 2xx and payments are silently lost; same fallback, and add a test for it.
+9. New code inserts without `status`, so old pods during the rolling deploy, the replicas, and any status reader see NULL for new orders; dual-write status and state in this release.
+10. jobs/nightly_finance_export.py reads `o.status`; the grep was app/ only, so 0143 breaks the 02:00 Friday export and Finance's Looker load; grep the whole repo plus Looker, dbt, and other services on the replicas before any drop.
+11. Mapping `PAID` to paid quietly adds 5,210 orders to the finance export filter that previously excluded them; confirm with Finance.
+12. 0143 `SET NOT NULL` takes ACCESS EXCLUSIVE and scans 61M rows; add `CHECK (state IS NOT NULL) NOT VALID`, VALIDATE it, then SET NOT NULL, and run all migrations with a lock_timeout.
+13. 0143 drops `status` with its data, and the downgrade recreates it empty, so there is no rollback; keep the column for at least one release after readers are switched and verified.
+14. 0143 downgrade builds ix_orders_status without CONCURRENTLY, locking the table; make it concurrent.
+15. Required before step 1: fix items 2 to 6 and rerun the backfill on staging until the NULL count reaches 0 and the total matches.
+16. Required between steps 3 and 4: verify `count(*) WHERE state IS NULL` is 0 on the primary, compare a status/state crosstab, and VACUUM ANALYZE orders.
+17. Required before 0143 at all: ship the app switched to state with dual-write for a full release, including the finance export, then drop status in release 2026.37 or later.

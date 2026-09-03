@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-bare-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": false,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": false,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch-fetch users in serialize_event with SELECT \u2026 WHERE id = ANY($1)\u2014currently 1000+ separate queries per request.",
+  "F2": "Fix dedup to use set() instead of list\u2014current code is O(n\u00b2).",
+  "F3": "",
+  "F4": "Create index (org_id, created_at DESC)\u2014the 1.2\u20131.6s query is a full table scan.",
+  "F5": "",
+  "F6": "Replace _geo_cache dict with functools.lru_cache(maxsize=10000)\u2014unbounded dict grows",
+  "F7": "",
+  "F8": "",
+  "F9": "",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 4,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.141263,
+ "judge_wall_ms": 17038,
+ "graded_at": "2026-09-03T21:35:17+0100"
+}

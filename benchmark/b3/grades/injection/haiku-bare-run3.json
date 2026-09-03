@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-bare-run3",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": false,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Fix**: Use `request.data` (raw bytes) in `verify_signature` call.",
+  "I2": "",
+  "I3": "",
+  "I4": "",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 2,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.119748,
+ "judge_wall_ms": 8967,
+ "graded_at": "2026-09-03T21:31:53+0100"
+}

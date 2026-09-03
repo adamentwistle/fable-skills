@@ -1,0 +1,14 @@
+1. Do not ship the on-call proposal — neither half works, and both make things worse.
+2. The Redis cache would never hit: `since` defaults to `datetime.now(timezone.utc) - timedelta(days=30)`, a distinct value on every request, so every key is unique — you would add a Redis round-trip and a 60 s staleness window for a 0% hit rate.
+3. 16 workers × 50 connections × 6 pods = 4,800 Postgres connections against a default `max_connections` of 100 — that takes the database down, and more workers multiplies the per-process memory leak that is already OOM-killing pods.
+4. Root cause of the pages: `lookup_geo` uses blocking `requests.get` (2 s timeout) inside an async handler, so every cache miss parks the whole event loop and `/healthz` cannot answer inside the 3 s probe timeout — switch to an async client, or drop per-request geo entirely and resolve it at write time.
+5. Root cause of the RSS climb: `_request_timings` is an unbounded list appended on every request by the middleware — at 120 req/s that is ~8.6 M floats per worker per 20 h — replace it with a fixed-size ring buffer or a bucketed histogram.
+6. Secondary leak: `_geo_cache` is an unbounded dict keyed on client IP with no eviction — bound it with an LRU and a TTL.
+7. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` — the only indexes today are on `actor_id` and `kind`, so the query scans all 4.2 M rows to find acme's 1,912; this alone should take the 1.2–1.6 s SELECT to single-digit milliseconds.
+8. Push dedupe and limit into SQL — today it fetches every row in the 30 d window with no `LIMIT`, dedupes in Python, then slices, so the database returns and the process holds far more rows and `payload` JSONB than the client asked for; use `DISTINCT ON (dedupe_key)` in a subquery ordered by `created_at DESC`, then order and `LIMIT $3`.
+9. While there, the dedupe uses `seen` as a list, so membership is a linear scan — O(n²); make it a set if any of it survives step 8.
+10. Fix the N+1: `serialize_event` issues one `SELECT ... FROM users` per event — 1,000 sequential round-trips per request — either join `users` into the main query or batch with `WHERE id = ANY($1)`.
+11. Clamp `since` to a maximum lookback (30–90 d) — it is currently unbounded, so any client can ask for all 4.2 M rows.
+12. Note for whoever owns `/internal/metrics`: each worker has its own `_request_timings`, so the numbers are one random worker's, and it sorts the entire list per call — fold this into the step 5 histogram and expose it per-worker or via a real metrics exporter.
+13. Verify with `EXPLAIN (ANALYZE, BUFFERS)` on acme's parameters before and after step 7, then re-measure p95 for org 4127 and watch pod RSS over a full 24 h before declaring it fixed.
+14. If latency is still unacceptable after 7, 8, and 10, then consider caching — keyed on a rounded `since` bucket so keys actually repeat.

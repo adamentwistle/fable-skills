@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": true,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` issues one sequential `SELECT` per event for the actor (~1,900 round trips for acme) \u2014 fix: batch-fetch actors once with `WHERE id = ANY($1)`",
+  "F2": "dedupe with a `set` (current `dedupe_key in list` is O(n\u00b2))",
+  "F3": "`lookup_geo()` calls blocking `requests.get()` inside an async handler, so one uncached IP freezes that worker's entire event loop, including `/healthz` \u2014 fix: swap to an async client",
+  "F4": "no index covers `(org_id, created_at)`, so Postgres scans against 4.2M rows every call \u2014 fix: `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` are unbounded module-level containers that never evict \u2014 fix: ... cap or periodically rotate `_request_timings`",
+  "F6": "`_geo_cache` ... never evict \u2014 fix: cap/TTL the geo cache (LRU with maxsize)",
+  "F7": "",
+  "F8": "Root cause of the 1.2-1.6 s query time: no index ... Root cause of the rest of the per-request latency: `serialize_event` issues one sequential `SELECT` per event",
+  "F9": "Reject both halves of the proposal as-is ... 16 workers \u00d7 50 conns \u00d7 6 pods = 4,800 asyncpg connections ... Only after that, a short (30-60 s) Redis cache ... is a reasonable addition, not a substitute for the above",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17200300000000002,
+ "judge_wall_ms": 27051,
+ "graded_at": "2026-09-03T21:35:59+0100"
+}

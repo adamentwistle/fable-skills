@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-bare-run4",
+ "items": {
+  "M1": true,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "ship 0142 + backfill + app now, drop `status` in 2026.37 or later",
+  "M2": "",
+  "M3": "`OrderState(row[\"state\"])` raises on NULL, so every pre-existing order 500s from the moment the new pods take traffic until the backfill finishes",
+  "M4": "`CASE status` has no `ELSE`, so `PAID`, `canceled`, `complete` and the 149 NULLs map to NULL and stay NULL forever (7,764 rows)",
+  "M5": "`OFFSET` paging over a predicate the loop itself shrinks (`state IS NULL`) skips rows \u2014 each committed batch pulls the remaining set left while the offset walks right",
+  "M6": "The whole loop is inside one `conn.transaction()`, so 61M rows sit in a single transaction \u2014 hours of held snapshot, table bloat, and nothing is durable until the end",
+  "M7": "`jobs/nightly_finance_export.py` still selects `o.status` and filters `status IN ('paid','shipped')`; 0143 drops the column and the 02:00 UTC export fails that night",
+  "M8": "throttled backfill \u2192 verify zero NULLs \u2192 create index concurrently ... `SET NOT NULL` and the `status` drop move to the next release, after a week with zero NULLs observed",
+  "M9": "Your staging run already shows this: \"2104377 rows to backfill\" then \"done: 1055000\" and an early exit on an empty `ids` \u2014 roughly half of staging is still NULL",
+  "M10": "0143's downgrade recreates `status` empty \u2014 after the drop there is no rollback",
+  "M11": "The 11-minute staging figure is worthless for prod: 29x the rows, and it only did half the work; measure again after the fix and assume hours",
+  "M12": "`SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and full-scans 61M rows, blocking all traffic; add a `NOT VALID` CHECK, `VALIDATE CONSTRAINT`, then `SET NOT NULL`"
+ },
+ "score": 11,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.198778,
+ "judge_wall_ms": 29758,
+ "graded_at": "2026-09-03T21:33:47+0100"
+}

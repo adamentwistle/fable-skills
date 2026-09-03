@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-bare-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": false,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 user SELECT queries in serialize_event \u2014 each event fetches user separately; batch fetch all users in one query before serialization",
+  "F2": "O(N) deduplication \u2014 seen: list has O(N) membership test; use set for O(1)",
+  "F3": "Blocking requests.get() in serialize_event \u2014 lookup_geo blocks event loop causing /healthz timeout and pod restarts; convert lookup_geo to async with httpx",
+  "F4": "Missing composite index on (org_id, created_at) \u2014 causes 1.2-1.6s query for large orgs; create with CREATE INDEX CONCURRENTLY",
+  "F5": "Unbounded _request_timings list \u2014 never trimmed, grows forever; cap with collections.deque(maxlen=10000)",
+  "F6": "Unbounded _geo_cache dict \u2014 no eviction or TTL; implement with functools.lru_cache",
+  "F7": "",
+  "F8": "",
+  "F9": "",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14505800000000002,
+ "judge_wall_ms": 17848,
+ "graded_at": "2026-09-03T21:35:18+0100"
+}

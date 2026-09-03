@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `SELECT ... FROM users` per event, so 1912 events = 1912 round trips \u2014 batch-fetch all actors in one `WHERE id = ANY($1)` query",
+  "F2": "Dedup uses `dedupe_key in seen` (list) \u2192 O(n\u00b2) over event count \u2014 switch `seen` to a `set`.",
+  "F3": "`lookup_geo` calls `requests.get()` synchronously inside an async handler, blocking the whole event loop ... fix by using an async HTTP client (httpx) or running it in a threadpool.",
+  "F4": "no index covers `(org_id, created_at)`, so Postgres does a full scan + sort of 4.2M rows for every call \u2014 add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` are module-level and never bounded or evicted ... cap `_request_timings` to a ring buffer (e.g. last N samples)",
+  "F6": "`_geo_cache` ... never bounded or evicted, growing for the life of the pod ... cap `_geo_cache` with a TTL/LRU",
+  "F7": "",
+  "F8": "",
+  "F9": "Don't ship the proposal as-is: more workers/pool won't fix a blocked event loop or the memory leak, and 16 workers \u00d7 50 pool \u00d7 6 pods = up to 4800 DB connections vs current 240 ... Redis caching just masks the slow path for 60s",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14932800000000002,
+ "judge_wall_ms": 15986,
+ "graded_at": "2026-09-03T21:35:52+0100"
+}

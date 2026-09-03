@@ -1,0 +1,13 @@
+No — this can't ship Thursday as planned; the backfill silently drops rows and 0143 will fail (or lock the table for hours) as a result.
+
+1. Backfill paginates with `OFFSET` while updating the same `WHERE state IS NULL` set, so each batch pushes the next batch out of range — staging's own log proves it (1,055,000/2,104,377 updated, then silently stopped); fix: page by `id > last_seen_id`, not `OFFSET`.
+2. Five prod status spellings (`PAID`, `canceled`, `complete`, NULL — 7,764 rows) have no `MAPPING` branch and will resolve to NULL forever; fix: add branches for the case/spelling variants and decide a target state for `complete` before backfilling.
+3. **Rollout step, before backfill:** run `SELECT status, count(*) FROM orders WHERE state IS NULL GROUP BY 1` to confirm the mapping is exhaustive.
+4. Backfill runs as one open transaction; at staging's rate (11 min/2.1M rows) 61M rows is hours long, holds locks across the table, blocks autovacuum, and loses all progress on any disconnect — contradicting "safe to re-run"; fix: commit per batch.
+5. **Rollout step, between backfill and 0143:** verify `SELECT count(*) FROM orders WHERE state IS NULL` = 0.
+6. 0143's `ALTER COLUMN state SET NOT NULL` will fail outright if any row is still NULL, which is guaranteed given findings 1–2 as written; fix: don't run 0143 until step 5 passes.
+7. Even clean, `SET NOT NULL` on 61M rows takes a full-table scan under an exclusive lock with no validated CHECK to skip it; fix: add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL` is metadata-only.
+8. During the 6-minute rolling deploy, new code's `create_order` never writes `status`, and old code's `mark_paid` matches on `status = 'pending'` (and vice versa: old-created rows have `state IS NULL`, failing new code's `state = PENDING` match) — any payment webhook landing on the "wrong" pod version silently updates 0 rows and still returns success, permanently stranding that order as pending; fix: dual-write both columns in both old and new code for the duration of the rollout.
+9. `jobs/nightly_finance_export.py` still selects `o.status`; the grep was scoped to `app/` only and missed `jobs/` — it breaks at 02:00 UTC the day after 0143 runs, and Finance's Looker load fails with it; fix: update this job to use `state` before 0143 ships.
+10. `app/api/orders.py` maps `status` to `OrderState` by name, but `OrderState` has no member for the 417 `complete` rows, so reading those orders will raise; fix: add a state for `complete` (see finding 2).
+11. 0143's `downgrade()` re-adds `status` as an empty column — none of the dropped values come back, so rollback after 0143 runs on prod is not a real undo; flag this to the team as a one-way step, not just a reversible migration.

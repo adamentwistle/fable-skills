@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-bare-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` runs a separate `SELECT ... FROM users` per event, awaited one at a time \u2014 for acme that's ~1,900 sequential round-trips per request. Batch actor lookups with one `WHERE id = ANY($1)`",
+  "F2": "dedupe checks `dedupe_key in seen` against a growing list (O(n\u00b2)) ... Use a `set` for the seen-check",
+  "F3": "`lookup_geo` calls `requests.get` (sync, blocking) inside an async handler ... Switch to an async HTTP client (`httpx.AsyncClient`) or take geo resolution off the request path entirely.",
+  "F4": "Add a composite index on `events(org_id, created_at DESC)` \u2014 there's no index covering this WHERE/ORDER BY, so it's scanning all 4.2M rows per request",
+  "F5": "bound `_request_timings` (ring buffer/reservoir) since `/internal/metrics` still needs to read it",
+  "F6": "`_geo_cache` and `_request_timings` are module-level and never evict ... Cap `_geo_cache` (LRU/TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "Re-measure after 2-6 before touching worker/pool counts \u2014 once the blocking call and N+1 are gone, 4 workers/10 conns may already be enough; only raise concurrency if profiling still shows contention.",
+  "F10": "",
+  "F11": "`since` defaults to `datetime.now()` computed per request, so unless the mobile client pins `since`, the cache key differs every call"
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.161688,
+ "judge_wall_ms": 22049,
+ "graded_at": "2026-09-03T21:35:55+0100"
+}

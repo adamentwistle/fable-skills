@@ -46,6 +46,8 @@ NO_TOOLS = ["Bash", "Edit", "Write", "MultiEdit", "NotebookEdit", "Read", "Glob"
 REDACT = re.compile(r"\b(claude|sonnet|opus|haiku|fable|anthropic|openai|gpt-?[0-9.]*|gemini|codex)\b", re.I)
 RATE_WORDS = ("rate limit", "usage limit", "session limit", "429", "overloaded", "try again later", "capacity",
               "limit reached", "hit your")
+LIMIT_WAIT_S = 600          # sleep between retries after a usage-limit rejection
+LIMIT_WAITS = 36            # up to 6 hours of waiting per call: a 5-hour window always resets within that
 MODEL_ORDER = ["haiku", "sonnet", "opus", "fable"]
 COND_ORDER = ["bare", "skills"]
 LEGACY = {
@@ -138,7 +140,9 @@ def claude_call(prompt, model, system_append=None, max_turns=4, effort=None, tim
     if effort:
         cmd += ["--effort", effort]
     last = None
-    for i in range(attempts):
+    i = 0
+    limit_waits = 0
+    while i < attempts:
         t0 = time.time()
         try:
             proc = subprocess.run(cmd, input=prompt, capture_output=True, text=True, encoding="utf-8",
@@ -147,6 +151,7 @@ def claude_call(prompt, model, system_append=None, max_turns=4, effort=None, tim
             last = {"error": f"timeout after {timeout}s"}
             say(f"    {label} retry {i + 1}/{attempts}: timeout")
             time.sleep(15)
+            i += 1
             continue
         raw = proc.stdout.strip()
         data = None
@@ -172,10 +177,16 @@ def claude_call(prompt, model, system_append=None, max_turns=4, effort=None, tim
                 data["_attempts"] = i + 1
                 return data
         blob = json.dumps(last).lower()
-        limited = any(w in blob for w in RATE_WORDS)
-        wait = 300 * (i + 1) if limited else 20 * (2 ** i)
-        say(f"    {label} retry {i + 1}/{attempts} in {wait}s: {last.get('error')}{' (limit)' if limited else ''}")
+        if any(w in blob for w in RATE_WORDS) and limit_waits < LIMIT_WAITS:
+            # A usage-limit rejection is not a failed attempt: wait for the window to move and try again.
+            limit_waits += 1
+            say(f"    {label} usage limit hit; waiting {LIMIT_WAIT_S}s ({limit_waits}/{LIMIT_WAITS})")
+            time.sleep(LIMIT_WAIT_S)
+            continue
+        wait = 20 * (2 ** i)
+        say(f"    {label} retry {i + 1}/{attempts} in {wait}s: {last.get('error')}")
         time.sleep(wait)
+        i += 1
     raise RuntimeError(f"{label}: claude call failed after {attempts} attempts: {json.dumps(last)[:1200]}")
 
 

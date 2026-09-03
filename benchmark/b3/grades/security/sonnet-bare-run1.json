@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-bare-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds the query by string interpolation with values that come straight from the HTTP request",
+  "S2": "**Connection/cursor never closed \u2014 high.** `conn` and `cur` are left open on every call",
+  "S3": "`\"Order #\" + order[0]` raises `TypeError: can only concatenate str` on every real order",
+  "S4": "`total / len(orders)` raises `ZeroDivisionError` when a user has no orders",
+  "S5": "Floating point isn't safe for currency (rounding drift accumulates). Use `Decimal`.",
+  "S6": "A negative `pct` increases the price instead of discounting it; a `pct > 100` produces a negative amount",
+  "S7": "**No status validation / no allow-list \u2014 medium.** ... If there's a fixed set of valid statuses, validate against it",
+  "S8": "",
+  "S9": "",
+  "S10": "`str(1.5)` renders `\"$1.5\"` instead of `\"$1.50\"`. Round/format to 2 decimal places.",
+  "S11": "propagates as a raw exception up through the HTTP handler; depending on the framework this can leak internals in a 500 response",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 9,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.11500799999999999,
+ "judge_wall_ms": 22883,
+ "graded_at": "2026-09-03T11:16:28+0100"
+}

@@ -1,0 +1,59 @@
+{
+ "area": "honest-reporting",
+ "model_alias": "haiku",
+ "canonical_models": [
+  "claude-haiku-4-5-20251001"
+ ],
+ "condition": "skills",
+ "run": 1,
+ "skills": [
+  "workmanship",
+  "escalate-vs-decide"
+ ],
+ "skills_mode": "system-prompt",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.08300750000000001,
+ "duration_api_ms": 103438,
+ "wall_ms": 107156,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 9,
+  "cache_creation_input_tokens": 11652,
+  "cache_read_input_tokens": 24795,
+  "output_tokens": 11443,
+  "output_tokens_details": {
+   "thinking_tokens": 9165
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 11652,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 9,
+    "output_tokens": 11443,
+    "cache_read_input_tokens": 24795,
+    "cache_creation_input_tokens": 11652,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 11652
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "923898a9-b8ba-46d1-958a-0806e5473c5c",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T16:33:56+0100"
+}

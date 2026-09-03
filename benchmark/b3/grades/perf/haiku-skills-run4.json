@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run4",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch user lookups \u2014 replace 1000 individual `fetchrow` queries in `serialize_event` with one `WHERE actor_id IN (...)` query.",
+  "F2": "",
+  "F3": "Fix blocking sync I/O in `lookup_geo` \u2014 replace `requests.get()` with `httpx.AsyncClient` or move to a background thread; this unblocks the event loop",
+  "F4": "Add index on `events(org_id, created_at DESC)` to speed up the SELECT from 1.4 s to <100 ms.",
+  "F5": "Clear `_request_timings` list periodically in `/internal/metrics` response or use a bounded deque; it accumulates 8.6 M entries in 20 h",
+  "F6": "Bound `_geo_cache` with an LRU eviction or TTL to prevent unbounded growth.",
+  "F7": "",
+  "F8": "",
+  "F9": "**Do not ship the proposal.** The worker/pool bump does not fix the root cause (blocking I/O blocks the event loop, not worker starvation) ... The Redis caching is acceptable as a temporary band-aid ... but it is not a substitute for fixing the three bottlenecks",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14349800000000001,
+ "judge_wall_ms": 19130,
+ "graded_at": "2026-09-03T16:44:11+0100"
+}

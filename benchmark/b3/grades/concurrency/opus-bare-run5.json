@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-bare-run5",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write is not atomic \u2014 two threads can both read 99 and both return True, letting the limit be exceeded",
+  "B2": "",
+  "B3": "wrap the read/increment in a `threading.Lock` (or use an atomic backend op)",
+  "B4": "There is no time window, so this is a lifetime quota, not a rate limit",
+  "B5": "The dict grows without bound, one entry per distinct `user_id` \u2014 a memory leak",
+  "B6": "State is per-process, so with N workers the real limit is N\u00d7`limit`",
+  "B7": "No input validation \u2014 `None`/unhashable `user_id` raises `TypeError`"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08033299999999999,
+ "judge_wall_ms": 15899,
+ "graded_at": "2026-09-03T11:19:14+0100"
+}

@@ -1,0 +1,17 @@
+1. **Blocker — enum renumbering corrupts persisted data:** inserting `Disputed` before `Paid` shifts `Paid` 2→3 and `Void` 3→4, and `invoices.state` is a SMALLINT holding the old numbers — every existing paid row now reads as Disputed; either append `Disputed` last or pin explicit values and ship a migration.
+2. **Blocker — the skipped test is a true positive, not flakiness:** `round-trips state values` asserts raw 2,3 map to `[Paid, Void]` and now fails precisely because of finding 1; un-skip it rather than rebuild the fixture DB.
+3. **Blocker — `services/notifier/src/reminders.ts:57` still passes a number** where `LateFeeOptions` is expected, so `opts.graceDays` is undefined and `computeLateFee` returns `NaN` into reminder emails; update the call site.
+4. **Blocker — `scripts/backfill-late-fees.js:22` has the same bad call** and is plain JS, so no typecheck will ever catch it; update it or the backfill writes NaN fees.
+5. **Blocker — CI green proves nothing here:** `--filter='[origin/main]'` explicitly skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`, which are exactly the packages findings 3 and 4 break; re-run the full graph before merge.
+6. **Blocker — prod grace period silently drops 21→7:** `infra/helm/billing/values.prod.yaml:31` (and staging, 14) still set `INVOICE_GRACE_DAYS`, which zod now strips as unknown and replaces with the new default, charging late fees two weeks early; rename both Helm keys in the same change.
+7. **Blocker — the compatibility claim is contradicted by the author's own sweep:** `reconcile.py:64` matches `status == "paid"` and reads `inv["total_cents"]`, both of which this diff removes, so reconciliation silently stops matching; confirm with the reconciler owners directly or keep the old fields alongside the new ones for a deprecation window.
+8. **Blocker — `events.ts` publishes `toInvoiceResponse` to `billing.invoice.updated`,** so the shape change hits every event consumer, not just the documented GET endpoint; version the event payload or exclude it from the reshape.
+9. `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` (now undefined) and `InvoiceBadge.tsx:9` tests `status === 'paid'` (now `'settled'`), and portal typecheck passed anyway — meaning the response is untyped `any`; fix both and give the response a real type.
+10. `total.amount` changed from an integer to a decimal *string*, which breaks zero-decimal currencies like JPY and forces consumers to re-parse; keep minor units and let the client format.
+11. `invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS`, so the fee shown on the invoice can differ from the fee actually charged whenever that config isn't 150; pass it in both places.
+12. The hardcoded `opts.rateBps ?? 150` duplicates the config default; derive it from config or drop the fallback.
+13. Test assertions were weakened to `toBeTruthy()`/`toBeDefined()`, which would pass on any wrong status or malformed total; restore exact-value assertions against the new shape.
+14. Version bumped 2.3.1→2.4.0 for a set of breaking API, config, and enum changes; this is a major bump, 3.0.0.
+15. `docs/runbooks/dunning.md:18` still tells on-call to raise `INVOICE_GRACE_DAYS` to pause late fees during an incident — a dead lever after this merge; update it.
+
+Recommend requesting changes, not a same-day merge. The reviewer note asking to exclude downstream concerns doesn't hold, since findings 3, 4, 6, and 7 are all visible in the sweeps the author attached.

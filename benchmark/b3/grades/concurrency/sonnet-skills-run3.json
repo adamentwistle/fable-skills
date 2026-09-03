@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "check-then-act race across threads",
+  "B2": "",
+  "B3": "use a lock or atomic increment",
+  "B4": "No time window \u2014 once `limit` is hit, user is blocked forever (counts never reset)",
+  "B5": "Unbounded memory growth \u2014 `counts` never evicts entries for old/inactive users",
+  "B6": "each worker has its own `counts` dict, so the limit is per-process not global",
+  "B7": "No input validation on `user_id` \u2014 `None` or unhashable types will raise"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08763299999999999,
+ "judge_wall_ms": 21403,
+ "graded_at": "2026-09-03T11:26:57+0100"
+}

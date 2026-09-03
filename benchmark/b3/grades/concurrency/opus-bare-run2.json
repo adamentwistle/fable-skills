@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-bare-run2",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `counts` is not atomic, so two threads can both pass the check and exceed the limit",
+  "B2": "",
+  "B3": "hold a lock (or use a single atomic operation) around the read/increment",
+  "B4": "There is no time window at all, so counts only ever grow and every user is permanently banned after 100 requests",
+  "B5": "Nothing ever removes entries, so the dictionary grows without bound and leaks memory",
+  "B6": "`counts` is per-process, so N workers each allow the full limit and the real ceiling is N \u00d7 limit",
+  "B7": "Unhashable or `None` user IDs raise or collapse into one shared bucket \u2014 validate the key before use."
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.078873,
+ "judge_wall_ms": 16490,
+ "graded_at": "2026-09-03T11:19:14+0100"
+}

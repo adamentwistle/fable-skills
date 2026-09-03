@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-bare-run4",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "the cache has no invalidation \u2014 once `_cache` is set it is never compared against the file again; key the cache on the file's mtime",
+  "A2": "NOT a fix: a time-based TTL (re-read every N seconds) \u2014 it only shrinks the stale window instead of closing it",
+  "A3": "NOT a fix: adding a `reload=True` argument or a `clear_cache()` function \u2014 it moves the burden onto every call site",
+  "A4": "`path` is ignored after the first call \u2014 a second call with a different path silently returns the first file's data",
+  "A5": "Not thread-safe \u2014 two threads can enter the load block at once and double-read; guard the check-and-load with a `threading.Lock`",
+  "A6": "Mutable return value is shared \u2014 a caller mutating the returned dict corrupts every later caller's config; return a deep copy",
+  "A7": "",
+  "A8": "`_cache is None` conflates \"not loaded\" with \"loaded a falsy value\" \u2014 a config file of `null` reloads on every call"
+ },
+ "score": 7,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080763,
+ "judge_wall_ms": 11493,
+ "graded_at": "2026-09-03T11:19:44+0100"
+}

@@ -1,0 +1,16 @@
+1. Do not ship the on-call proposal — it treats a blocked event loop and a memory leak as a capacity problem, and both halves make things worse.
+2. Specifically: 16 workers × pool max 50 × 6 pods = 4,800 Postgres connections (default `max_connections` is 100), and 16 workers per pod multiplies a leak that already reaches 2.1 GB — the pod OOMs sooner, not later.
+3. Also: the 60 s Redis cache is keyed on `since`, which the mobile client never sends, so if you key on the resolved `datetime.now()-30d` the hit rate is 0%; and a cache miss still blocks the loop, so `/healthz` still times out and pods still restart.
+4. Baseline first: `EXPLAIN (ANALYZE, BUFFERS)` the events SELECT with org 4127 and the 30 d timestamp, and time the endpoint 5× warm against acme — record median and spread before editing anything.
+5. Root cause of the pod restarts: `lookup_geo` uses synchronous `requests.get` inside an async handler, so one request makes up to 1,000 sequential blocking calls (2 s timeout each) that stall the whole worker's event loop, including `/healthz` — switch to an async client and gather them, or drop per-event geo lookup.
+6. Root cause of the RSS climb: `_request_timings` is an unbounded list appended once per request on every route (~8.6 M floats in 20 h at 120 req/s) — replace with a fixed-size `collections.deque(maxlen=...)` or a histogram, keeping `/internal/metrics` working.
+7. Second leak: `_geo_cache` is an unbounded dict keyed by client IP with no eviction — bound it with an LRU/TTL cache.
+8. `/internal/metrics` sorts that entire list on every call, which is itself a multi-second event-loop stall — a bounded deque fixes this too.
+9. Root cause of the 1.2–1.6 s query: there is no index on `(org_id, created_at)`, so the planner scans all 4.2 M rows for 1,912 — add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.
+10. The dedupe loop is O(n²) — `seen` is a list, so `in` is a linear scan, ~1.8 M comparisons at 1,912 rows and 500 M at 30 k — make `seen` a `set`.
+11. N+1 queries: `serialize_event` issues one `users` fetch per event, so limit=1000 is 1,000 round trips — batch with `WHERE id = ANY($1)` after the fetch, or join `users` into the main query.
+12. The query fetches every row in the window and only then applies `limit`, so cost scales with org size rather than page size — collapse on `dedupe_key` and apply `LIMIT` in SQL (`DISTINCT ON` in a subquery, or a `row_number()` window), which also makes the index above sufficient.
+13. Apply 5, 6, 9, 10, 11 one at a time and re-run the step-4 measurement after each; revert anything that does not move the number.
+14. Then re-run the correctness suite — the dedupe change moves "keep newest" from Python into SQL, and it must still keep the newest row per `dedupe_key`.
+15. Separately, and off this ticket: `org_activity` never checks that the caller belongs to `org_id`, so any authenticated user can read any org's activity feed.
+16. Only after 5–12 are in should you revisit pooling; if you still need it, raise pool max modestly (10 → 20) and leave workers at 4, and add a short cache keyed on the *raw* `since` param, not the resolved one.

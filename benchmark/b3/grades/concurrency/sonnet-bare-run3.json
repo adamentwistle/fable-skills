@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "two requests can both pass the check before either increments, over-admitting",
+  "B2": "",
+  "B3": "use a per-user lock or an atomic increment (e.g. `Lock`, `itertools.count`, or a `threading`-safe counter/Redis `INCR`)",
+  "B4": "No time window \u2014 once a user hits `limit` they're blocked forever, not per minute/hour",
+  "B5": "`counts` grows unboundedly for every distinct `user_id` seen, with no eviction \u2014 memory leak",
+  "B6": "separate worker processes (gunicorn/uwsgi workers) each get their own `counts`, so the real limit is `limit * num_workers`",
+  "B7": "No input validation on `user_id` \u2014 `None`, unhashable types, or malicious values aren't guarded"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080703,
+ "judge_wall_ms": 12823,
+ "graded_at": "2026-09-03T11:19:22+0100"
+}

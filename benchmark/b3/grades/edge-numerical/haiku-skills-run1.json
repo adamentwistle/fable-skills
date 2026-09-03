@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "haiku-skills-run1",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": false,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": false,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing 'price'/'qty' keys crash with KeyError",
+  "C2": "None values crash with TypeError \u2014 add None checks before float()/int()",
+  "C3": "",
+  "C4": "Commas and currency symbols in strings cause ValueError \u2014 preprocess/strip before conversion.",
+  "C5": "Qty as decimal string \"3.5\" fails int()",
+  "C6": "Using float for revenue is fundamentally wrong \u2014 use Decimal or track as integer cents.",
+  "C7": "Negative price or qty silently accepted \u2014 add range checks (>= 0)",
+  "C8": "",
+  "C9": ""
+ },
+ "score": 6,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07908799999999999,
+ "judge_wall_ms": 13593,
+ "graded_at": "2026-09-03T11:27:26+0100"
+}

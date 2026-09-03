@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-skills-run4",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `'price'`/`'qty'` key raises a bare `KeyError`",
+  "C2": "`None` value (empty CSV cell parsed as None) raises `TypeError`, a different failure than a bad string",
+  "C3": "Empty string `''` fails conversion \u2014 decide explicitly whether blank means zero or a rejected row.",
+  "C4": "`float`/`int` silently strip surrounding whitespace but not a `$`, `%`, or thousands separator",
+  "C5": "`int('3.0')` raises `ValueError` even though 3.0 is a valid quantity",
+  "C6": "Money in binary floats \u2014 `float(price)` misprices cents and drifts on sum; use `Decimal(r['price'])` or integer minor units",
+  "C7": "Negative price or negative quantity sums happily into the total \u2014 validate sign unless refunds are intended",
+  "C8": "`float('nan')` and `float('inf')` are accepted silently and poison the total",
+  "C9": "wrap each conversion and include row index, column name, and the offending value"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08570799999999999,
+ "judge_wall_ms": 13654,
+ "graded_at": "2026-09-03T11:27:41+0100"
+}

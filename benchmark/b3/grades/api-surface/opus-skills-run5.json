@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`",
+  "P2": "`InvoiceBadge.tsx:9` matches `status === 'paid'`, `services/reconciler/reconcile.py:64` matches both",
+  "P3": "inserting `Disputed` mid-enum renumbers Paid 2\u21923 and Void 3\u21924, but `invoices.state` is a persisted SMALLINT, so every existing row decodes wrong",
+  "P4": "Helm still sets the old key (`values.prod.yaml:31` = \"21\", `values.staging.yaml:29` = \"14\"); zod strips unknown env keys silently, so prod drops from 21 days to the new default 7",
+  "P5": "two callers still pass a positional number (`services/notifier/src/reminders.ts:57`, `scripts/backfill-late-fees.js:22`) ... CI never compiled them: `--filter='[origin/main]'` skipped @acme/notifier, @acme/scripts",
+  "P6": "The serializer test was weakened rather than updated \u2014 `toBeTruthy()`/`toBeDefined()` pass on `status: 'banana'` \u2192 assert `'settled'`, the exact amount and the currency.",
+  "P7": "the sweep contradicts the \"platform team confirmed both shapes\" note, so either update them or emit old and new fields together",
+  "P8": "",
+  "P9": "either update them or emit old and new fields together",
+  "P10": "re-run `turbo run typecheck test` unfiltered (plus a lint/typecheck path for the untyped `.js` script) before merge",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes it \u2192 the route and the dunning cycle will report different fees for the same invoice"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17616300000000001,
+ "judge_wall_ms": 25872,
+ "graded_at": "2026-09-03T16:42:18+0100"
+}

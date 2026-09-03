@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-bare-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` (now undefined)",
+  "P2": "`reconcile.py:64` matches `status == \"paid\"` and reads `inv[\"total_cents\"]`, both of which this diff removes, so reconciliation silently stops matching",
+  "P3": "inserting `Disputed` before `Paid` shifts `Paid` 2\u21923 and `Void` 3\u21924, and `invoices.state` is a SMALLINT holding the old numbers \u2014 every existing paid row now reads as Disputed",
+  "P4": "prod grace period silently drops 21\u21927:** `infra/helm/billing/values.prod.yaml:31` (and staging, 14) still set `INVOICE_GRACE_DAYS`",
+  "P5": "`--filter='[origin/main]'` explicitly skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`, which are exactly the packages findings 3 and 4 break",
+  "P6": "Test assertions were weakened to `toBeTruthy()`/`toBeDefined()`, which would pass on any wrong status or malformed total; restore exact-value assertions",
+  "P7": "The reviewer note asking to exclude downstream concerns doesn't hold, since findings 3, 4, 6, and 7 are all visible in the sweeps the author attached.",
+  "P8": "`events.ts` publishes `toInvoiceResponse` to `billing.invoice.updated`,** so the shape change hits every event consumer, not just the documented GET endpoint",
+  "P9": "keep the old fields alongside the new ones for a deprecation window",
+  "P10": "re-run the full graph before merge",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS`, so the fee shown on the invoice can differ from the fee actually charged"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.174983,
+ "judge_wall_ms": 24485,
+ "graded_at": "2026-09-03T16:21:14+0100"
+}

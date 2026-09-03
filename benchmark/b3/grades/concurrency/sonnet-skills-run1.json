@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Race condition on read-modify-write of `counts[user_id]` across threads",
+  "B2": "",
+  "B3": "use a per-key lock or an atomic increment (e.g. `threading.Lock`, or an atomic counter/Redis INCR)",
+  "B4": "No time window \u2014 once `limit` is hit, user is blocked forever, not per-minute/hour",
+  "B5": "Unbounded memory growth \u2014 `counts` never evicts entries",
+  "B6": "State is process-local, so each worker enforces its own limit \u2192 effective limit is `limit * num_workers`",
+  "B7": "No input validation on `user_id`/`limit` \u2014 malicious or malformed `user_id` (None, huge string) still gets an entry \u2014 validate/sanitize before use."
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.079208,
+ "judge_wall_ms": 15063,
+ "graded_at": "2026-09-03T11:26:50+0100"
+}

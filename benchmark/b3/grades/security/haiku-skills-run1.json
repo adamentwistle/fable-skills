@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": false,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "The query uses string interpolation: `\"... WHERE user_id = '%s' AND status = '%s'\" % (user_id, status)`",
+  "S2": "Database connection is opened but never closed",
+  "S3": "`\"Order #\" + order[0] + \": $\"` attempts to concatenate an integer (order ID from the database) with a string",
+  "S4": "If `orders` is empty, `total / len(orders)` crashes with ZeroDivisionError",
+  "S5": "Using binary floats for currency: `amount - amount * pct / 100`",
+  "S6": "No check that `amount >= 0` or `0 <= pct <= 100`",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "Receipt displays unformatted float: `str(order[1])` could print `\"99.99999999999999\"`",
+  "S11": "",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 7,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.100353,
+ "judge_wall_ms": 16122,
+ "graded_at": "2026-09-03T11:27:54+0100"
+}

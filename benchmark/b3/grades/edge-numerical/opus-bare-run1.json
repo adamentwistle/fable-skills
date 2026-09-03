@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-bare-run1",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `'price'` or `'qty'` key raises `KeyError`",
+  "C2": "`None` value from a null CSV field raises `TypeError`",
+  "C3": "Empty string or whitespace-only field raises `ValueError`",
+  "C4": "Currency symbols, thousands separators, or trailing spaces (`\"$1,299.00 \"`) raise `ValueError`",
+  "C5": "`int(\"3.0\")` raises `ValueError` even though the value is a valid integer",
+  "C6": "Binary floating point loses cents on accumulation \u2014 use `decimal.Decimal` for money",
+  "C7": "Negative prices or quantities pass silently \u2014 validate against a business rule",
+  "C8": "`float(\"nan\")` and `float(\"inf\")` parse silently and poison the total",
+  "C9": "return or log a count of skipped rows alongside the total"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.083803,
+ "judge_wall_ms": 11345,
+ "graded_at": "2026-09-03T11:15:30+0100"
+}

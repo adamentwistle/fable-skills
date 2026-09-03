@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-skills-run3",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "both can read-check-count before either increments, allowing both through",
+  "B2": "",
+  "B3": "use threading.Lock to protect read-check-write",
+  "B4": "Counters never reset; users permanently blocked after hitting limit\u2014implement time-windowed resets",
+  "B5": "counts dict grows unbounded; old user entries never removed",
+  "B6": "Each worker process has its own counts dict in multi-worker deployments; limits aren't shared globally",
+  "B7": ""
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.072143,
+ "judge_wall_ms": 14528,
+ "graded_at": "2026-09-03T11:26:35+0100"
+}

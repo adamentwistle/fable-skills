@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "fable-bare-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the guard only asks whether `_cache` is `None`, never whether the file changed, so the first load is permanent for the life of the process; fix by storing the file's stat signature next to the data and reloading whenever it differs",
+  "A2": "Non-fix: a time-to-live shrinks the stale window but does not close it, and reloads when nothing changed",
+  "A3": "Non-fix: deleting the cache reads and parses on every call, a performance regression that only moves the problem to callers",
+  "A4": "`path` is ignored once anything is cached, so `get_config('other.json')` returns the first file's contents; key the cache by resolved absolute path",
+  "A5": "With reload in play two threads can race the load; assign the whole entry as one tuple, and add a lock only if parsing is expensive",
+  "A6": "Callers receive the shared dict and can mutate it for everyone, which looks like staleness from the outside; return a copy",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.093803,
+ "judge_wall_ms": 19280,
+ "graded_at": "2026-09-03T11:19:33+0100"
+}

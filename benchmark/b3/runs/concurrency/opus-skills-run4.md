@@ -1,0 +1,10 @@
+1. Read-modify-write on `counts` is not atomic across threads (get, compare, assign) — two threads can both see 99 and both allow; wrap the whole check-and-increment in a `threading.Lock`.
+2. In-process dict guards one process only, so N workers each grant the full limit (N×100) — move the counter to Redis/DB with an atomic `INCR` or a compare-and-swap.
+3. No time window at all — counts accumulate forever, so every user is permanently blocked after 100 lifetime requests; use a fixed or sliding window keyed by (user, bucket) or a token bucket with a refill rate.
+4. `counts` never shrinks and is keyed by arbitrary caller-supplied `user_id` — unbounded memory growth and a trivial memory-exhaustion vector; bound it with TTL eviction or an LRU cap.
+5. `limit` is a per-call parameter, so any caller passing a larger value bypasses the limit — take the limit from server-side config keyed by user tier, not from the call site.
+6. `user_id` is not validated or normalized — `None`, `""`, or case/whitespace variants become separate buckets that each get their own 100; reject falsy IDs and canonicalize before keying.
+7. Consumption happens before the request is known to succeed, and there's no release path, so failed or cancelled requests still burn quota; decide explicitly whether to refund on failure, or document the burn.
+8. Return value is a bare bool, so the caller can't emit `Retry-After` or `X-RateLimit-Remaining` — return remaining count and reset time alongside the decision.
+9. Module-level mutable global makes the limiter untestable and unresettable between tests, and it silently shares state across every import; hold it in a class instance injected where needed.
+10. Fail-open/fail-closed behavior is undefined once this moves to a shared store — pick one deliberately and make the exception path explicit rather than letting a store outage either block everything or allow everything.

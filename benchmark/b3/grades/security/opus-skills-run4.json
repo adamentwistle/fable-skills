@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection in `get_user_orders`.** `status` and `user_id` are interpolated straight into the query with `%`",
+  "S2": "Connection and cursor leak.** `conn` is never closed, and on any exception it leaks along with its file handle and lock.",
+  "S3": "`format_receipt` raises `TypeError` on every call.** `\"Order #\" + order[0]` concatenates a `str` with an `int` id.",
+  "S4": "`ZeroDivisionError` on a user with no orders.** `average_order_value` divides by `len(orders)` with no guard.",
+  "S5": "Money in binary floats.** `total += o[1]`, `amount - amount * pct / 100`, and `total / len(orders)` all use floats, which cannot represent 0.10 or 0.01 exactly.",
+  "S6": "`apply_discount` never validates `pct`.** A negative percentage *increases* the price; anything over 100 returns a negative amount",
+  "S7": "`status` is not validated against an allowlist. Even parameterized, an arbitrary string reaches the database",
+  "S8": "No authorization \u2014 insecure direct object reference.** `user_id` arrives from the request and is used as the whole access-control decision.",
+  "S9": "A NULL `amount` raises `TypeError` mid-sum.** If the column is nullable, `total += None` fails",
+  "S10": "The discount and the average are returned at full float precision and printed raw. ... f\"Order #{order.id}: {currency_symbol}{order.amount:.2f} ({order.status})\"",
+  "S11": "Raw `sqlite3` errors reach the HTTP handler.** An `OperationalError` message names tables and columns and may name the database path.",
+  "S12": "No rounding policy anywhere. ... Fix: pick a policy, name it, and apply it once at the boundary. I used ROUND_HALF_UP on the discount amount",
+  "S13": "Unbounded `fetchall`.** A user with 200,000 orders pulls all of them into memory in one list. Fix: `LIMIT`/`OFFSET` with a hard server-side cap.",
+  "S14": "Positional tuple indexing across three functions.** `o[1]` and `order[0]` silently produce wrong output the day someone reorders the `SELECT` columns"
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.147318,
+ "judge_wall_ms": 17960,
+ "graded_at": "2026-09-03T11:28:12+0100"
+}

@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing key (`r['price']` or `r['qty']` absent) \u2192 raises KeyError",
+  "C2": "`None` values from CSV nulls \u2192 `float(None)`/`int(None)` raises TypeError; guard for `None` before conversion.",
+  "C3": "Empty string qty/price \u2192 ValueError on `int('')`/`float('')`",
+  "C4": "Thousands separators or currency symbols (\"$1,200.50\") \u2192 `float()` raises ValueError; strip/normalize before parsing.",
+  "C5": "Non-integer qty like \"2.5\" \u2192 `int()` raises ValueError",
+  "C6": "Float binary rounding error accumulating over many rows \u2192 use `Decimal` instead of `float` for money.",
+  "C7": "Negative price or qty (refunds, data errors) \u2192 silently subtracts from total",
+  "C8": "`NaN`/`inf` strings (\"nan\", \"inf\") parse successfully via `float()` \u2192 poisons total silently",
+  "C9": "no visibility into which row failed; catch per-row and report/collect errors rather than crashing whole batch"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.089793,
+ "judge_wall_ms": 13320,
+ "graded_at": "2026-09-03T11:15:43+0100"
+}

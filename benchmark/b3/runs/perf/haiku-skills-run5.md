@@ -1,0 +1,6 @@
+1. Add index on (org_id, created_at) — the 1.2–1.6s slow query is a full-table scan; this index covers the WHERE and ORDER BY in a single range lookup.
+2. Batch-fetch all actors in one query instead of per-event — N+1 doing 1,900 user queries for 1,900 events adds seconds; prefetch with `WHERE id = ANY($1)` and build a lookup map.
+3. Change dedup from list to set — `if ev["dedupe_key"] in seen:` is O(n) per iteration, making this O(n²) over ~2,000 events.
+4. Switch geo lookups from `requests.get()` to async HTTP client (e.g., `httpx.AsyncClient`) — sync blocking calls freeze the event loop, explaining why /healthz times out during requests.
+5. Bound `_geo_cache` with LRU or maxsize — currently grows unbounded (310MB → 2.1GB in 20h), this is the memory leak killing pods.
+6. **Do NOT ship the proposal.** Pool/worker bumps and Redis caching don't fix root causes (missing index, N+1, blocking sync HTTP, unbounded cache); they trade resources without solving the problem. After fixes 1–5, latency should drop from 6–12s to ~1s, eliminating the need for Redis caching.

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-bare-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `data.total_cents` (now undefined)",
+  "P2": "`InvoiceBadge.tsx:9` tests `status === 'paid'` (now never true)",
+  "P3": "`Disputed` inserted mid-enum makes `Paid` 2\u21923 and `Void` 3\u21924, but `invoices.state` is a raw SMALLINT, so every existing paid row now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, zod strips the unknown key and applies the new default",
+  "P5": "`--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`, which are exactly the broken packages",
+  "P6": "Serializer test was weakened rather than updated: `toBeTruthy()` and `toBeDefined()` assert nothing about the new contract; assert `status === 'settled'` and the exact `total.amount`",
+  "P7": "in-repo consumers break, and the reviewer note does not cover them",
+  "P8": "this is a breaking change to a published event contract, not just one GET endpoint; confirm event consumers",
+  "P9": "confirm event consumers and say so in the PR description, or version the event payload",
+  "P10": "re-run typecheck and test across the whole workspace before merge",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps`, so it falls back to the hardcoded `150` while `dunning.ts` passes `config.LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.171863,
+ "judge_wall_ms": 20382,
+ "graded_at": "2026-09-03T16:29:37+0100"
+}

@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "Module-level `_cache` never invalidated once set \u2014 fix: check file mtime/hash each call and reload when it changes.",
+  "A2": "reducing a TTL or \"reload every N calls\" (masks the bug, still serves stale data for up to N calls/seconds)",
+  "A3": "adding a manual `clear_cache()` function (doesn't fix the \"stale-until-someone-remembers-to-call-it\" problem, silent by default)",
+  "A4": "`path` param is ignored after first call (cache keyed by nothing) \u2014 fix: key the cache dict by `path`.",
+  "A5": "Not thread-safe (two threads can both see `_cache is None` and double-load, or one reads mid-write) \u2014 fix: guard with a lock.",
+  "A6": "",
+  "A7": "",
+  "A8": "`_cache is None` sentinel means an empty/falsy config (`{}`, `null`) reloads every call \u2014 fix: use a separate `bool` flag (\"loaded\") instead of `is None`."
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080598,
+ "judge_wall_ms": 11465,
+ "graded_at": "2026-09-03T11:27:22+0100"
+}

@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "builds SQL by string interpolation from request input",
+  "S2": "Connection and cursor are never closed \u2014 medium.",
+  "S3": "`\"Order #\" + order[0]` concatenates a `str` with `order[0]`, which is the SQL `id` column \u2014 an integer. This raises `TypeError`",
+  "S4": "`total / len(orders)` raises `ZeroDivisionError` whenever a user has no orders in that status",
+  "S5": "Money handled as binary float \u2014 medium.",
+  "S6": "A negative `pct` increases the price; `pct > 100` yields a negative price.",
+  "S7": "validate `status` against an allowlist of known statuses",
+  "S8": "",
+  "S9": "",
+  "S10": "`str(order[1])` can render as `19.990000000004` or `20.0` instead of `$20.00`",
+  "S11": "risking a raw traceback/DB details leaking to the client. Fix: catch `sqlite3.Error`, log it with context, raise a sanitized exception",
+  "S12": "use `Decimal` (or integer minor units) for all money arithmetic, and round explicitly once at the boundary",
+  "S13": "The query has no `LIMIT`/pagination, so a user with a very large order history returns everything into memory",
+  "S14": "Callers index by position (`o[1]`, `order[0]`) with no names; a column reorder in the `SELECT` silently breaks every caller"
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.12267800000000001,
+ "judge_wall_ms": 23144,
+ "graded_at": "2026-09-03T11:28:29+0100"
+}

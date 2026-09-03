@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-modify-write on `counts[user_id]` isn't atomic \u2014 two threads can both read the same count and both increment, letting requests past the limit",
+  "B2": "",
+  "B3": "use a per-user lock or an atomic/threadsafe counter (e.g. `collections.Counter` with a lock, or `threading.Lock` around the check-and-increment)",
+  "B4": "No window/expiry \u2014 `count` never resets, so after the first `limit` requests ever, the user is blocked forever",
+  "B5": "Unbounded memory growth \u2014 `counts` grows forever, one entry per distinct `user_id`, never cleaned up",
+  "B6": "State is per-process only \u2014 multiple workers each get their own `counts`, so the real limit is `limit * num_workers`",
+  "B7": "No validation on `user_id` \u2014 `None`, empty, or absent values are silently treated as a valid bucket"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08959800000000001,
+ "judge_wall_ms": 20915,
+ "graded_at": "2026-09-03T11:26:58+0100"
+}

@@ -1,0 +1,8 @@
+1. Read-modify-write on `counts[user_id]` isn't atomic — two threads can both read the same count and both increment, letting requests past the limit → use a per-user lock or an atomic/threadsafe counter (e.g. `collections.Counter` with a lock, or `threading.Lock` around the check-and-increment).
+2. Dict itself isn't thread-safe under concurrent mutation across threads → guard `counts` with a lock or use a concurrent map.
+3. State is per-process only — multiple workers each get their own `counts`, so the real limit is `limit * num_workers` → move state to a shared store (Redis, etc.).
+4. No window/expiry — `count` never resets, so after the first `limit` requests ever, the user is blocked forever → add a time window (fixed or sliding) and reset/expire counts.
+5. Unbounded memory growth — `counts` grows forever, one entry per distinct `user_id`, never cleaned up → evict/expire stale entries (TTL or LRU).
+6. No validation on `user_id` — `None`, empty, or absent values are silently treated as a valid bucket → reject/validate `user_id` before use.
+7. No validation on `limit` — a caller passing `limit=0` or negative silently just always denies, and inconsistent `limit` values per call for the same user produce incoherent behavior → fix `limit` per user/config, not per call.
+8. Not crash-safe/durable — in-memory dict is lost on restart, silently resetting everyone's quota → persist to external store if quota must survive restarts.

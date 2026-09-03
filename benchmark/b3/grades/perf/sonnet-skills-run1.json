@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `actor` SELECT per event (N+1, ~1900 round trips for acme) \u2014 batch it into a single `WHERE id = ANY($actor_ids)` query and build a lookup dict.",
+  "F2": "Dedup bug: `if ev[\"dedupe_key\"] in seen` against a growing `list` is O(n\u00b2) on top of everything else \u2014 use a `set`.",
+  "F3": "`lookup_geo` uses synchronous `requests.get` inside an async handler... blocks that worker's whole event loop for seconds at a time... fix by using an async HTTP client (httpx.AsyncClient) or moving geo lookups off the request path.",
+  "F4": "no index covers `(org_id, created_at)` \u2014 `events` only has indexes on `actor_id` and `kind`, so this is a sequential-scan-and-sort over 4.2M rows every call; add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "cap/rotate `_request_timings` (fixed-size ring buffer)",
+  "F6": "bound `_geo_cache` (LRU with a maxsize, or TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal as-is: it scales up two subsystems (workers, pool) and slaps a cache in front of a request that has three separate correctness/perf bugs \u2014 it will hide the symptom for ~60s windows and make the memory leak worse (more workers each running the same unbounded caches).",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.145808,
+ "judge_wall_ms": 18092,
+ "graded_at": "2026-09-03T16:44:52+0100"
+}

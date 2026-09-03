@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "fable-bare-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "`_cache` is a module global that is filled once and the only reload condition is `_cache is None`, which is never true again ... fix by caching `os.stat(path).st_mtime_ns` and `st_size` alongside the parsed data and reloading whenever the current stat differs",
+  "A2": "**Non-fix:** a TTL still serves stale values for up to the TTL and re-parses unchanged files needlessly; it narrows the window instead of removing the cause.",
+  "A3": "**Non-fix:** a `reload_config()` that sets `_cache = None` is manual invalidation that only helps callers who know to call it; it leaves the bug in place for everyone else.",
+  "A4": "`path` is ignored after the first call, so `get_config('other.json')` returns the first file's contents; key the cache by resolved absolute path.",
+  "A5": "The check-then-load has no lock, so concurrent first calls parse twice and can interleave; wrap it in a `threading.Lock`",
+  "A6": "Callers get the shared dict by reference, so one caller mutating it changes config for all others ... return a deep copy or a `MappingProxyType`.",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.087408,
+ "judge_wall_ms": 15271,
+ "graded_at": "2026-09-03T11:19:29+0100"
+}

@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-skills-run2",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `'price'` or `'qty'` key raises a bare `KeyError` naming only the key",
+  "C2": "`None` values (from a NULL-ish CSV) raise `TypeError`, not `ValueError`",
+  "C3": "Common CSV money formats (`\"$12.99\"`, `\"1,299.00\"`, `\"12.99 USD\"`, `\"\"`, `\"N/A\"`, BOM-prefixed `\"\\ufeff12.99\"`) all raise",
+  "C4": "Common CSV money formats (`\"$12.99\"`, `\"1,299.00\"`, `\"12.99 USD\"`, ...) all raise \u2014 strip/normalise known formats, reject the rest explicitly",
+  "C5": "`int(\"3.0\")` raises `ValueError` even though it's a valid quantity",
+  "C6": "`float` for money loses cents (0.1+0.2 problems) \u2014 parse into `Decimal` or integer minor units instead",
+  "C7": "Negative price or qty is accepted silently \u2014 decide the policy",
+  "C8": "`float(\"nan\")`, `\"inf\"`, `\"-inf\"` parse fine and poison the total silently",
+  "C9": "Every parse error aborts the whole aggregation with no row number, column, or offending value"
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.091413,
+ "judge_wall_ms": 13251,
+ "graded_at": "2026-09-03T11:27:35+0100"
+}

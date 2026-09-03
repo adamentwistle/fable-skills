@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "haiku-bare-run4",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing 'price' or 'qty' keys raise KeyError",
+  "C2": "Empty or None values raise ValueError",
+  "C3": "Empty or None values raise ValueError \u2192 skip rows or validate non-empty before conversion.",
+  "C4": "Non-numeric price string raises ValueError \u2192 validate format or wrap float() in try-except.",
+  "C5": "Qty must be integer (decimals rejected) \u2192 clarify if quantities are always whole units.",
+  "C6": "Float precision degrades with currency math \u2192 use Decimal instead of float.",
+  "C7": "Negative price/qty produces wrong totals \u2192 assert both price > 0 and qty > 0.",
+  "C8": "float(\"nan\") and float(\"inf\") accepted as valid \u2192 validate result with math.isfinite().",
+  "C9": ""
+ },
+ "score": 8,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.086963,
+ "judge_wall_ms": 17586,
+ "graded_at": "2026-09-03T11:15:30+0100"
+}

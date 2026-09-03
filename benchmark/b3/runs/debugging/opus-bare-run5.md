@@ -1,0 +1,8 @@
+1. Root cause: the cache is never invalidated — `_cache is None` is the only refill condition, so once populated it lives for the process lifetime; store the file's mtime and size alongside the data and reload when either changes.
+2. `path` is not part of the cache key, so a second call with a different path silently returns the first file's data; key the cache by resolved absolute path.
+3. NOT a fix: adding a time-based TTL — it only shortens the staleness window and still serves wrong data between ticks, while adding a wait after every legitimate edit.
+4. NOT a fix: `_cache = None` sprinkled at call sites or an exposed `clear_cache()` — it makes correctness depend on every caller remembering, which is what already failed.
+5. NOT a fix: checking mtime alone — coarse filesystem timestamp resolution plus same-second rewrites can miss a change; pair it with size (or a content hash for certainty).
+6. NOT a fix: switching to `functools.lru_cache` — same permanent-cache semantics with a nicer spelling, and it silently hides the stale-read bug behind a stdlib name.
+7. Falsy-config edge: if the file contains `null`, `_cache is None` stays true and the file is re-read every call; use a distinct sentinel object rather than `None` for "unloaded".
+8. Not thread-safe: concurrent first calls can both read and parse the file, and readers can observe a half-assigned state under a non-atomic update; guard the reload with a lock and swap in the finished dict in one assignment.

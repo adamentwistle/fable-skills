@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": false,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL Injection in `get_user_orders`** \u2014 Query uses string formatting (`%`) instead of parameterized queries.",
+  "S2": "Database connection leak in `get_user_orders`** \u2014 Connection is never closed.",
+  "S3": "`order[0]` is an integer; `\"Order #\" + order[0]` raises `TypeError`.",
+  "S4": "Division by zero in `average_order_value`** \u2014 Empty `orders` list crashes with `ZeroDivisionError`.",
+  "S5": "Float arithmetic for currency in `apply_discount`** and amounts returned from database \u2014 Binary float math causes precision loss.",
+  "S6": "",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "No error handling in `get_user_orders`** \u2014 Database errors bubble up as generic exceptions with no user_id or context.",
+  "S12": "",
+  "S13": "",
+  "S14": "Brittle tuple indexing** \u2014 Code assumes `order[0]` is ID, `order[1]` is amount."
+ },
+ "score": 7,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.103738,
+ "judge_wall_ms": 18214,
+ "graded_at": "2026-09-03T11:28:02+0100"
+}

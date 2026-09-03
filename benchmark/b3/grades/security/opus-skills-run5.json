@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection \u2014 critical.** `user_id` and `status` come from the request and are interpolated into the query string.",
+  "S2": "Connection is never closed \u2014 high.** No `close()`, no context manager, and an exception in `execute` leaks it outright.",
+  "S3": "`TypeError` on every call \u2014 critical.** `order[0]` is an integer id from the database, and `\"Order #\" + 1` raises `TypeError`",
+  "S4": "`ZeroDivisionError` on an empty list \u2014 high.",
+  "S5": "Money accumulated in binary floats \u2014 high.** `0.1 + 0.2 != 0.3`.",
+  "S6": "`pct` is not range-checked \u2014 high.** `pct=150` returns a negative price",
+  "S7": "`status` is not checked against an allowlist \u2014 medium.",
+  "S8": "No authorization on the object \u2014 critical.** `user_id` is taken from the request, so any authenticated caller can read any other customer's orders",
+  "S9": "A NULL amount raises a bare `TypeError` \u2014 medium.** `None` in the `amount` column",
+  "S10": "Money rendered with `str()` \u2014 high.** `str(10.5)` is `\"10.5\"`, not `\"10.50\"`",
+  "S11": "Raw `sqlite3` errors reach the HTTP handler \u2014 medium.",
+  "S12": "No rounding \u2014 high.** `100.00` at `12.5%` gives `87.5`, and `89.99` at `15%` gives `76.4915`",
+  "S13": "Unbounded result set \u2014 medium.** `fetchall` with no `LIMIT`",
+  "S14": "Rows come back as positional tuples \u2014 medium.** ... Fix: `sqlite3.Row` plus a small frozen dataclass."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.139263,
+ "judge_wall_ms": 12556,
+ "graded_at": "2026-09-03T11:28:11+0100"
+}

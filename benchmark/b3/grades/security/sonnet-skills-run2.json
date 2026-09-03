@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds the query by string interpolation with values that come straight from the HTTP request. Fix: use parameterized queries",
+  "S2": "`conn`/`cur` are never closed, and there's no `try`/`finally` or context manager, so on any exception ... the connection leaks",
+  "S3": "`order[0]` is the numeric order ID from SQLite (an int); `\"Order #\" + order[0]` raises `TypeError: can only concatenate str`",
+  "S4": "`total / len(orders)` throws `ZeroDivisionError` when `orders` is empty",
+  "S5": "Money stored/handled as `float` \u2014 high (data integrity)... Fix: use `Decimal` (ideally the DB itself should store integer minor units/cents)",
+  "S6": "A negative `pct` increases the price; `pct > 100` produces a negative amount. Fix: clamp/reject outside `[0, 100]`",
+  "S7": "`status` should be validated against a known set of order statuses at the boundary",
+  "S8": "`user_id` comes from the request, and this function trusts it with no check that it matches the authenticated caller",
+  "S9": "",
+  "S10": "`apply_discount` and `format_receipt` don't round, so results can show as `19.999999999997`",
+  "S11": "Any `sqlite3.Error` propagates unhandled up to the HTTP layer, risking a raw DB error (schema/path detail) reaching the client",
+  "S12": "Round once, at the point of display/storage, with a stated policy (half-up here)",
+  "S13": "No `LIMIT`/pagination; a user with an enormous order history returns everything in one query",
+  "S14": ""
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.118453,
+ "judge_wall_ms": 18922,
+ "graded_at": "2026-09-03T11:28:21+0100"
+}

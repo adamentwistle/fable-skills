@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "breaks `apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents` now `undefined`) and `services/reconciler/reconcile.py:64` (`inv[\"total_cents\"]` now missing)",
+  "P2": "`status: 'paid'` \u2192 `'settled'` rename breaks `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'` check) and the same reconciler line 64 checking `\"paid\"`",
+  "P3": "`repo.ts` writes/reads `state` as a raw SMALLINT, so existing rows with stored value `2` (previously `Paid`) now deserialize as `Disputed`, and value `3` (`Void`) now deserializes as `Paid`",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set `INVOICE_GRACE_DAYS`, which the new Zod schema no longer recognizes \u2014 env var is silently dropped and every environment falls back to the new default of 7 days, cutting prod's actual 21-day grace period",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still call `computeLateFee` with the old `INVOICE_GRACE_DAYS` env var / positional number \u2014 untyped JS and an unbuilt package hid this from `turbo`'s typecheck/test filter",
+  "P6": "replaced exact assertions (`toBe('paid')`, `toBe(12500)`, `toBe('GBP')`) with `toBeTruthy()`/`toBeDefined()` ... Restore precise assertions against the new shape.",
+  "P7": "PR description's claim that \"mobile app and reconciler handle both old and new shapes\" is contradicted by the author's own `rg` sweep ... don't let it wave off findings 3\u20134.",
+  "P8": "",
+  "P9": "Block merge or split into a versioned/dual-write response until both consumers are updated.",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.175713,
+ "judge_wall_ms": 25393,
+ "graded_at": "2026-09-03T16:21:39+0100"
+}

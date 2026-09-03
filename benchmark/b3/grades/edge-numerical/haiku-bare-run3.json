@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "haiku-bare-run3",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": false,
+  "C6": true,
+  "C7": true,
+  "C8": false,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing 'price' or 'qty' keys raise KeyError",
+  "C2": "None values raise TypeError: validate not None.",
+  "C3": "Empty strings raise ValueError on conversion",
+  "C4": "Non-numeric strings raise ValueError: validate numeric format.",
+  "C5": "",
+  "C6": "Float precision loss in currency math: use Decimal type.",
+  "C7": "Negative prices/quantities allowed (business logic error): validate >= 0.",
+  "C8": "",
+  "C9": ""
+ },
+ "score": 6,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.078928,
+ "judge_wall_ms": 12153,
+ "graded_at": "2026-09-03T11:15:24+0100"
+}

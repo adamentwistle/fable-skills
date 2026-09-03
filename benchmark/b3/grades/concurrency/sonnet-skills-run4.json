@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `count`/`counts[user_id]` across threads \u2014 race lets concurrent requests both pass",
+  "B2": "",
+  "B3": "fix with an atomic increment or a per-user lock",
+  "B4": "No window/expiry \u2014 once a user hits 100 they're blocked forever, not per-second/minute; fix by adding a time window",
+  "B5": "`counts` dict grows unbounded \u2014 every distinct `user_id` ever seen stays in memory forever",
+  "B6": "`counts` is per-process, not shared \u2014 multi-worker deployment lets each worker grant its own 100, so real limit is 100\u00d7workers",
+  "B7": "No input validation on `user_id` \u2014 `None`/unhashable/malicious values throw or collide"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07822299999999999,
+ "judge_wall_ms": 16623,
+ "graded_at": "2026-09-03T11:26:53+0100"
+}

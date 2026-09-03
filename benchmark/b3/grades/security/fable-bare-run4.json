@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "fable-bare-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "Both `user_id` and `status` are pasted into the SQL string with `%`. A user_id of `1' OR '1'='1` returns every user's orders.",
+  "S2": "`conn` and `cur` are never closed. Every request leaks a file handle and a SQLite lock.",
+  "S3": "`order[0]` is an integer id from the database. `\"Order #\" + int` raises `TypeError`.",
+  "S4": "`average_order_value` divides by zero.** An empty list raises `ZeroDivisionError`.",
+  "S5": "money as float. Totals accumulate in a float ... Fix: use `Decimal` and quantize to cents. Longer term, store integer cents in the database.",
+  "S6": "A negative pct raises the price. A pct over 100 returns a negative amount. ... Fix: validate 0 to 100",
+  "S7": "any status string is accepted and silently returns zero rows, including case mismatches like `Shipped`. ... Fix: allowlist statuses",
+  "S8": "The user_id comes straight from the request. Nothing ties it to the authenticated caller, so any logged-in user can read any other user's orders.",
+  "S9": "",
+  "S10": "`str(order[1])` prints `12.5` or `12.300000000000001`. ... return f\"Order #{order.id}: ${order.amount:.2f}\"",
+  "S11": "raw `sqlite3.Error` reaches the HTTP layer.** Depending on the handler, schema details leak in 500 responses.",
+  "S12": "Discount math compounds the rounding error. Fix: use `Decimal` and quantize to cents.",
+  "S13": "unbounded `fetchall`.** No `LIMIT` and no `ORDER BY`. A heavy user pulls their whole history into memory",
+  "S14": "`o[1]`, `order[0]` and `order[1]` depend on the SELECT column order. Reordering the SELECT silently breaks the math and receipts."
+ },
+ "score": 13,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.132118,
+ "judge_wall_ms": 27129,
+ "graded_at": "2026-09-03T11:16:09+0100"
+}

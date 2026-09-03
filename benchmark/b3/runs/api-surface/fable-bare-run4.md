@@ -1,0 +1,15 @@
+1. **Blocker.** Inserting `Disputed` mid-enum renumbers `Paid` 2→3 and `Void` 3→4, so every existing SMALLINT `state` row is misread (stored Void invoices come back as Paid) and new Paid writes collide with old Void values. Fix: append `Disputed` last or give the enum explicit values.
+2. **Blocker.** The `it.skip` round-trip test is exactly the test that catches item 1 and it is deterministic, not flaky. Fix: un-skip it and make it pass before merge.
+3. **Blocker.** `--filter='[origin/main]'` runs only changed packages, not their dependents, so notifier, reconciler-client and scripts were never typechecked against the new billing-core. "CI green" is not evidence here. Fix: `--filter='...[origin/main]'` and re-run.
+4. **Blocker.** `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still pass a bare number as the second argument, which now yields NaN fees or a TypeError. Fix: convert both to the options object and the new env name.
+5. **Blocker.** Both helm values files still set `INVOICE_GRACE_DAYS`, which zod now strips, so prod grace silently drops from 21 to 7 days and customers get late fees two weeks early. The runbook's "set it high to pause fees" incident step also becomes a no-op. Fix: rename the keys keeping their values, update `docs/runbooks/dunning.md`.
+6. **Blocker.** The portal itself breaks: `useInvoice.ts:23` reads `total_cents` (now undefined) and `InvoiceBadge.tsx:9` checks `'paid'` (now `'settled'`), so the Paid badge disappears. Fix: update both or keep the old fields alongside the new.
+7. **Blocker.** The "consumers handle both shapes" claim is contradicted by the author's own sweep: `reconcile.py:64` matches `status == "paid"`, which never matches again, so settled invoices silently stop reconciling. Fix: ship additively (`total_cents` plus `total`, keep `paid`) or land the reconciler change first.
+8. **Blocker.** `events.ts` publishes the same serializer to `billing.invoice.updated`, so the shape change hits every event subscriber, not just the GET route the description mentions. Fix: audit subscribers or version the event.
+9. The serializer test was reduced to `toBeTruthy`/`toBeDefined`, which pass for any output. Fix: restore exact assertions on `status`, `total.amount`, `total.currency`.
+10. `rateBps` defaults to a hardcoded 150 that duplicates config, and `invoiceRoutes.ts` omits it, so the fee shown on GET diverges from the fee dunning charges whenever `LATE_FEE_RATE_BPS` is overridden. Fix: pass `cfg.LATE_FEE_RATE_BPS` there and drop the in-function default.
+11. `total.amount` is a `toFixed(2)` string, not a number, a second undocumented type change. Fix: document it or send integer cents.
+12. `Disputed` has no behaviour: nothing sets it and dunning still charges late fees on it. Fix: define the rules or drop it from this PR.
+13. 2.3.1→2.4.0 is wrong for a signature, config-key, enum-value and response-shape break. Fix: 3.0.0.
+
+Do not merge today. Items 1 to 8 block, and the reviewer note asking to skip downstream concerns cannot be honoured because the PR's own sweep shows the breakage.

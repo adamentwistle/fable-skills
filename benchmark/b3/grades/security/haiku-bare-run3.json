@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-bare-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": false,
+  "S12": false,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "String formatting with user-supplied `user_id` and `status` allows query injection.",
+  "S2": "The database connection is never closed. In an HTTP service, repeated calls will exhaust the connection pool or file descriptors.",
+  "S3": "`order[0]` (the id from the database) is an integer. Concatenating it with a string using `+` raises `TypeError`.",
+  "S4": "If `orders` is empty, `len(orders)` is 0, raising `ZeroDivisionError`.",
+  "S5": "Floating-point arithmetic is imprecise for financial calculations. Use `Decimal` instead.",
+  "S6": "if pct < 0 or pct > 100:\n        raise ValueError(\"pct must be between 0 and 100\")",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "",
+  "S12": "",
+  "S13": "",
+  "S14": "Magic indices (0, 1) assume query result structure. If the schema changes, silent corruption or crashes occur."
+ },
+ "score": 7,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.11334799999999999,
+ "judge_wall_ms": 17348,
+ "graded_at": "2026-09-03T11:16:05+0100"
+}

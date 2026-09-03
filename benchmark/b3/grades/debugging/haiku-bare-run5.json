@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-bare-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never invalidates when file changes \u2014 always reload on each call or add file-change detection.",
+  "A2": "Tempting: TTL-based expiry \u2014 stale values persist during cached interval.",
+  "A3": "Tempting: Reload() method \u2014 requires caller discipline, easily forgotten.",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 3,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.086228,
+ "judge_wall_ms": 16897,
+ "graded_at": "2026-09-03T11:19:46+0100"
+}

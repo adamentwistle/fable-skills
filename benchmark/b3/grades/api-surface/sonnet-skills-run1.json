@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "HTTP response shape change (`total_cents` \u2192 `total.amount/currency`, string amount) breaks `apps/portal/src/client/hooks/useInvoice.ts` (`data.total_cents` now undefined) in the same repo",
+  "P2": "Status label rename `'paid'` \u2192 `'settled'` breaks `apps/portal/src/client/components/InvoiceBadge.tsx` (`status === 'paid'`) and `services/reconciler/reconcile.py` (`inv[\"status\"] == \"paid\"`)",
+  "P3": "inserting `Disputed` between `Open` and `Paid` shifted every subsequent enum's numeric value, and `invoices.state` is a persisted SMALLINT column, so every existing \"Paid\"/\"Void\" row now decodes as the wrong state",
+  "P4": "`infra/helm/billing/values.prod.yaml` and `values.staging.yaml` still set `INVOICE_GRACE_DAYS` (21/14) \u2014 after this rename that value is dropped and every environment silently reverts to the new hardcoded default of 7 days",
+  "P5": "call sites in `services/notifier/src/reminders.ts` and `scripts/backfill-late-fees.js` still pass the old positional `graceDays` number ... CI didn't catch because turbo skipped those packages as \"no changes since main\"",
+  "P6": "Test changes weakened real assertions to `toBeTruthy()`/`toBeDefined()` ... restore concrete assertions",
+  "P7": "treat the \"mobile/reconciler already compatible\" claim as unverified since the Python reconciler is not",
+  "P8": "the totals/status shape change silently changes the wire event schema for any external subscriber, not just the HTTP endpoint; confirm event consumers are covered",
+  "P9": "add `total_cents` back for one deprecation cycle or confirm every consumer (mobile, reconciler, portal client) is migrated before removing it",
+  "P10": "don't merge on a filtered CI run that excludes them",
+  "P11": "`dunning.ts` now explicitly passes `config.LATE_FEE_RATE_BPS` while `invoiceRoutes.ts` omits it and falls back to the hardcoded 150 ... pass `cfg.LATE_FEE_RATE_BPS` in `invoiceRoutes.ts` too"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.18264799999999998,
+ "judge_wall_ms": 26754,
+ "graded_at": "2026-09-03T16:42:19+0100"
+}

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` still reads `data.total_cents`",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` checks `status === 'paid'`",
+  "P3": "Adding `Disputed` between `Open` and `Paid` shifts numeric values of all downstream states (Paid: 2\u21923, Void: 3\u21924). Existing invoices with `state=2` (Paid) will be read as Disputed after deploy. Requires database migration",
+  "P4": "Helm values files not updated: `infra/helm/billing/values.prod.yaml:31` and `infra/helm/billing/values.staging.yaml:29` still set `INVOICE_GRACE_DAYS`",
+  "P5": "call sites in `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` not updated (CI skipped these packages; they will fail at runtime)",
+  "P6": "\"serializes a paid invoice\" test gutted from checking exact values to just `toBeTruthy()` / `toBeDefined()`, no longer verifies response shape correctness",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.177853,
+ "judge_wall_ms": 33738,
+ "graded_at": "2026-09-03T16:42:00+0100"
+}

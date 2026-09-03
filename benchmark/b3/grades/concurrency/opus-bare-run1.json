@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-bare-run1",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write is not atomic, so two threads can both see count 99 and both allow",
+  "B2": "",
+  "B3": "hold a lock (or use per-user atomic counters) around the get/set pair",
+  "B4": "There is no time window at all, so this is a lifetime quota rather than a rate limit",
+  "B5": "`counts` grows without bound as new user IDs arrive, a memory leak",
+  "B6": "In a multi-worker deployment each process keeps its own dict, so the real limit is `limit` times the worker count",
+  "B7": "`user_id` is unvalidated and used directly as a dict key, so `None` or an unhashable value either merges all callers into one bucket or raises `TypeError`"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080218,
+ "judge_wall_ms": 16579,
+ "graded_at": "2026-09-03T11:19:14+0100"
+}

@@ -1,0 +1,62 @@
+{
+ "area": "security",
+ "model_alias": "sonnet",
+ "canonical_models": [
+  "claude-sonnet-5"
+ ],
+ "condition": "skills",
+ "run": 1,
+ "skills": [
+  "security-reflexes",
+  "edge-case-sweep",
+  "numerical-care",
+  "error-message-quality",
+  "workmanship"
+ ],
+ "skills_mode": "system-prompt",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.11102680000000001,
+ "duration_api_ms": 43065,
+ "wall_ms": 48192,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 16473,
+  "cache_read_input_tokens": 29454,
+  "output_tokens": 3924,
+  "output_tokens_details": {
+   "thinking_tokens": 1661
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 16473,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3924,
+    "cache_read_input_tokens": 29454,
+    "cache_creation_input_tokens": 16473,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 16473
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "6c713de1-d35a-4a2a-8227-2d0cbe5cf161",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T11:23:44+0100"
+}

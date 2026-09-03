@@ -1,0 +1,13 @@
+1. Two callers still pass the old positional/env signature — `services/notifier/src/reminders.ts:57` calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` (number instead of options object) and `scripts/backfill-late-fees.js:22` does the same — both compile only because `notifier`/`scripts` were skipped by CI's `[origin/main]` filter, not because they're compatible; will throw/NaN at runtime. **Blocking**: update both call sites or CI is lying about coverage.
+
+2. `INVOICE_GRACE_DAYS` env var is dead in code but still set in `infra/helm/billing/values.prod.yaml:31` (21) and `values.staging.yaml:29` (14) — after deploy, `BILLING_GRACE_PERIOD_DAYS` falls back to its new default of 7, silently changing prod grace period from 21 to 7 days. **Blocking**: update Helm values in the same rollout, not after.
+
+3. `docs/runbooks/dunning.md:18` tells on-call to raise `INVOICE_GRACE_DAYS` during an incident — that var no longer does anything post-merge. Update runbook before this ships (incident-response correctness).
+
+4. API response shape and status vocabulary changed (`total_cents`+`currency` → `total.amount/currency`, `"paid"` → `"settled"`) but `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` and `InvoiceBadge.tsx:9` checks `status === 'paid'` — both are in-repo, in-scope consumers that break, contradicting the "consumer compatibility is covered" claim (that note only addressed external mobile/reconciler). **Blocking**: fix or update these two files in this diff.
+
+5. `total.amount` is now a string (`toFixed(2)`) where it was previously an integer cents value — a silent type change for any consumer doing arithmetic on it, not just a rename; flag explicitly since the reviewer note waves off "downstream concerns."
+
+6. Tests were weakened, not fixed: `expect(res.status).toBe('paid')`/`total_cents`/`currency` assertions replaced with `toBeTruthy()`/`toBeDefined()`, so the new `"settled"` label and `total.amount/currency` shape are never actually asserted. Restore real value assertions.
+
+7. The state-persistence round-trip test is skipped with a comment admitting the fixture DB doesn't reflect the new `Disputed` enum value — `Disputed` was inserted between `Open` and `Paid`, shifting the underlying int values for `Paid`/`Void`. `repo.ts` writes `state` directly to a SMALLINT column, so any row written before this deploy has old integer values that now decode to the wrong enum/status. **Blocking**: this is a data-migration hazard, not a flaky test — needs an explicit enum value assignment (or migration) before merge, not a skip.

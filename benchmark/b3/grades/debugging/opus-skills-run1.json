@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run1",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the cache is never invalidated \u2014 it is filled on first call and never compared against the file again, so only a restart can change it; fix by recording the file's stat signature at load time and reloading when it differs",
+  "A2": "NOT a fix \u2014 a TTL: still serves known-stale data for the whole window and leaves the missing invalidation in place.",
+  "A3": "NOT a fix \u2014 exposing `reload()` or setting `_cache = None` at call sites: pushes correctness onto every caller and misses out-of-band edits.",
+  "A4": "The cache ignores `path` \u2014 a second call with a different file returns the first file's data; fix by keying a dict on the resolved absolute path.",
+  "A5": "Concurrent first calls race on `_cache` and each parse the file; fix with a module-level lock around the load-and-store.",
+  "A6": "The cached dict is returned live, so one caller's mutation silently rewrites config for everyone; fix by returning a deep copy.",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.095883,
+ "judge_wall_ms": 19432,
+ "graded_at": "2026-09-03T11:27:12+0100"
+}

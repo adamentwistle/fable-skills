@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-bare-run1",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": false,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Cause**: Handler passed `json.dumps(payload)` to `verify_signature`, but the function requires raw request bytes. Re-serialization alters the digest.\n- **Fix**: Replace `json.dumps(payload)` with `request.get_data()`.",
+  "I2": "",
+  "I3": "",
+  "I4": "",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "Signing secret (`whsec_...`) is at Dashboard \u2192 Endpoints \u2192 [your endpoint] \u2192 Signing secret.",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 2,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.117368,
+ "judge_wall_ms": 12415,
+ "graded_at": "2026-09-03T16:22:51+0100"
+}

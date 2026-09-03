@@ -1,0 +1,9 @@
+1. Not thread-safe — `counts.get`/`counts[user_id] = count+1` is a check-then-act race across threads → use a lock or atomic increment (e.g., `threading.Lock`, `collections.Counter` won't help; use a per-key lock or `multiprocessing`-safe store).
+2. Not multi-process/multi-worker safe — each worker has its own `counts` dict, so the limit is per-process not global → move state to a shared store (Redis/Memcached with atomic INCR).
+3. No time window — once `limit` is hit, user is blocked forever (counts never reset) → add a window/expiry (sliding/fixed window, token bucket).
+4. Unbounded memory growth — `counts` never evicts entries for old/inactive users → add TTL/expiry or an LRU eviction.
+5. No input validation on `user_id` — `None` or unhashable types will raise or silently pool all `None` users together → validate/require a hashable, non-null id.
+6. No validation on `limit` — negative or zero values behave inconsistently (0 blocks everyone, negative never triggers reset logic) → validate `limit > 0`.
+7. Race in the increment allows over-limit under concurrency even ignoring locks (two threads both read count=99 before either writes) → same fix as #1, needs atomicity, not just presence of a lock statement.
+8. No persistence — counts reset to zero on process restart/crash, defeating the limiter → back with persistent/shared storage if resets-on-restart is not acceptable.
+9. No distinction between "rate limited" and "error" for the caller — returns `False` for legitimate errors too if extended (e.g., swallowing exceptions) → keep error paths distinct (raise, don't fold into `False`).

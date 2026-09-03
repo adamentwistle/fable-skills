@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-skills-run1",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": true,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Fix:** Use `request.get_data()` to pass raw bytes exactly as received.",
+  "I2": "",
+  "I3": "",
+  "I4": "Do not disable signature verification (`SF_WEBHOOK_VERIFY=0`). Signatures verify the source of webhook data.",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "`SF_WEBHOOK_SECRET`: from Dashboard \u2192 Endpoints \u2192 [your endpoint] \u2192 Signing secret",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 3,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.115613,
+ "judge_wall_ms": 11063,
+ "graded_at": "2026-09-03T16:43:00+0100"
+}

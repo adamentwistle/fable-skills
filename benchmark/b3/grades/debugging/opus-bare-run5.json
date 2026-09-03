@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-bare-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "the cache is never invalidated \u2014 `_cache is None` is the only refill condition, so once populated it lives for the process lifetime; store the file's mtime and size alongside the data and reload when either changes",
+  "A2": "NOT a fix: adding a time-based TTL \u2014 it only shortens the staleness window and still serves wrong data between ticks",
+  "A3": "NOT a fix: `_cache = None` sprinkled at call sites or an exposed `clear_cache()` \u2014 it makes correctness depend on every caller remembering",
+  "A4": "`path` is not part of the cache key, so a second call with a different path silently returns the first file's data; key the cache by resolved absolute path",
+  "A5": "Not thread-safe: concurrent first calls can both read and parse the file, and readers can observe a half-assigned state under a non-atomic update; guard the reload with a lock",
+  "A6": "",
+  "A7": "",
+  "A8": "if the file contains `null`, `_cache is None` stays true and the file is re-read every call; use a distinct sentinel object rather than `None` for \"unloaded\""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.082238,
+ "judge_wall_ms": 11869,
+ "graded_at": "2026-09-03T11:19:45+0100"
+}

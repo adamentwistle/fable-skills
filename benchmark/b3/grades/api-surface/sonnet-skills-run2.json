@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "author's own sweep shows live consumers reading `total_cents` ... in `apps/portal/src/client/hooks/useInvoice.ts`, `InvoiceBadge.tsx`, and `services/reconciler/reconcile.py`",
+  "P2": "`status` label `paid` \u2192 `settled` are breaking response-shape changes ... `status === 'paid'`/`== \"paid\"`",
+  "P3": "shifts the numeric enum values (`Paid` 2\u21923, `Void` 3\u21924) but `invoices.state` is a persisted SMALLINT column \u2014 every existing \"Paid\"/\"Void\" row will be misread",
+  "P4": "`infra/helm/billing/values.prod.yaml`/`values.staging.yaml` still set the old var name \u2014 grace days silently fall back ... instead of the intended value in prod",
+  "P5": "still pass the old positional `graceDays` number ... these packages were skipped by CI's `--filter='[origin/main]'` scope so this was never caught",
+  "P6": "Test assertions were weakened from exact value checks (`toBe('paid')`, `toBe(12500)`, `toBe('GBP')`) to `toBeTruthy()`/`toBeDefined()` ... restore precise assertions",
+  "P7": "these are in-repo, so \"downstream consumers already handle both shapes\" is contradicted by the diff itself",
+  "P8": "",
+  "P9": "block until portal client and reconciler are updated in this PR or a version-negotiated/dual-shape response ships first",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.165568,
+ "judge_wall_ms": 21714,
+ "graded_at": "2026-09-03T16:42:17+0100"
+}

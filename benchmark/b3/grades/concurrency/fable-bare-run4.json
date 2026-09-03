@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "fable-bare-run4",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Check-then-increment is not atomic across threads, so concurrent requests past the limit are both allowed",
+  "B2": "concurrent requests past the limit are both allowed and increments are lost",
+  "B3": "guard the read-modify-write with a lock or use an atomic increment",
+  "B4": "No time window: counts never reset, so a user is blocked forever after 100 requests",
+  "B5": "Unbounded memory: every user_id ever seen stays in the dict; evict entries on window expiry",
+  "B6": "`counts` is per-process, so N workers each enforce their own limit and the real limit is N\u00d7100",
+  "B7": "`None` becomes a shared bucket, and unhashable ids raise `TypeError`; validate and normalise user_id"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.082788,
+ "judge_wall_ms": 18420,
+ "graded_at": "2026-09-03T11:18:58+0100"
+}

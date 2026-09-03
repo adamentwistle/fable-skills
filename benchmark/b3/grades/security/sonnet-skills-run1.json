@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds the query with `%` string formatting on `user_id`/`status`, both attacker-controlled from the HTTP request",
+  "S2": "`conn`/`cur` leak on every call, and doubly so if an exception is raised mid-query (no `try/finally`)",
+  "S3": "`order[0]` (the `id` column) comes back from SQLite as an `int`, but the code does `\"Order #\" + order[0]`, concatenating `str + int` \u2014 this raises `TypeError`",
+  "S4": "Empty `orders` list raises `ZeroDivisionError`",
+  "S5": "`amount` is summed and divided as `float` throughout ... Floats can't represent currency exactly",
+  "S6": "A negative percentage increases the price; a percentage over 100 makes the amount negative. Neither is validated.",
+  "S7": "`status` should be checked against the known set of valid order statuses ... validate against an allowlist",
+  "S8": "no check that it matches the authenticated caller's own account ... this is an IDOR",
+  "S9": "",
+  "S10": "round `order[1]` to 2 decimals when formatting",
+  "S11": "if that propagates to an HTTP error response unmodified it can leak internal schema/path details to the client ... return a sanitized generic error",
+  "S12": "round once at the display boundary with an explicit policy (e.g. `ROUND_HALF_UP` to 2 places)",
+  "S13": "No `LIMIT`/pagination on the query; a user with a very large order history returns the entire table",
+  "S14": ""
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.117783,
+ "judge_wall_ms": 18191,
+ "graded_at": "2026-09-03T11:28:18+0100"
+}

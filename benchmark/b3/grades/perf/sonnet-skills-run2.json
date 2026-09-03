@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 \u2014 one `actor` `fetchrow` per event, sequentially awaited, up to ~1,900 round trips per request \u2014 batch into one `SELECT ... WHERE id = ANY($1)`",
+  "F2": "Dedup is O(n\u00b2) (`if ev[\"dedupe_key\"] in seen` over a `list`) ... use a `set` for `seen`",
+  "F3": "`lookup_geo` uses synchronous `requests.get` inside an async handler, blocking the whole event loop ... replace with an async HTTP client",
+  "F4": "no index on `(org_id, created_at)` \u2014 add one (`CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`)",
+  "F5": "`_request_timings` list is appended to forever and never trimmed \u2014 cap it or replace with a rolling/reservoir metric",
+  "F6": "`_geo_cache` is an unbounded dict that never evicts \u2014 bound it (LRU with max size, or TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal as-is ... 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 Postgres connections, likely past `max_connections`); revisit caching only after the fixes below",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.144983,
+ "judge_wall_ms": 20525,
+ "graded_at": "2026-09-03T16:45:00+0100"
+}

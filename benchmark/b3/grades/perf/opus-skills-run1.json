@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` issues one `SELECT ... FROM users` per event, so acme's request makes ~1,900 round-trips \u2014 fetch the distinct actor ids once with `WHERE id = ANY($1)`",
+  "F2": "the dedupe loop tests `ev[\"dedupe_key\"] in seen` against a list, which is O(n\u00b2) \u2014 ~1.8M comparisons at 1,912 rows",
+  "F3": "`lookup_geo` calls blocking `requests.get` with a 2 s timeout inside an async handler, so every cache-miss IP stalls the whole worker's event loop",
+  "F4": "no index serves `org_id = $1 AND created_at >= $2`, so every call scans all 4.21M rows to return 1,912 \u2014 add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` appends one float per request forever across all routes (~8.6M entries in 20 h at 120 req/s) \u2014 replace it with a bounded structure (`deque(maxlen=...)` or fixed-bucket histogram)",
+  "F6": "`_geo_cache` is a second unbounded dict keyed on client IP with no eviction \u2014 bound it (LRU with a max size and TTL)",
+  "F7": "Baseline first: record wall time and p95 for `GET /api/v2/orgs/4127/activity?limit=1000` five times warm ... Re-run the exact step-3 measurements after the index alone, then after the query and N+1 fixes",
+  "F8": "",
+  "F9": "Reject step 1 of the proposal: 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 Postgres connections ... Reject step 2: `since` defaults to `datetime.now()`, so the cache key is unique on every request",
+  "F10": "",
+  "F11": "`since` defaults to `datetime.now()`, so the cache key is unique on every request the mobile app sends \u2014 hit rate \u2248 0"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.165068,
+ "judge_wall_ms": 240588,
+ "graded_at": "2026-09-03T16:48:00+0100"
+}

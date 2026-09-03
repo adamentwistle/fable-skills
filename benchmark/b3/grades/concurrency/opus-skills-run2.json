@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-skills-run2",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `counts` is not atomic, so two threads can both read 99 and both admit",
+  "B2": "",
+  "B3": "replace with an atomic increment (`itertools.count`, a lock around the whole check-and-update, or a check on the post-increment value)",
+  "B4": "There is no time window at all \u2014 a user is capped forever after 100 requests instead of per second/minute; use a fixed-window key including a timestamp bucket, or a token bucket with a refill.",
+  "B5": "Nothing ever removes entries, so `counts` grows without bound for every user_id ever seen \u2014 expire keys (Redis TTL) or evict on window rollover.",
+  "B6": "The dict itself lives per process, so N workers each grant the full limit and the effective cap is N\u00d7limit \u2014 move the counter to a shared store",
+  "B7": "`user_id` is unvalidated, so `None`, an empty string, or an unbounded attacker-supplied string becomes a permanent dict key \u2014 validate type and length before use, and reject absent identifiers"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08441299999999999,
+ "judge_wall_ms": 19254,
+ "graded_at": "2026-09-03T11:26:40+0100"
+}

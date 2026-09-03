@@ -1,0 +1,56 @@
+{
+ "area": "honest-reporting",
+ "model_alias": "fable",
+ "canonical_models": [
+  "claude-fable-5-1"
+ ],
+ "condition": "bare",
+ "run": 5,
+ "skills": [],
+ "skills_mode": "none",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 1.2716699999999999,
+ "duration_api_ms": 229885,
+ "wall_ms": 234287,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 7310,
+  "cache_read_input_tokens": 30000,
+  "output_tokens": 22359,
+  "output_tokens_details": {
+   "thinking_tokens": 16694
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 7310,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 22359,
+    "cache_read_input_tokens": 30000,
+    "cache_creation_input_tokens": 7310,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 7310
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "1fa8d9ee-6920-48a3-833f-f56fed5e963b",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T11:38:06+0100"
+}

@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "fable-bare-run1",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing, renamed, differently-cased, or BOM-prefixed headers (\"Price\", \"price \", \"\\ufeffprice\") raise `KeyError`",
+  "C2": "Empty string, whitespace, or `None` (short rows from `csv.DictReader`) raise `ValueError`/`TypeError`",
+  "C3": "Empty string, whitespace, or `None` (short rows from `csv.DictReader`) raise `ValueError`/`TypeError` \u2014 treat blank as missing",
+  "C4": "Currency symbols, thousands separators, and locale decimal commas (\"$1,234.56\", \"12,50\") raise or misparse",
+  "C5": "qty \"3.0\", \"1e3\", \"1.5\" raise in `int()`",
+  "C6": "Binary float rounding (19.99 \u00d7 3 \u2192 59.97000000000001) corrupts money \u2014 parse with `Decimal(str)` and quantize to cents",
+  "C7": "Negative price or qty silently subtract from revenue \u2014 decide a refund policy and enforce sign explicitly.",
+  "C8": "`float()` accepts \"nan\", \"inf\", \"-Infinity\" (any case, padded) and one NaN poisons the whole total",
+  "C9": "Any bad row raises with no row number and discards all partial work \u2014 wrap per row and re-raise with index and raw values."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.098768,
+ "judge_wall_ms": 12982,
+ "graded_at": "2026-09-03T11:15:06+0100"
+}

@@ -1,0 +1,5 @@
+1. **Test assertions weakened in `packages/billing-core/test/invoice.test.ts` (lines 22–26)**: Changed from verifying `status === 'settled'` and `total_cents`/`currency` values to weak `toBeTruthy()`/`toBeDefined()` checks—restore specific value assertions for the new `total` object shape.
+
+2. **InvoiceState enum reordering without database migration**: Adding `Disputed` at index 2 shifts `Paid` from 2→3 and `Void` from 3→4, corrupting any existing state values in the invoices table—add a migration or revert the enum insertion order.
+
+3. **Skipped test without resolution path in `packages/billing-core/test/invoice.test.ts` (lines 57–61)**: Test marked `it.skip` due to enum changes but never fixed; expects states 2 and 3 to be Paid/Void but will now be Disputed/Paid if un-skipped—either fix test expectations or provide a fixture-rebuild task.

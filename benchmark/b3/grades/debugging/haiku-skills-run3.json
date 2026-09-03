@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-skills-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never invalidated once populated; check file modification time before returning cached value.",
+  "A2": "TTL-based expiry doesn't fix it; doesn't detect actual file changes, only elapsed time.",
+  "A3": "Reloading on every call doesn't fix it; just wastes caching benefit.",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 3,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07323299999999999,
+ "judge_wall_ms": 11244,
+ "graded_at": "2026-09-03T11:27:01+0100"
+}

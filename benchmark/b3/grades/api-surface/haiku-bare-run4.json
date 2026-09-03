@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-bare-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": false,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "Portal client (`apps/portal/src/client/hooks/useInvoice.ts:23` ...) still reads `total_cents` field ... UI will break",
+  "P2": "`InvoiceBadge.tsx:9`) ... checks `status === 'paid'` but API now returns ... status `'settled'`",
+  "P3": "Enum shift (adding `Disputed` between `Open` and `Paid`) changes numeric values: existing DB rows with `state=2` (was Paid) now read as Disputed \u2014 requires data migration",
+  "P4": "Helm config files (`values.prod.yaml`, `values.staging.yaml`) and runbook still reference `INVOICE_GRACE_DAYS` but code now reads `BILLING_GRACE_PERIOD_DAYS`",
+  "P5": "",
+  "P6": "",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 4,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.15781299999999998,
+ "judge_wall_ms": 20184,
+ "graded_at": "2026-09-03T16:20:59+0100"
+}

@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-bare-run4",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "check and increment are separate operations; two threads read the same count, both pass the check",
+  "B2": "",
+  "B3": "Use `threading.Lock()` around read-modify-write.",
+  "B4": "No time window: counts never reset, so once a user hits the limit, they stay blocked forever.",
+  "B5": "Memory leak: user_id entries accumulate indefinitely, consuming unbounded memory.",
+  "B6": "each server/worker maintains its own `counts` dict, so limits apply per-server, not globally",
+  "B7": ""
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.075828,
+ "judge_wall_ms": 13760,
+ "graded_at": "2026-09-03T11:19:08+0100"
+}

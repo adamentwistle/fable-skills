@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the cache has an initialization guard, not an invalidation policy \u2014 `_cache is None` is only ever true once per process, so disk changes can never be seen; fix by recording the file's identity stamp",
+  "A2": "**Not a fix \u2014 TTL/expiry:** it only bounds how long you serve stale data instead of removing the staleness",
+  "A3": "**Not a fix \u2014 dropping the cache and reading every call:** it does end the staleness but discards the caching the function exists to provide",
+  "A4": "one global slot is shared across all `path` values, so the first caller's file is returned to every other caller forever; fix by keying the cache dict on the resolved absolute path",
+  "A5": "Concurrent first-callers can each open and parse the file and race on the global assignment; fix with a module-level `threading.Lock`",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 5,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.091043,
+ "judge_wall_ms": 16848,
+ "graded_at": "2026-09-03T11:27:17+0100"
+}

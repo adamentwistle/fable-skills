@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-skills-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache is never invalidated when file changes on disk \u2014 check file modification time and reload if mtime is newer than cached-load time.",
+  "A2": "TTL timer: reloads only after a timeout expires, not when the file actually changes.",
+  "A3": "External invalidation function: requires caller coordination; does not auto-detect changes.",
+  "A4": "Path parameter is ignored after the first call \u2014 use `path` as part of the cache key",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 4,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.075568,
+ "judge_wall_ms": 12257,
+ "graded_at": "2026-09-03T11:27:03+0100"
+}

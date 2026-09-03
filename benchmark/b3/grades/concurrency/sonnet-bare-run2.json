@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-bare-run2",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Non-atomic check-then-increment races under threads",
+  "B2": "",
+  "B3": "use a lock or atomic counter per user_id",
+  "B4": "No time window \u2014 counts never reset, so limit is lifetime not per-interval",
+  "B5": "Unbounded dict growth (no eviction) \u2014 expire/evict old user_id entries (TTL or LRU)",
+  "B6": "In-process state only, not shared across workers/processes \u2014 back with a shared store (Redis, etc.)",
+  "B7": "No handling of invalid/missing user_id (None, empty) \u2014 validate/reject before lookup"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.075498,
+ "judge_wall_ms": 12692,
+ "graded_at": "2026-09-03T11:19:20+0100"
+}

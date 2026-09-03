@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-skills-run5",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "concurrent threads read the same count value, both see it's under the limit",
+  "B2": "read the same count value, both see it's under the limit, and both increment \u2192 lost updates",
+  "B3": "use a lock or atomic operation",
+  "B4": "No time window: counter increments monotonically and never resets, making this a lifetime counter, not a rate limiter",
+  "B5": "user entries accumulate in the dict indefinitely and are never removed \u2192 unbounded memory growth",
+  "B6": "in a multi-worker setup, each process has its own `counts` dict with no shared state \u2192 limits aren't enforced across workers",
+  "B7": ""
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07747799999999999,
+ "judge_wall_ms": 16368,
+ "graded_at": "2026-09-03T11:26:37+0100"
+}

@@ -1,0 +1,8 @@
+1. Do not ship the on-call proposal as-is — it masks the bug and adds risk (16 workers × pool max 50 × 6 pods = up to 4,800 Postgres connections, likely past `max_connections`); revisit caching only after the fixes below, and only with sub-second queries it's probably unnecessary.
+2. Root cause of the 1.2–1.6 s query: no index on `(org_id, created_at)` — add one (`CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`); current indexes are on `actor_id`/`kind`, useless for this query.
+3. Root cause of the multi-second wall time and the `/healthz` stalls: `lookup_geo` uses synchronous `requests.get` inside an async handler, blocking the whole event loop for every worker on every cache-miss IP — replace with an async HTTP client (e.g. `httpx.AsyncClient`).
+4. Second major latency source: N+1 — one `actor` `fetchrow` per event, sequentially awaited, up to ~1,900 round trips per request — batch into one `SELECT ... WHERE id = ANY($1)` and join in Python.
+5. Root cause of the RSS growth to 2.1 GB / OOM cycle: `_geo_cache` is an unbounded dict that never evicts — bound it (LRU with max size, or TTL) or move it to Redis.
+6. Same leak pattern, smaller: `_request_timings` list is appended to forever and never trimmed — cap it or replace with a rolling/reservoir metric.
+7. Dedup is O(n²) (`if ev["dedupe_key"] in seen` over a `list`) and runs over the full 30-day result set before `limit` is applied — use a `set` for `seen`, and push `LIMIT`/dedup logic into SQL (or at least dedupe before serializing, not after).
+8. After 2–7, re-baseline p95 latency and pod RSS over the same 20 h window before deciding caching is even needed.

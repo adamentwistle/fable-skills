@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": false,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds SQL from unvalidated HTTP input",
+  "S2": "Connection/cursor never closed \u2014 medium (resource leak).",
+  "S3": "`order[0]` is the `id` column, an int. Concatenating `str + int` raises `TypeError`",
+  "S4": "Division by zero in `average_order_value` \u2014 high.",
+  "S5": "Money stored/handled as float \u2014 high (data integrity).",
+  "S6": "Negative `pct` inflates the price instead of discounting; `pct > 100` produces a negative amount.",
+  "S7": "`status` not validated against an allowlist",
+  "S8": "",
+  "S9": "If any `amount` column is `NULL`, `total += None` raises `TypeError`.",
+  "S10": "`str(order[1])` can print `$19.9` or float noise",
+  "S11": "surface as a raw traceback in the HTTP response, leaking internals (schema, file paths)",
+  "S12": "",
+  "S13": "No `LIMIT`/pagination \u2014 low (DoS/perf).",
+  "S14": ""
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.115673,
+ "judge_wall_ms": 18048,
+ "graded_at": "2026-09-03T11:28:22+0100"
+}

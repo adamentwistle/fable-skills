@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": false
+ },
+ "citations": {
+  "C1": "Missing key ('price'/'qty' absent) raises KeyError uncaught",
+  "C2": "None values (null CSV cell parsed as None) raise TypeError",
+  "C3": "Non-numeric price/qty (\"N/A\", \"\") raises ValueError",
+  "C4": "Thousands separators (\"1,200.50\") raise ValueError \u2192 strip commas or use locale-aware parser",
+  "C5": "qty as float string (\"2.0\") raises ValueError on int()",
+  "C6": "Binary float arithmetic drifts (0.1+0.2 rounding) over many rows \u2192 use Decimal for money, not float",
+  "C7": "Negative price or qty silently subtracts from total",
+  "C8": "float() accepts \"inf\"/\"nan\" \u2192 total becomes inf/nan silently",
+  "C9": ""
+ },
+ "score": 8,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.086853,
+ "judge_wall_ms": 14364,
+ "graded_at": "2026-09-03T11:27:50+0100"
+}

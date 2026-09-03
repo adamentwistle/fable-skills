@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` still accesses `total_cents` (now `total.amount`)",
+  "P2": "`InvoiceBadge.tsx:9` still checks `status === 'paid'` (now `'settled'`)",
+  "P3": "Existing rows with state=2 (Paid) will deserialize as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml` and `values.staging.yaml` still set `INVOICE_GRACE_DAYS` ... Prod will silently fall back to the default (7 instead of 21)",
+  "P5": "",
+  "P6": "The test that catches this was skipped instead of fixed ... and re-enable the test",
+  "P7": "or confirm the external service is genuinely decoupled (the author's note covered only the mobile app and \"the reconciler service\", not which one this is)",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.165008,
+ "judge_wall_ms": 29146,
+ "graded_at": "2026-09-03T16:41:56+0100"
+}

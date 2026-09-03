@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "fable-bare-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "Critical, SQL injection.** The query is built with `%` string formatting from request values.",
+  "S2": "Medium, connection never closed.** The connection is left to garbage collection, which delays releasing the file lock and leaks handles",
+  "S3": "`format_receipt` always crashes.** The id column comes back from SQLite as an int, and adding an int to a string raises TypeError on every call.",
+  "S4": "`average_order_value` divides by zero.** A user with no orders in the requested status gives an empty list and a ZeroDivisionError.",
+  "S5": "Medium, money as binary floats.** Totals and discounts use float arithmetic, so results drift and produce values like 8.999999999. Fix: use Decimal throughout",
+  "S6": "`apply_discount` accepts any percentage.** A negative pct raises the price, a pct over 100 gives a negative total... Fix: reject values outside 0 to 100",
+  "S7": "an unknown status should fail with a clear error rather than silently return nothing... Fix: allowlist status values",
+  "S8": "High, broken access control.** The user id comes from the request, so any caller can read another customer's orders by changing the number.",
+  "S9": "NULL or non-numeric amounts crash the average... a NULL or text amount makes the sum raise TypeError.",
+  "S10": "Low, receipt amount formatting.** `str()` on a float prints `$9.5` and can print scientific notation. Fix: format with two decimal places.",
+  "S11": "raw sqlite3 errors propagate to the handler. Consider... mapping `sqlite3.Error` to a 500 without echoing the query.",
+  "S12": "nothing rounds to cents. Fix: reject values outside 0 to 100 and quantize the result.",
+  "S13": "Low, unbounded result set.** No LIMIT, so a customer with many orders loads everything into memory.",
+  "S14": "Low, positional tuple access.** Indexing by position means a reordered SELECT silently breaks every consumer. Fix: return a NamedTuple."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.119503,
+ "judge_wall_ms": 19088,
+ "graded_at": "2026-09-03T11:15:51+0100"
+}

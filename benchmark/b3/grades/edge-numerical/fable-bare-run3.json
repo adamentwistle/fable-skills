@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "fable-bare-run3",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `price` or `qty` header raises a bare `KeyError`. Fix: validate headers once before the loop.",
+  "C2": "Short rows give `None` from `DictReader`, raising `TypeError`. Fix: treat `None` as missing, same error path.",
+  "C3": "Empty-string cells raise `ValueError` with no row context.",
+  "C4": "Currency symbols and thousands separators like `$1,234.50` raise.",
+  "C5": "`int()` rejects `3.0` but accepts ` +3 `. Fix: decide if qty may be fractional and validate to that rule.",
+  "C6": "Float accumulation drifts across rows. Fix: sum `Decimal` built from the raw strings, or integer cents.",
+  "C7": "Negative price or qty silently subtracts revenue. Fix: reject, or route to an explicit refunds bucket.",
+  "C8": "`float()` accepts `nan`, so one bad cell silently makes the whole total NaN.",
+  "C9": "One bad row aborts the whole run and you cannot tell which. Fix: catch per row, re-raise with index, or collect errors and report counts."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.09851300000000002,
+ "judge_wall_ms": 13290,
+ "graded_at": "2026-09-03T11:15:18+0100"
+}

@@ -1,0 +1,12 @@
+1. Read-then-write on `counts` is not atomic, so two threads can both read 99 and both admit — replace with an atomic increment (`itertools.count`, a lock around the whole check-and-update, or a check on the post-increment value).
+2. The dict itself lives per process, so N workers each grant the full limit and the effective cap is N×limit — move the counter to a shared store (Redis `INCR`, or a database row lock).
+3. There is no time window at all — a user is capped forever after 100 requests instead of per second/minute; use a fixed-window key including a timestamp bucket, or a token bucket with a refill.
+4. Nothing ever removes entries, so `counts` grows without bound for every user_id ever seen — expire keys (Redis TTL) or evict on window rollover.
+5. `user_id` is unvalidated, so `None`, an empty string, or an unbounded attacker-supplied string becomes a permanent dict key — validate type and length before use, and reject absent identifiers rather than bucketing them all together under one key.
+6. Even single-threaded, plain dict `get`/`__setitem__` is only atomic by CPython bytecode accident; on free-threaded builds or non-CPython runtimes the window widens — do not rely on the GIL, lock explicitly.
+7. The counter increments only when the request is allowed, so denied requests are invisible — increment first and compare, if you want to detect sustained abuse or apply penalties.
+8. `limit` is a per-call default, so a caller passing a smaller limit later can still admit requests already counted against a bigger one — resolve the limit from config keyed by user or route, not from the call site.
+9. `limit <= 0` admits nothing and a negative or non-integer `limit` silently misbehaves — validate at configuration time.
+10. Counting is unconditional on outcome, so a retry after a network failure double-charges the caller — accept an idempotency key and count a retried request once.
+11. There is no way to release or refund a reservation if downstream work fails — return a handle the caller can cancel, or count only on completion.
+12. Nothing tells the caller when to retry — return the remaining window and the current count so the response can set `Retry-After` and `X-RateLimit-*` headers.

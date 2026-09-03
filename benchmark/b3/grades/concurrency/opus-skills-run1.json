@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-skills-run1",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Check-then-act race \u2014 `get` then `counts[user_id] = count + 1` is not atomic",
+  "B2": "",
+  "B3": "fix with a lock around read-modify-write or an atomic increment",
+  "B4": "No time window \u2014 counts never reset, so this is a lifetime quota, not a rate limit",
+  "B5": "Unbounded memory growth \u2014 one permanent entry per distinct `user_id`",
+  "B6": "Per-process state \u2014 each worker has its own `counts`, so the real limit is `limit \u00d7 workers`",
+  "B7": "`user_id` unvalidated \u2014 `None` buckets every anonymous caller together, and an unhashable ID raises `TypeError`"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.080993,
+ "judge_wall_ms": 14841,
+ "graded_at": "2026-09-03T11:26:35+0100"
+}

@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-bare-run5",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Global `_cache` populated once and never invalidated \u2014 fix: check file mtime/hash each call and reload when it changes",
+  "A2": "Tempting-but-wrong: reducing/adding a TTL cache \"helps\" but still serves stale data for up to the TTL window.",
+  "A3": "Tempting-but-wrong: adding `_cache = None` reset only fixes it until next edit \u2014 doesn't solve staleness, just delays it.",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 3,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.093558,
+ "judge_wall_ms": 16424,
+ "graded_at": "2026-09-03T11:15:08+0100"
+}

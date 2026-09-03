@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-bare-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": false,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "apps/portal/src/client/hooks/useInvoice.ts:23 \u2014 total_cents field removed from response shape; update to access total.amount instead.",
+  "P2": "apps/portal/src/client/components/InvoiceBadge.tsx:9 \u2014 status 'paid' renamed to 'settled' in responses; update condition.",
+  "P3": "InvoiceState enum reordering (Disputed inserted at index 2) breaks interpretation of existing database records with state=2 (now reads as Disputed, was Paid) and state=3 (now reads as Paid, was Void); add migration or move Disputed to end of enum",
+  "P4": "infra/helm/billing/values.prod.yaml and values.staging.yaml \u2014 environment variable renamed INVOICE_GRACE_DAYS \u2192 BILLING_GRACE_PERIOD_DAYS; update both.",
+  "P5": "",
+  "P6": "",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 4,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.156498,
+ "judge_wall_ms": 20235,
+ "graded_at": "2026-09-03T16:21:04+0100"
+}

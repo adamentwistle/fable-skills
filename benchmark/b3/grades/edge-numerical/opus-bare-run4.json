@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "opus-bare-run4",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing `'price'`/`'qty'` keys raise KeyError mid-loop",
+  "C2": "`None` values from empty CSV cells raise TypeError on `float(None)`",
+  "C3": "Empty strings and whitespace-padded values (`\" 12 \"`) \u2014 `.strip()` first, treat `\"\"` as zero or skip.",
+  "C4": "Malformed numerics (\"N/A\", \"1,299.00\", \"$5.00\") raise ValueError \u2014 strip currency/thousands separators",
+  "C5": "`int(\"3.0\")` raises ValueError even though the value is a valid integer",
+  "C6": "Binary float accumulation loses cents on large row counts \u2014 use `decimal.Decimal` for price and total throughout.",
+  "C7": "Negative price or qty pass silently (refunds vs. corrupt data) \u2014 decide the policy explicitly and validate against it.",
+  "C8": "`float()` silently accepts `\"nan\"`/`\"inf\"` and poisons the whole total to NaN",
+  "C9": "Failures are all-or-nothing with no row context \u2014 catch per row and report the index plus the offending value."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08568300000000001,
+ "judge_wall_ms": 13351,
+ "graded_at": "2026-09-03T11:15:37+0100"
+}

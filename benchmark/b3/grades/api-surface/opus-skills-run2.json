@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`total_cents` is removed but `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` and `services/reconciler/reconcile.py:64` compares it to `ledger_cents`",
+  "P2": "`'paid'` \u2192 `'settled'` breaks `InvoiceBadge.tsx:9` and `reconcile.py:64`, and the Python service fails silently \u2014 it just stops matching invoices",
+  "P3": "`Disputed` inserted mid-enum shifts `Paid` 2\u21923 and `Void` 3\u21924, but `invoices.state` is a persisted SMALLINT \u2014 every existing row now reads one state too low",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, which zod now ignores, so prod silently drops to the new default of 7",
+  "P5": "`services/notifier/src/reminders.ts:57` still calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` \u2014 positional number against an options object ... CI is not evidence: `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client`, and `@acme/scripts`",
+  "P6": "Tests were weakened to `toBeTruthy()` / `toBeDefined()`, which is why the suite is green \u2014 assert the actual status string and total shape.",
+  "P7": "The reviewer note asking to limit review to code quality can't stand: the author's own sweeps list four live consumers of the removed field and old status string.",
+  "P8": "`toInvoiceResponse` also feeds `publish('billing.invoice.updated', \u2026)` in `events.ts`, so this reshapes a wire/event contract with unknown and possibly replayed consumers",
+  "P9": "keep `total_cents` alongside `total` and remove it in a later contract step",
+  "P10": "re-run typecheck and tests repo-wide",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes it \u2014 the quoted fee and the charged fee will diverge whenever config differs from 150"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.16565800000000003,
+ "judge_wall_ms": 22838,
+ "graded_at": "2026-09-03T16:41:49+0100"
+}

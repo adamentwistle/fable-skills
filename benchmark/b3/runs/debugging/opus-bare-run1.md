@@ -1,0 +1,9 @@
+1. Root cause: the cache never checks whether the file changed — `_cache is None` is the only miss condition, so it fills once per process and never again; fix by storing the file's mtime and size alongside the value and reloading when either differs (`os.stat(path)` on each call).
+2. The cache key ignores `path`, so a second call with a different config file silently returns the first file's data; fix by keying the cache on the resolved absolute path.
+3. `_cache = json.load(f)` assigns the parsed result directly, so any caller mutating the returned dict corrupts the cache for everyone; fix by returning a deep copy, or freeze the value.
+4. No lock around the check-then-load, so concurrent threads can double-read and interleave the mtime/value assignment; fix by guarding the reload with a module-level `threading.Lock`.
+5. A failed parse or read propagates with the cache in whatever state it was, and the next call retries from scratch with no backoff; fix by keeping the last good value and re-raising only when there is nothing cached.
+6. NOT a fix — adding a TTL/time-based expiry: it only shortens the staleness window, still serves the old value for the whole interval, and hides the real bug (no change detection).
+7. NOT a fix — a manual `clear_config_cache()` for callers to invoke: correctness then depends on every caller remembering, and out-of-process edits to the file never trigger it.
+8. NOT a fix — `functools.lru_cache` on the loader: it has the same never-invalidate semantics plus the same path-keying blind spot, so it changes nothing about staleness.
+9. NOT a fix — checking mtime alone at 1-second resolution: rapid rewrites within the same second slip through, which is why the size (or a content hash) belongs in the stamp.

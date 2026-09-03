@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-bare-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": true
+ },
+ "citations": {
+  "A1": "Cache has no invalidation \u2014 it's keyed on nothing and never checked against the file, so store the file's mtime (and size) alongside the data and reload when it differs.",
+  "A2": "adding a time-based TTL (still serves stale data for the window and re-reads when nothing changed \u2014 it masks the missing invalidation rather than fixing it)",
+  "A3": "calling `get_config.cache_clear()`-style tricks or switching to `functools.lru_cache` (same never-invalidated cache, now keyed by path \u2014 it fixes finding 3 only)",
+  "A4": "`path` is ignored after the first call \u2014 a second call with a different path silently returns the first file's data, so key the cache by resolved absolute path in a dict.",
+  "A5": "Not thread-safe \u2014 two threads can both see `None` and race on the parse, so guard load-and-store with a lock (double-checked).",
+  "A6": "",
+  "A7": "",
+  "A8": "`_cache is None` conflates \"not loaded\" with \"loaded and empty/null\" \u2014 a config file containing `null` reloads every call; use a distinct sentinel or a separate `_loaded` flag."
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.08857799999999999,
+ "judge_wall_ms": 14764,
+ "graded_at": "2026-09-03T11:19:44+0100"
+}

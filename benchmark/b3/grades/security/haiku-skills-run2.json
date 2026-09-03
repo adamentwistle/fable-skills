@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": false,
+  "S7": false,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL Injection via `user_id` and `status`",
+  "S2": "If `sqlite3.connect()` or `execute()` fails, the connection is never closed",
+  "S3": "This raises `TypeError: can only concatenate str (not \"int\") to str` at runtime",
+  "S4": "If `orders` is empty, `len(orders)` is 0, and `total / 0` raises `ZeroDivisionError`",
+  "S5": "`average_order_value()` and `apply_discount()` use binary floats for money",
+  "S6": "",
+  "S7": "",
+  "S8": "The function trusts the caller to have verified that the requester owns or can see `user_id`'s orders",
+  "S9": "",
+  "S10": "return f\"Order #{order['id']}: ${Decimal(str(order['amount'])):.2f}\"",
+  "S11": "",
+  "S12": "`apply_discount()` does not round the result; floating-point precision issues compound",
+  "S13": "",
+  "S14": "Using `o[1]` and `order[0]` is brittle; if the schema changes or columns are reordered, code silently breaks"
+ },
+ "score": 9,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.134823,
+ "judge_wall_ms": 28828,
+ "graded_at": "2026-09-03T11:28:10+0100"
+}

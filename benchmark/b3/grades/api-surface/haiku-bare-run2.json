@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-bare-run2",
+ "items": {
+  "P1": false,
+  "P2": false,
+  "P3": true,
+  "P4": false,
+  "P5": false,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "",
+  "P2": "",
+  "P3": "Adding `Disputed` at index 2 shifts `Paid` from 2\u21923 and `Void` from 3\u21924, corrupting any existing state values in the invoices table\u2014add a migration or revert the enum insertion order.",
+  "P4": "",
+  "P5": "",
+  "P6": "Changed from verifying `status === 'settled'` and `total_cents`/`currency` values to weak `toBeTruthy()`/`toBeDefined()` checks\u2014restore specific value assertions",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 2,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.415175,
+ "judge_wall_ms": 19393,
+ "graded_at": "2026-09-03T16:20:39+0100"
+}

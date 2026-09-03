@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "fable-bare-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "`user_id` and `status` are pasted into the query with `%` formatting, and both come from the request.",
+  "S2": "The connection and cursor are never closed, and an exception in `execute` leaks them.",
+  "S3": "`\"Order #\" + order[0]` adds a string to an integer `id`, which raises `TypeError`.",
+  "S4": "`average_order_value` raises on an empty list.",
+  "S5": "Totals, averages and discounts accumulate binary rounding error",
+  "S6": "A negative or over-100 `pct` inflates the price or makes it negative",
+  "S7": "`status` should be checked against an allowlist",
+  "S8": "Any caller can read any user's orders by changing `user_id`. The id should come from the authenticated session, not the request",
+  "S9": "If the column is nullable, `0.0 + None` raises `TypeError`.",
+  "S10": "`str(order[1])` prints `5.0` or `17.991`, not `$5.00`. Fix: format with two decimals.",
+  "S11": "",
+  "S12": "are never rounded to cents. `apply_discount(19.99, 10)` returns `17.991`. Fix: convert to `Decimal` at the DB boundary and quantize to cents.",
+  "S13": "A user with many orders loads them all into memory. Add pagination in the handler",
+  "S14": "`o[1]` and `order[0]` are coupled to the column order in the SELECT."
+ },
+ "score": 13,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.112013,
+ "judge_wall_ms": 16302,
+ "graded_at": "2026-09-03T11:15:53+0100"
+}

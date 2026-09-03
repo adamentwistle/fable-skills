@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "does one `SELECT` per event for the actor \u2014 an N+1 that's up to 1000 round-trips per request ... Fix: batch-fetch all actors once with `WHERE id = ANY($1::bigint[])`",
+  "F2": "Dedupe uses `if key in seen` against a growing Python list \u2014 O(n\u00b2) over up to thousands of rows per request. Fix: use a `set` for `seen`.",
+  "F3": "`lookup_geo` calls `requests.get` synchronously inside an `async def` request path \u2014 this blocks the whole event-loop thread ... Fix: use an async HTTP client (`httpx.AsyncClient`) or push the sync call to a thread pool",
+  "F4": "no index covers `(org_id, created_at)` \u2014 only `actor_id` and `kind` are indexed ... Fix: add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "cap `_request_timings` (e.g. `collections.deque(maxlen=N)`)",
+  "F6": "Bound `_geo_cache` (TTL/LRU cache)",
+  "F7": "",
+  "F8": "",
+  "F9": "No \u2014 don't ship the proposal as-is ... the pool bump risks exhausting Postgres connections (16 workers \u00d7 50 \u00d7 6 pods = 4800) ... Only after that: Redis response cache at 60s ... land it last, not first.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.147158,
+ "judge_wall_ms": 19534,
+ "graded_at": "2026-09-03T16:45:07+0100"
+}

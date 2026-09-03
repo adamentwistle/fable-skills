@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "haiku-skills-run2",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": false
+ },
+ "citations": {
+  "B1": "Concurrent calls bypass limit in read-modify-write race",
+  "B2": "",
+  "B3": "use threading.Lock",
+  "B4": "No time window resets count; users permanently blocked \u2014 add sliding-window reset",
+  "B5": "Unbounded dict grows indefinitely, memory leak \u2014 add entry expiration",
+  "B6": "Separate worker processes use separate dicts, limit multiplied by worker count",
+  "B7": ""
+ },
+ "score": 5,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.072683,
+ "judge_wall_ms": 15164,
+ "graded_at": "2026-09-03T11:26:36+0100"
+}

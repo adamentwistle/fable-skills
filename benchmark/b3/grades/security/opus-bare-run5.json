@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-bare-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "`user_id` and `status` are formatted straight into the query string with `%s`",
+  "S2": "the database connection is never closed.** No `close()`, no context manager",
+  "S3": "concatenates a `str` with the `id` column, which SQLite returns as an `int`, giving `TypeError`",
+  "S4": "`average_order_value` raises `ZeroDivisionError` on an empty list",
+  "S5": "money is handled as binary floats.** `total = 0.0`, `amount * pct / 100`, and float accumulation across many orders all introduce representation error",
+  "S6": "`apply_discount` accepts any percentage.** `pct=150` returns a negative amount; `pct=-20` silently *increases* the charge",
+  "S7": "`status` is not validated.** Any string is accepted ... Fix: check against an explicit allow-list of known statuses",
+  "S8": "no authorization (IDOR).** ... `user_id` arrives from the request, so any caller can read any other customer's orders",
+  "S9": "a `NULL` amount raises `TypeError` in the sum.** `total += None` fails",
+  "S10": "receipt amounts are formatted with `str()`.** An amount of `12.5` prints as `$12.5` ... Fix: format to exactly two decimal places.",
+  "S11": "database errors propagate raw to the handler.** An unhandled `sqlite3.OperationalError` can surface the database path or schema in a 500 response",
+  "S12": "`apply_discount` returns unrounded values like `89.99999999999999`. Fix: use `decimal.Decimal` and quantize to cents with `ROUND_HALF_UP` at each boundary",
+  "S13": "the result set is unbounded.** `fetchall()` loads every matching order into memory ... Fix: add `LIMIT` with a caller-supplied cap, and paginate.",
+  "S14": "rows are read by tuple position.** `o[1]` and `order[0]` depend on the `SELECT` column order ... Fix: set `conn.row_factory = sqlite3.Row`"
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.13093300000000002,
+ "judge_wall_ms": 21266,
+ "graded_at": "2026-09-03T11:16:26+0100"
+}

@@ -1,0 +1,36 @@
+{
+ "area": "edge-numerical",
+ "run": "sonnet-bare-run1",
+ "items": {
+  "C1": true,
+  "C2": true,
+  "C3": true,
+  "C4": true,
+  "C5": true,
+  "C6": true,
+  "C7": true,
+  "C8": true,
+  "C9": true
+ },
+ "citations": {
+  "C1": "Missing key (`r['price']`/`r['qty']` KeyError) \u2014 use `.get()` with default or validate schema upfront.",
+  "C2": "Price/qty as `None` (null in CSV) \u2014 guard against `NoneType` before cast.",
+  "C3": "Missing/empty string value ('' fails `float()`/`int()`) \u2014 skip or default to 0 on empty.",
+  "C4": "Non-numeric garbage (`\"N/A\"`, `\"$5\"`, currency symbols/commas) \u2014 sanitize/strip before cast",
+  "C5": "Qty as float string (`\"2.5\"`) \u2014 `int()` raises; use `int(float(x))` or reject non-integer quantities deliberately.",
+  "C6": "Float precision drift accumulating over many rows \u2014 use `Decimal` for currency instead of `float`.",
+  "C7": "Negative price or qty (refunds vs. bad data indistinguishable) \u2014 decide policy and validate sign explicitly.",
+  "C8": "Scientific notation or `inf`/`nan` strings (`float(\"nan\")`, `float(\"inf\")` succeed silently) \u2014 explicitly reject non-finite floats.",
+  "C9": "One bad row aborts the entire aggregation (no partial result, no visibility into which row) \u2014 wrap per-row parse in try/except, collect errors, continue."
+ },
+ "score": 9,
+ "max": 9,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.09253800000000001,
+ "judge_wall_ms": 16592,
+ "graded_at": "2026-09-03T11:15:41+0100"
+}

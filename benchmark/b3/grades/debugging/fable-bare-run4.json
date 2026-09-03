@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "fable-bare-run4",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "`_cache` is a module global filled once and never invalidated ... fix by storing the file's `st_mtime_ns` and `st_size` next to the data and reloading whenever a fresh `os.stat(path)` differs",
+  "A2": "Not a fix: a time-based TTL still serves stale values for up to the TTL and reloads unchanged files for nothing",
+  "A3": "Not a fix: deleting the cache and re-reading every call cures staleness but puts a file open and JSON parse on every hot-path call",
+  "A4": "The `path` argument is ignored after the first call, so a later call with a different file silently returns the first file's data",
+  "A5": "The check-and-load is not thread-safe, so two threads can both miss the cache and one can read a half-updated tuple; wrap the stat-compare-and-reload in a `threading.Lock`",
+  "A6": "The cached dict is handed out by reference, so any caller that mutates it changes what everyone sees next",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.093893,
+ "judge_wall_ms": 17163,
+ "graded_at": "2026-09-03T11:19:36+0100"
+}

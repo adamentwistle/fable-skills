@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "sonnet-bare-run4",
+ "items": {
+  "B1": true,
+  "B2": false,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `counts[user_id]` races across threads \u2014 two requests can both pass the check and both increment, overrunning the limit",
+  "B2": "",
+  "B3": "use a lock or atomic/CAS structure",
+  "B4": "No time window \u2014 once a user hits `limit`, they're blocked forever; add a sliding/fixed window with expiry",
+  "B5": "`counts` dict grows unboundedly, one entry per user forever \u2014 evict or expire old entries",
+  "B6": "Not process-safe for multi-worker deployment (e.g. gunicorn workers) since each process has its own `counts`",
+  "B7": "No input validation on `user_id` (None, empty, non-hashable)"
+ },
+ "score": 6,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07872799999999999,
+ "judge_wall_ms": 14280,
+ "graded_at": "2026-09-03T11:19:28+0100"
+}

@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "fable-bare-run3",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write on `counts` is not atomic, so concurrent threads both see `count < limit` and both increment",
+  "B2": "both increment, letting users exceed the limit and losing updates",
+  "B3": "guard the check-and-increment with a lock or use an atomic increment",
+  "B4": "There is no time window, so counts never reset and a user who hits 100 is blocked forever; add a window",
+  "B5": "The dict grows by one entry per user ID and is never evicted, so memory grows without bound",
+  "B6": "`counts` lives in one process's memory, so each worker keeps its own copy and the effective limit is `limit \u00d7 workers`",
+  "B7": "A `None` or shared anonymous `user_id` ... and an unhashable ID raises `TypeError`; normalize the key ... and validate it"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.086843,
+ "judge_wall_ms": 22311,
+ "graded_at": "2026-09-03T11:19:02+0100"
+}

@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-bare-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache is populated once and never invalidated \u2014 fix by checking file mtime/hash each call and reloading when it changes",
+  "A2": "Tempting fix \"just clear `_cache` on a timer\" doesn't work \u2014 a poll interval still serves stale data between ticks",
+  "A3": "it fixes cross-call staleness only by removing caching, defeating the point without addressing invalidation",
+  "A4": "`path` is ignored after first call \u2014 a second call with a different path silently returns the first path's cached config; fix by keying the cache on path",
+  "A5": "Global mutable `_cache` isn't thread-safe \u2014 concurrent reload should use a lock if this runs multi-threaded",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 5,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.083868,
+ "judge_wall_ms": 10447,
+ "graded_at": "2026-09-03T11:14:43+0100"
+}

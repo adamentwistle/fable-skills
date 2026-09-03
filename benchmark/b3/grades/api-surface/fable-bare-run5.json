@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "fable-bare-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `data.total_cents` (now undefined)",
+  "P2": "`InvoiceBadge.tsx:9` checks `'paid'` (now `'settled'`) so paid invoices lose their badge",
+  "P3": "Inserting `Disputed` mid-enum renumbers `Paid` 2\u21923 and `Void` 3\u21924, but `invoices.state` stores the raw SMALLINT, so every existing paid row now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set `INVOICE_GRACE_DAYS`, which zod now silently strips, so on deploy prod's grace period drops from 21 to 7 days",
+  "P5": "`services/notifier/src/reminders.ts:57` still passes a bare number ... CI is green only because `--filter='[origin/main]'` runs changed packages, not their dependents",
+  "P6": "`serializes a paid invoice` was gutted to `toBeTruthy()`/`toBeDefined()` ... restore concrete assertions",
+  "P7": "The compatibility claim is contradicted by the author's own sweep: `services/reconciler/reconcile.py:64` matches `status == \"paid\"`",
+  "P8": "this breaks every event subscriber, not just the GET route the description mentions; enumerate subscribers or publish a versioned event",
+  "P9": "keep the old fields alongside the new ones for a deprecation window",
+  "P10": "rerun with `--filter='...[origin/main]'` and make that the CI default",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps`, falling back to the hardcoded 150 in `lateFee.ts`, while dunning uses `LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.44116500000000003,
+ "judge_wall_ms": 23031,
+ "graded_at": "2026-09-03T16:20:43+0100"
+}

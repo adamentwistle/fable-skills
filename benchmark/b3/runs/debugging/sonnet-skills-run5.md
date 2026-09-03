@@ -1,0 +1,6 @@
+1. Module-global `_cache` set once and never invalidated — fix: cache keyed/invalidated on file mtime (or hash), reloaded when it changes.
+2. `if _cache is None` treats a falsy-but-loaded config (`{}`) same as unloaded — fix: use a separate `loaded` flag/sentinel, not `is None` on the value itself.
+3. Tempting fix "just remove the cache and always read the file" works but defeats the purpose of caching — reject unless caller truly wants no caching.
+4. Tempting fix "add a manual `clear_cache()`/`reload()` function" only helps if every caller remembers to call it after every edit — doesn't fix the default path, so stale reads still happen unless mtime-check is also added.
+5. Tempting fix "reduce cache lifetime with a TTL/timer" masks the bug with polling latency instead of detecting the actual change — still serves stale data between checks and adds unnecessary delay when nothing changed.
+6. Multiple `path` values share the single global `_cache` — fix: cache should be keyed per `path`, not one global for all calls.

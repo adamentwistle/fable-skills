@@ -1,0 +1,32 @@
+{
+ "area": "concurrency",
+ "run": "opus-bare-run4",
+ "items": {
+  "B1": true,
+  "B2": true,
+  "B3": true,
+  "B4": true,
+  "B5": true,
+  "B6": true,
+  "B7": true
+ },
+ "citations": {
+  "B1": "Read-then-write race: two threads can both read `count = 99`",
+  "B2": "two threads can both read `count = 99` and both write 100, so the limit is exceeded",
+  "B3": "guard the read-modify-write with a `threading.Lock`",
+  "B4": "No time window: counts only ever grow, so a user is permanently banned after 100 lifetime requests",
+  "B5": "Unbounded memory growth: `counts` never evicts, so one entry per user forever is a memory leak",
+  "B6": "each process/gunicorn worker has its own `counts`, so the real limit is `limit \u00d7 workers`",
+  "B7": "No handling of `user_id=None` or unauthenticated callers"
+ },
+ "score": 7,
+ "max": 7,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.085338,
+ "judge_wall_ms": 21272,
+ "graded_at": "2026-09-03T11:19:20+0100"
+}

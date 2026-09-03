@@ -1,0 +1,48 @@
+{
+ "area": "debugging",
+ "title": "Stale config cache: root cause",
+ "discipline": "root-cause-debugging",
+ "skills": [
+  "root-cause-debugging",
+  "workmanship"
+ ],
+ "prompt_file": "../../../tasks/debugging/prompt-bare.md",
+ "answer_key_file": "../../../tasks/debugging/answer-key.md",
+ "output_format": "numbered-findings",
+ "items": [
+  {
+   "id": "A1",
+   "short": "Root cause: cache populated once and never invalidated (no f"
+  },
+  {
+   "id": "A2",
+   "short": "Rejects TTL/periodic-expiry as a proper fix (calls it a symp"
+  },
+  {
+   "id": "A3",
+   "short": "Rejects \"always re-read / drop the cache\" OR \"manual clear_c"
+  },
+  {
+   "id": "A4",
+   "short": "Secondary bug: the `path` argument is ignored after first ca"
+  },
+  {
+   "id": "A5",
+   "short": "Thread-safety / concurrency race (check-then-act on the glob"
+  },
+  {
+   "id": "A6",
+   "short": "Shared mutable return: same dict handed to all callers, a ca"
+  },
+  {
+   "id": "A7",
+   "short": "Gives explicit REPRODUCE-and-verify steps (edit file between"
+  },
+  {
+   "id": "A8",
+   "short": "The `is None` sentinel bug: a config of JSON `null` (or empt"
+  }
+ ],
+ "max_score": 8,
+ "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+}

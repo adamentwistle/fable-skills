@@ -1,0 +1,23 @@
+{
+  "area": "perf",
+  "title": "Slow endpoint investigation",
+  "discipline": "performance-investigation",
+  "skills": ["performance-investigation", "perf-sanity"],
+  "prompt_file": "prompt.md",
+  "answer_key_file": "answer-key.md",
+  "output_format": "numbered-findings",
+  "items": [
+    {"id": "F1", "short": "N+1 actor lookup per event"},
+    {"id": "F2", "short": "O(n^2) list-membership dedupe"},
+    {"id": "F3", "short": "Sync requests.get blocks event loop"},
+    {"id": "F4", "short": "Missing index on events(org_id, created_at)"},
+    {"id": "F5", "short": "_request_timings grows unbounded"},
+    {"id": "F6", "short": "_geo_cache never evicts"},
+    {"id": "F7", "short": "Named baseline, re-measured after"},
+    {"id": "F8", "short": "Instrument to rank before fixing"},
+    {"id": "F9", "short": "Rejects pool bump, defers cache"},
+    {"id": "F10", "short": "Memory attribution stated as unverified"}
+  ],
+  "max_score": 10,
+  "design_notes": "The six seeded defects are all visible on inspection, so bare runs score well on F1-F6; the headroom is in what a solver does around them. Bare runs typically jump from findings to fixes without naming a reproducible measurement for a specific org (F7), without proposing EXPLAIN or a query count to rank the six by actual cost (F8), tend to accept the 60 s response cache as a cheap win alongside the algorithmic fixes rather than after them (F9), and report both unbounded structures as confirmed leaks instead of saying the artifacts do not show which one drives the RSS growth (F10)."
+}

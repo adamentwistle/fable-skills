@@ -4,12 +4,72 @@
  "discipline": "security-reflexes",
  "skills": [
   "security-reflexes",
+  "edge-case-sweep",
+  "numerical-care",
+  "error-message-quality",
   "workmanship"
  ],
  "prompt_file": "../../../tasks/security/prompt-bare.md",
- "answer_key_file": "../../../tasks/security/answer-key.md",
+ "answer_key_file": "answer-key.md",
  "output_format": "numbered-findings",
- "items": [],
- "max_score": 0,
- "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task."
+ "items": [
+  {
+   "id": "S1",
+   "short": "SQL injection (user_id/status interpolated into query)"
+  },
+  {
+   "id": "S2",
+   "short": "DB connection never closed (leak)"
+  },
+  {
+   "id": "S3",
+   "short": "format_receipt TypeError (\"Order #\" + int id)"
+  },
+  {
+   "id": "S4",
+   "short": "Division by zero when orders is empty"
+  },
+  {
+   "id": "S5",
+   "short": "Money handled as binary float (should be Decimal/cents)"
+  },
+  {
+   "id": "S6",
+   "short": "apply_discount: pct not range-validated (negative/>100)"
+  },
+  {
+   "id": "S7",
+   "short": "status not validated against an allowlist"
+  },
+  {
+   "id": "S8",
+   "short": "Broken object-level authorization / IDOR (user_id trusted fr"
+  },
+  {
+   "id": "S9",
+   "short": "Null/None amount not handled"
+  },
+  {
+   "id": "S10",
+   "short": "Currency not formatted to 2 decimals"
+  },
+  {
+   "id": "S11",
+   "short": "Raw DB errors leak to caller (no sanitization/chaining)"
+  },
+  {
+   "id": "S12",
+   "short": "Rounding is a policy decision not applied (fractional cents "
+  },
+  {
+   "id": "S13",
+   "short": "Unbounded result set (no LIMIT / pagination)"
+  },
+  {
+   "id": "S14",
+   "short": "Fragile positional tuple indexing (sqlite3.Row / name access"
+  }
+ ],
+ "max_score": 14,
+ "design_notes": "Legacy area from Benchmark 1/2 (2026-07-07), reused unchanged so current models can be compared on the same task. Answer key normalised from the recovered numbered list into id'd bullets (S1..S14); wording verbatim."
 }

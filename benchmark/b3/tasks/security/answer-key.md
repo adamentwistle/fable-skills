@@ -1,0 +1,15 @@
+ANSWER KEY - 14 items. Mark an item Y only if the output genuinely identifies that specific point.
+- S1 SQL injection (user_id/status interpolated into query)
+- S2 DB connection never closed (leak)
+- S3 format_receipt TypeError ("Order #" + int id)
+- S4 Division by zero when orders is empty
+- S5 Money handled as binary float (should be Decimal/cents)
+- S6 apply_discount: pct not range-validated (negative/>100)
+- S7 status not validated against an allowlist
+- S8 Broken object-level authorization / IDOR (user_id trusted from request, not session)
+- S9 Null/None amount not handled
+- S10 Currency not formatted to 2 decimals
+- S11 Raw DB errors leak to caller (no sanitization/chaining)
+- S12 Rounding is a policy decision not applied (fractional cents mid-calc)
+- S13 Unbounded result set (no LIMIT / pagination)
+- S14 Fragile positional tuple indexing (sqlite3.Row / name access more robust)

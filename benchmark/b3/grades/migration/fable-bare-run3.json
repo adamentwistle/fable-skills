@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "fable-bare-run3",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "0143 goes out in a later release once items 2, 7, 8 and 16 are verified",
+  "M2": "add a dual-write/dual-read release first (write both columns, read `state` with fallback to `status`), and only switch to state-only after backfill is verified complete",
+  "M3": "every `get_order` on an unbackfilled row raises ValueError (500s) for the entire backfill duration",
+  "M4": "The CASE has no ELSE, so `PAID`, `canceled`, `complete` and the 149 NULLs (7,764 rows) map to NULL and stay NULL forever, which makes 0143's SET NOT NULL fail",
+  "M5": "each UPDATE removes rows from the `state IS NULL` set, so the next OFFSET jumps past unprocessed rows",
+  "M6": "The whole backfill runs in one transaction, holding row locks on every updated order for hours ... any crash rolls back everything (so \"safe to re-run\" means \"start over\"); commit per batch",
+  "M7": "`jobs/nightly_finance_export.py` reads `o.status` and filters `IN ('paid','shipped')`; the grep was limited to `app/`, so 0143 breaks Friday's 02:00 UTC Finance export",
+  "M8": "add a preflight in 0143 that asserts `count(*) WHERE state IS NULL = 0`",
+  "M9": "staging's \"1055000 of 2104377\" is this bug, not a stat",
+  "M10": "0143's downgrade re-adds `status` as an empty column, so a rollback after step 4 leaves the old app reading NULL statuses",
+  "M11": "Prod runtime is at least 61M/2.1M \u00d7 11 min \u2248 5.5 h even before the quadratic OFFSET cost, so the backfill cannot fit \"all in the Thursday window\"",
+  "M12": "`ALTER COLUMN state SET NOT NULL` in 0143 scans all 61M rows under ACCESS EXCLUSIVE, blocking every read and write"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.174153,
+ "judge_wall_ms": 18027,
+ "graded_at": "2026-09-03T21:32:46+0100"
+}

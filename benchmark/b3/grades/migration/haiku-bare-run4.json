@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-bare-run4",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": false,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "doesn't handle 'PAID' (uppercase, 5210 rows), 'canceled' (American spelling, 1988 rows), 'complete' (417 rows), or NULL (149 rows); migration 0143 will fail when it makes state NOT NULL",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py still selects o.status (which will be deleted in 0143) \u2014 query will fail when that file next runs.",
+  "M8": "",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 2,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.14496799999999999,
+ "judge_wall_ms": 10996,
+ "graded_at": "2026-09-03T21:32:57+0100"
+}

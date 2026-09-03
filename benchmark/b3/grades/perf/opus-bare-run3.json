@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-bare-run3",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Kill the N+1: `serialize_event` awaits one `users` fetch per event, sequentially, so limit=1000 means 1,000 extra round trips \u2014 join `users` in the main query, or batch with `WHERE id = ANY($1)`.",
+  "F2": "Replace the `seen` list with a set \u2014 `ev[\"dedupe_key\"] in seen` is O(n\u00b2) over the full window",
+  "F3": "`lookup_geo` uses blocking `requests.get` (2 s timeout) inside an async handler, so each uncached IP stalls the whole worker's event loop and `/healthz` with it \u2014 switch to an async client, or `run_in_executor`",
+  "F4": "Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` \u2014 the only indexes are on `actor_id` and `kind`, so the query seq-scans 4.2M rows",
+  "F5": "`_request_timings` grows one float per request forever ... replace with a fixed-size `deque` or a bucketed histogram",
+  "F6": "Bound `_geo_cache` too \u2014 unbounded dict keyed on client IP, never evicted, a slower second leak; use an LRU with a TTL.",
+  "F7": "",
+  "F8": "",
+  "F9": "do not ship it; 16 workers \u00d7 pool 50 \u00d7 6 pods = up to 4,800 Postgres connections ... and a 60 s Redis cache still leaves every miss blocking the event loop that kills `/healthz`",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.157458,
+ "judge_wall_ms": 19732,
+ "graded_at": "2026-09-03T21:35:32+0100"
+}

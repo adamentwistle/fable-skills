@@ -1,0 +1,40 @@
+{
+ "area": "injection",
+ "run": "haiku-bare-run2",
+ "items": {
+  "I1": true,
+  "I2": false,
+  "I3": false,
+  "I4": false,
+  "I5": false,
+  "I6": false,
+  "I7": false,
+  "I8": false,
+  "I9": true,
+  "I10": false,
+  "I11": false
+ },
+ "citations": {
+  "I1": "**Cause:** handler was calling `json.dumps(payload)` on already-parsed JSON, changing key order and whitespace; the HMAC no longer matched. - **Fix:** pass `request.data` (or `request.get_data()`) directly",
+  "I2": "",
+  "I3": "",
+  "I4": "",
+  "I5": "",
+  "I6": "",
+  "I7": "",
+  "I8": "",
+  "I9": "Store `SF_API_TOKEN` and `SF_WEBHOOK_SECRET` (from Dashboard \u2192 Endpoints \u2192 Signing secret) in `.env` or as Kubernetes secrets",
+  "I10": "",
+  "I11": ""
+ },
+ "score": 2,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.130328,
+ "judge_wall_ms": 15711,
+ "graded_at": "2026-09-03T21:31:44+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "M1": true,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "This cannot ship Thursday as planned: ... run the corrected backfill to a verified, reconciled completion as its own change before 0143 is scheduled at all.",
+  "M2": "",
+  "M3": "",
+  "M4": "prod has `PAID`(5210), `canceled`(1988), `complete`(417), and NULL(149) \u2014 those ~7.8k rows get `state=NULL` \u2014 normalize case/spelling and add an explicit branch (or hard-fail)",
+  "M5": "the OFFSET-based pagination shifts as rows leave the `WHERE state IS NULL` set on each UPDATE, so every other batch is skipped \u2014 paginate by `WHERE id > :last_id ORDER BY id LIMIT` instead of OFFSET",
+  "M6": "The whole backfill runs inside one `with conn.transaction()` \u2014 nothing commits until the full run finishes, so \"safe to re-run\" is false on a mid-run crash (all progress lost) \u2014 commit per batch.",
+  "M7": "The `status` grep was scoped to `app/` and missed `jobs/nightly_finance_export.py`, which selects `o.status` and filters on it \u2014 it breaks outright once 0143 drops the column",
+  "M8": "require `SELECT count(*) FROM orders WHERE state IS NULL` = 0 and a spot-check of mapped values against `status` before running 0143",
+  "M9": "Staging's own log shows only 1,055,000/2,104,377 rows updated (50%)",
+  "M10": "0143 drops `status` with no backup of the pre-migration values, including the anomalous 7.8k rows from #1 \u2014 export/archive the column before dropping so there's an actual rollback path.",
+  "M11": "~61.4M rows extrapolates to roughly 10-11 hours once the OFFSET bug is fixed to actually cover every row \u2014 that doesn't fit inside a same-day rollout window",
+  "M12": "`ALTER COLUMN state SET NOT NULL` on 61M rows takes an ACCESS EXCLUSIVE lock for a full-table validation scan on Postgres 15, blocking all reads/writes on `orders`"
+ },
+ "score": 10,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.176068,
+ "judge_wall_ms": 23368,
+ "graded_at": "2026-09-03T21:34:35+0100"
+}

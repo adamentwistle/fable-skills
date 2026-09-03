@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run3",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "fix by shipping 0142 + backfill + app in release 2026.36 and 0143 no earlier than 2026.37",
+  "M2": "Nothing dual-writes: old pods insert `status='pending'` with `state` NULL for the ~6 min rolling deploy, after the backfill's snapshot \u2014 fix by writing both columns in the expand release.",
+  "M3": "`mark_paid` matches `state = 0`, a not-yet-backfilled pending order has `state IS NULL`, the UPDATE hits 0 rows and the webhook still returns 2xx, so the provider never retries and the payment is lost",
+  "M4": "The `CASE` has no `ELSE`, so `PAID` (5,210), `canceled` (1,988), `complete` (417) and NULL (149) map to NULL and stay NULL forever",
+  "M5": "it pages with `OFFSET` over the same `state IS NULL` predicate it is updating, so each batch's update shifts the remaining rows under the next offset",
+  "M6": "The entire loop is inside one `conn.transaction()` \u2014 not batched, not resumable, one 61M-row transaction holding locks and bloating the table; fix by committing per batch.",
+  "M7": "`jobs/nightly_finance_export.py` reads `orders.status` and was missed because the grep was scoped to `app/`; it runs 02:00 UTC and feeds Finance's Looker model, so it breaks the morning after 0143",
+  "M8": "Between steps 3 and 4: require `SELECT count(*) FROM orders WHERE state IS NULL` = 0, and `GROUP BY state` reconciling to the status histogram",
+  "M9": "2,104,377 rows in, \"done: 1055000\" out \u2014 that is the every-other-batch signature, and ~1.05M staging rows are still unmigrated right now",
+  "M10": "0143 has no rollback: its downgrade recreates `status` empty, so the original strings are gone",
+  "M11": "61,437,902 rows is 29\u00d7 staging ... so a corrected full run is roughly 5\u201311 hours at staging's observed 1,600\u20133,200 rows/s, not 11 minutes",
+  "M12": "`ALTER COLUMN ... SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and full-scans 61M rows; fix with `ADD CONSTRAINT ... CHECK (state IS NOT NULL) NOT VALID`, then `VALIDATE CONSTRAINT`, then `SET NOT NULL`."
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.188343,
+ "judge_wall_ms": 21458,
+ "graded_at": "2026-09-03T21:33:53+0100"
+}

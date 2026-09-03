@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-bare-run3",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Only then, in a separate release, `alembic upgrade 0143`.",
+  "M2": "During the 6-minute rolling deploy, old pods write only `status` and new pods write only `state`, so each reads NULLs from the other's rows \u2014 a dual-write release has to land first.",
+  "M3": "Deploying the app before the backfill breaks every read: `OrderState(row[\"state\"])` raises on the NULL state of all 61M existing rows.",
+  "M4": "`MAPPING` has no arm for `PAID`, `canceled`, `complete`, or NULL, so 7,764 rows stay NULL and 0143's `SET NOT NULL` fails",
+  "M5": "The backfill pages with `OFFSET` over a predicate its own `UPDATE` removes rows from, so it skips every other batch \u2014 switch to keyset paging",
+  "M6": "The entire backfill runs inside one `conn.transaction()`, so 61M rows means one hours-long snapshot, no resumability",
+  "M7": "The 02:00 UTC finance export still reads and filters `orders.status`, so 0143 breaks Finance's Looker load that same night",
+  "M8": "Then confirm `SELECT count(*) FROM orders WHERE state IS NULL` is 0 and that per-state counts reconcile against the status histogram above.",
+  "M9": "Staging did not pass: 1,055,000 updated out of 2,104,377 is exactly that skip, so the 11-minute number covers half the work.",
+  "M10": "0143 is irreversible (its downgrade recreates an empty `status`), so it belongs in a later release after a soak",
+  "M11": "Prod is 29x staging, so budget several hours, not minutes; it does not fit in a Thursday deploy window.",
+  "M12": "`SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and full-scans 61M rows \u2014 add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`."
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17138799999999998,
+ "judge_wall_ms": 17984,
+ "graded_at": "2026-09-03T21:33:34+0100"
+}

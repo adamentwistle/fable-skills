@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run5",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": false,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "Prod data includes 7,615 rows with unmapped status values (PAID uppercase: 5,210; canceled American spelling: 1,988; complete: 417). The CASE statement produces NULL for these; they remain state=NULL after backfill. Migration 0143's NOT NULL constraint will fail.",
+  "M5": "",
+  "M6": "",
+  "M7": "`jobs/nightly_finance_export.py` is an unidentified reader.** It queries `o.status` directly in SQL; after migration 0143 drops the column, this job fails Friday 02:00 UTC.",
+  "M8": "",
+  "M9": "The staging count (1,055,000/2,104,377) and the incomplete progress output shown suggest the author didn't verify reconciliation on the full prod dataset.",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 3,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.166193,
+ "judge_wall_ms": 20901,
+ "graded_at": "2026-09-03T21:33:23+0100"
+}

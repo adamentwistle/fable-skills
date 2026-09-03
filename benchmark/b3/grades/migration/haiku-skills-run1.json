@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run1",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "script's CASE statement doesn't handle 'PAID' (5.2k rows), 'canceled' (1.9k rows), or 'complete' (417 rows); these will retain state=NULL, causing migration 0143's NOT NULL constraint to fail",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py still selects orders.status \u2014 query will fail when migration 0143 drops the column",
+  "M8": "after backfill completes, run a count query to verify all rows have state IS NOT NULL before running 0143",
+  "M9": "Staging backfill incomplete \u2014 only 1,055,000 of 2,104,377 rows updated (50%)",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 4,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.152913,
+ "judge_wall_ms": 14502,
+ "graded_at": "2026-09-03T21:33:12+0100"
+}

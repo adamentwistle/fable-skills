@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-bare-run2",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "leave `status` in place for at least one release, then drop it in a separate PR once the finance export and BI are confirmed reading `state`",
+  "M2": "During the 6-minute rolling deploy new pods insert `state` only and old pods insert `status` only, so rows appear that neither the old readers nor the backfill cover \u2014 ship a release that writes both columns first.",
+  "M3": "`Order.from_row` calls `OrderState(row[\"state\"])` on every read, so between the deploy and the end of the backfill every legacy order raises on NULL \u2014 reads 500 for hours",
+  "M4": "`PAID` (5210), `canceled` (1988), `complete` (417) and NULL (149) all get state NULL \u2014 normalize with `lower(trim(status))`",
+  "M5": "each batch removes 5000 rows from the result set while the offset advances 5000, so roughly half the table is never touched",
+  "M6": "The entire backfill runs inside one `conn.transaction()`, so nothing commits until the end: \"safe to re-run\" is false, a kill loses everything",
+  "M7": "The nightly finance export reads `o.status` and filters on it, so it silently drops every new order after the deploy and hard-fails after 0143",
+  "M8": "require `SELECT count(*) FROM orders WHERE state IS NULL` to be 0 and a per-value reconciliation of status counts against state counts, and block the drop if either is off",
+  "M9": "the staging run's \"2104377 rows to backfill / done: 1055000\" is exactly that, not a coincidence",
+  "M10": "Dropping `status` in the same release as the cutover leaves no rollback, since 0143's downgrade recreates an empty column \u2014 keep `status` for a release or snapshot id\u2192status to a side table first.",
+  "M11": "61.4M rows at staging's real rate is hours, and OFFSET makes it quadratic at that scale",
+  "M12": "`op.alter_column(..., nullable=False)` takes ACCESS EXCLUSIVE and full-scans 61M rows \u2014 add a `NOT VALID` CHECK, `VALIDATE CONSTRAINT`, then SET NOT NULL"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.175188,
+ "judge_wall_ms": 19351,
+ "graded_at": "2026-09-03T21:33:31+0100"
+}

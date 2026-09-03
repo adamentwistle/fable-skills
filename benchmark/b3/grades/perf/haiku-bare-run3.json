@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-bare-run3",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": false,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch actor lookups \u2014 replace 1000 sequential `fetchrow()` calls per request with a single `SELECT...WHERE id = ANY($1)` query.",
+  "F2": "",
+  "F3": "",
+  "F4": "Add composite index on `events(org_id, created_at DESC)`",
+  "F5": "",
+  "F6": "Cap `_geo_cache` to a max size with a check before insertion \u2014 prevents memory from growing unbounded",
+  "F7": "",
+  "F8": "",
+  "F9": "**Don't ship the proposal** \u2014 scaling workers and pool sizes merely buffers slow requests; the real issues ... must be fixed first. ... After the above land, re-benchmark; if still slow, revisit the scaling proposal.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 4,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.153698,
+ "judge_wall_ms": 20777,
+ "graded_at": "2026-09-03T21:35:10+0100"
+}

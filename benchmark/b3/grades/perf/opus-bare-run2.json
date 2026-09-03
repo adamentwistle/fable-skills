@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-bare-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "Fix the N+1: `serialize_event` issues one `SELECT ... FROM users` per event \u2014 1,000 sequential round-trips per request \u2014 either join `users` into the main query or batch with `WHERE id = ANY($1)`.",
+  "F2": "the dedupe uses `seen` as a list, so membership is a linear scan \u2014 O(n\u00b2); make it a set",
+  "F3": "`lookup_geo` uses blocking `requests.get` (2 s timeout) inside an async handler, so every cache miss parks the whole event loop ... switch to an async client",
+  "F4": "Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` \u2014 the only indexes today are on `actor_id` and `kind`, so the query scans all 4.2 M rows",
+  "F5": "`_request_timings` is an unbounded list appended on every request by the middleware ... replace it with a fixed-size ring buffer or a bucketed histogram",
+  "F6": "`_geo_cache` is an unbounded dict keyed on client IP with no eviction \u2014 bound it with an LRU and a TTL",
+  "F7": "Verify with `EXPLAIN (ANALYZE, BUFFERS)` on acme's parameters before and after step 7, then re-measure p95 for org 4127",
+  "F8": "",
+  "F9": "16 workers \u00d7 50 connections \u00d7 6 pods = 4,800 Postgres connections against a default `max_connections` of 100 \u2014 that takes the database down ... If latency is still unacceptable after 7, 8, and 10, then consider caching",
+  "F10": "",
+  "F11": "the Redis cache would never hit: `since` defaults to `datetime.now(timezone.utc) - timedelta(days=30)`, a distinct value on every request, so every key is unique"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17330299999999998,
+ "judge_wall_ms": 26248,
+ "graded_at": "2026-09-03T21:35:36+0100"
+}

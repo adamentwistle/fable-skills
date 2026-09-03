@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "fable-bare-run1",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "This cannot ship Thursday as planned. Thursday can safely take 0142 plus the fixed backfill plus a dual-write app release; the read switch goes in the following release, and 0143 only after that has run clean.",
+  "M2": "During the 6-minute rolling deploy, old pods insert `status` only and new pods insert `state` only, so each side's `mark_paid` silently misses the other's pending orders; ship a transitional release that dual-writes both columns and reads either.",
+  "M3": "`Order.from_row` calls `OrderState(None)` on every unbackfilled order and every `get_order` raises ... `mark_paid` matches on `state = 0`, which is NULL for unbackfilled pending orders, so the UPDATE silently affects 0 rows, returns 2xx, and paid orders are never marked paid",
+  "M4": "Backfill CASE has no ELSE, so `PAID`, `canceled`, `complete` and NULL rows (7,764 in prod) get `state = NULL` and stay NULL forever; map `lower(status)`, add `canceled`, decide `complete` and NULL with product, and raise on anything unmapped.",
+  "M5": "Paging with OFFSET over `WHERE state IS NULL` skips half the rows because the result set shrinks as you update it ... use keyset paging (`WHERE id > last_id ORDER BY id LIMIT n`).",
+  "M6": "The whole backfill runs in one transaction, holding row locks on every updated order until the end ... commit per batch",
+  "M7": "`jobs/nightly_finance_export.py` was missed because the grep stopped at `app/`; from Thursday night it silently excludes every new order (status NULL), and after 0143 it crashes",
+  "M8": "Required step between 3 and 4: verify `count(*) WHERE state IS NULL = 0` on the primary and confirm replica lag is back to zero.",
+  "M9": "which is why staging reported 1,055,000 of 2,104,377",
+  "M10": "Dropping `status` in 0143 is irreversible; its downgrade recreates an empty column, so no app rollback exists after step 4; defer the drop to a later release after a full cycle on `state`.",
+  "M11": "on 61M rows that is many hours, not the 11 minutes staging showed, and does not fit a Thursday window",
+  "M12": "`SET NOT NULL` on 61M rows takes an ACCESS EXCLUSIVE lock for a full table scan; add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.18542299999999998,
+ "judge_wall_ms": 24317,
+ "graded_at": "2026-09-03T21:32:43+0100"
+}

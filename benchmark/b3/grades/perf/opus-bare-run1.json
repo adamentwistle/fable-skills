@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-bare-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` issues one `fetchrow` per event, so limit=1000 is 1,000 extra round trips on one pooled connection \u2014 join `users` in the main query, or batch with `WHERE id = ANY($1)`.",
+  "F2": "Dedupe uses `if ev[\"dedupe_key\"] in seen` against a *list*, which is O(n\u00b2) \u2014 make `seen` a `set`",
+  "F3": "`lookup_geo` calls `requests.get` (blocking, 2 s timeout) from inside an `async def` handler, so every cache miss freezes the whole worker's event loop",
+  "F4": "`events` has no index supporting `WHERE org_id = $1 AND created_at >= $2 ORDER BY created_at DESC` \u2014 it scans 4.2M rows for 1,912. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.",
+  "F5": "`_request_timings` grows forever, one float per request across all routes ... Replace with a fixed-size `collections.deque(maxlen=...)` or running histogram buckets.",
+  "F6": "`_geo_cache` is a second unbounded leak keyed on client IP with no eviction \u2014 cap it with an LRU or TTL.",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal as written \u2014 both halves make things worse ... Workers 4\u219216 with pool max 10\u219250 gives 16\u00d750\u00d76 = 4,800 possible Postgres connections",
+  "F10": "",
+  "F11": "The Redis cache keys on `since`, which the mobile client never sends, so the handler resolves it to `datetime.now()` \u2014 every request produces a fresh key and the hit rate is ~0 unless you key on the *unresolved* param."
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.169373,
+ "judge_wall_ms": 24108,
+ "graded_at": "2026-09-03T21:35:28+0100"
+}

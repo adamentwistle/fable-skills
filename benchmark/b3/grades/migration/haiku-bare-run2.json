@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-bare-run2",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": false,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "doesn't map 'PAID', 'canceled', 'complete' (7,615 prod rows shown in GROUP BY output); they'll stay NULL and block migration 0143's NOT NULL constraint",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py not updated \u2014 still references `orders.status`, which is dropped in migration 0143; the job will fail when run after Thursday's rollout",
+  "M8": "",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 2,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.15659299999999998,
+ "judge_wall_ms": 17358,
+ "graded_at": "2026-09-03T21:33:00+0100"
+}

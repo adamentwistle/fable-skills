@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "Contract step (`0143`, NOT NULL + drop `status`) is scheduled same-day as expand+migrate, with no soak time ... fix: split `0143` into its own deploy, days later, after the above are fixed and prod is verified clean.",
+  "M2": "From the moment app deploy lands (step 2), new orders are inserted with `state` only \u2014 `status` stays NULL for them ... fix: dual-write `status` until the export is migrated, or fix the export before step 2.",
+  "M3": "`Order.from_row` does `OrderState(row[\"state\"])` with no null handling \u2014 every existing order has `state IS NULL` until the backfill finishes, so every `get_order` call throws immediately after deploy",
+  "M4": "prod has `'PAID'`, `'canceled'`, `'complete'`, and NULL (~7.8k rows total) that all resolve to `state = NULL` forever",
+  "M5": "the script paginates with `OFFSET` over `WHERE state IS NULL`, and as each batch's rows leave that set the offset skips the next batch; paginate by `WHERE id > last_id` instead",
+  "M6": "The whole batched loop runs inside one `with conn.transaction():`, so nothing actually commits per batch \u2014 one long transaction across 61M rows, not batches",
+  "M7": "`jobs/nightly_finance_export.py` reads `o.status` directly and isn't touched by this PR \u2014 breaks at its next 02:00 UTC run once `0143` drops the column",
+  "M8": "the operator should verify `SELECT count(*) FROM orders WHERE state IS NULL` = 0 before running `0143`",
+  "M9": "The pasted staging run proves the backfill is broken: \"2104377 rows to backfill\" but \"done: 1055000 rows updated\" \u2014 roughly half silently skipped",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.168508,
+ "judge_wall_ms": 17890,
+ "graded_at": "2026-09-03T21:34:19+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "M1": false,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "`create_order` no longer inserts `status`; if `orders.status` has NOT NULL/no default, every new order write breaks starting at step 2, before status is even dropped \u2192 confirm the column's current constraint before deploy, or keep writing `status` until 0143 lands.",
+  "M3": "new pods call `OrderState(row[\"state\"])` on rows whose `state` is still NULL and will crash reading them \u2192 run the backfill before the app deploy, or make `Order.from_row` tolerate NULL `state` until backfill completes",
+  "M4": "`PAID`, `canceled`, `complete`, and NULL status (7,764 prod rows total) all backfill to NULL `state` \u2192 add case-insensitive matching for the typos and get a product decision on `complete`",
+  "M5": "paginates with `OFFSET` while concurrently updating the rows that match its own `WHERE state IS NULL` filter, so later pages skip rows as the matching set shrinks",
+  "M6": "The entire batch loop is inside one `with conn.transaction():`, so nothing commits until the whole run finishes \u2014 not actually batched for locking/bloat/replica-lag purposes, and any failure loses all progress \u2192 commit per batch",
+  "M7": "it missed `jobs/nightly_finance_export.py`, which still reads `o.status` and filters `IN ('paid','shipped')`; it will silently under-report to Finance's Looker model, then hard-error at 02:00 UTC once 0143 drops the column",
+  "M8": "reconcile `count(state IS NULL)=0` and `sum(state counts) = 61,437,902` before running 0143",
+  "M9": "staging's own log proves it (2,104,377 rows to backfill, script reports done at 1,055,000, roughly half silently skipped)",
+  "M10": "0143's downgrade re-adds `status` as an empty nullable column with no reverse backfill from `state` \u2192 rollback after 0143 has run loses the original status values permanently",
+  "M11": "staging (2.1M rows, already undercounting) took 11 min, prod is 61.4M rows (~29x) \u2192 re-time after fixing (3), expect well over an hour",
+  "M12": ""
+ },
+ "score": 10,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.191003,
+ "judge_wall_ms": 28510,
+ "graded_at": "2026-09-03T21:34:39+0100"
+}

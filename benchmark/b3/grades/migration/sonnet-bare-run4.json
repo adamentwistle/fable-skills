@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-bare-run4",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": false,
+  "M6": true,
+  "M7": true,
+  "M8": false,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "right after step 1 every existing row has `state=NULL`, so `OrderState(row[\"state\"])` raises on every single order read until backfill catches that row",
+  "M4": "The `MAPPING` CASE has no ELSE \u2014 `'PAID'`, `'canceled'`, `'complete'`, and NULL statuses (7,764 prod rows) map to NULL forever",
+  "M5": "",
+  "M6": "The backfill wraps the entire loop in one transaction \u2014 on 61M rows that's a long-held transaction risking WAL/replica bloat and an all-or-nothing rollback",
+  "M7": "`jobs/nightly_finance_export.py` still selects `o.status` and isn't touched by this PR \u2014 the grep was scoped to `app/` and missed `jobs/`",
+  "M8": "",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": "`alter_column(..., nullable=False)` on a 61M-row table forces a full-table scan under an ACCESS EXCLUSIVE lock, blocking all reads/writes for its duration"
+ },
+ "score": 5,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.16356300000000001,
+ "judge_wall_ms": 19321,
+ "graded_at": "2026-09-03T21:34:12+0100"
+}

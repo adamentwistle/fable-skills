@@ -1,0 +1,10 @@
+1. Do not ship the on-call proposal: 16 workers × 50 connections × 6 pods is up to 4,800 Postgres connections, more workers multiply the per-process leaks, and a Redis key on `since` never hits because the mobile client omits it and the default is `now() - 30d` to the microsecond.
+2. Today, no deploy: `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC)`; the query is a seq scan over 4.2M rows (there is no org_id index), which is the 1.2-1.6 s in the slow log.
+3. Root cause of the healthz outages and probe restarts: `lookup_geo` calls sync `requests.get` (2 s timeout, up to 1,000 times per request) inside an async handler, freezing the whole worker's event loop; switch to an async HTTP client, look up distinct IPs only, run them concurrently under a semaphore, and treat a lookup failure as `location: null` instead of 500ing the feed.
+4. N+1 in `serialize_event`: one `users` SELECT per event, ~1,000 sequential round trips; fetch all distinct actor_ids in one `WHERE id = ANY($1)` and join in memory.
+5. The SQL has no LIMIT, so it pulls every event in the window and trims in Python after dedupe; dedupe in SQL (`DISTINCT ON (dedupe_key)` ordered by `created_at DESC`, re-sorted) and apply `LIMIT $3`, which also bounds a user-supplied `since` far in the past.
+6. Memory leak 1: `_request_timings` is appended on every request (including /healthz) and never trimmed, and `/internal/metrics` copies it whole via `sorted()`; replace with a bounded deque or a histogram, keeping the name for the two importers.
+7. Memory leak 2: `_geo_cache` is an unbounded per-process dict keyed by every client IP ever served, duplicated in each of the 4 workers; make it a TTL/LRU cache or move it to Redis with a TTL.
+8. Replace the `seen` list with a set; `in` on a list makes the dedupe loop O(n²).
+9. Keep the Redis response cache off the table until 2-8 are in; if still wanted later, round `since` to the minute and key on that.
+10. Verify: EXPLAIN ANALYZE on org 4127 before and after the index, load-test the endpoint at limit=1000 on staging while polling /healthz, then watch pod RSS flat over 24 h before closing the ticket.

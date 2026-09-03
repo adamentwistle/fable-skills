@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run4",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Dropping `status` in the same window as adding `state` leaves no recovery period \u2014 move 0143 to release 2026.37 at the earliest.",
+  "M2": "during the ~6-minute rolling deploy old pods write `status` only and new pods write `state` only, so rows created in that window are unreadable by one side or the other \u2014 dual-write both columns and read either for one full release.",
+  "M3": "`OrderState(row[\"state\"])` raises on `None`, so any unbackfilled row or old-pod insert crashes the read path rather than degrading",
+  "M4": "The `CASE` has no `ELSE`, so `PAID` (5,210), `canceled` (1,988), `complete` (417) and the 149 NULLs get `state = NULL`",
+  "M5": "The backfill skips every other batch: `OFFSET` walks forward while the `state IS NULL` result set shrinks underneath it \u2014 drop `OFFSET` and repeatedly take the first `BATCH` ids (or keyset-paginate on `id > last_seen`).",
+  "M6": "The whole loop runs inside one `conn.transaction()`, so nothing commits until the end: a 61M-row transaction, no resumability, table bloat, and replica conflicts \u2014 commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` selects `o.status` and filters on it; 0143 breaks Finance's Looker load at 02:00 UTC the same night",
+  "M8": "Required after the backfill, before 0143: `count(*) WHERE state IS NULL` must be 0 and each `state` value's count must match its `status` count from the histogram",
+  "M9": "Staging did not succeed, it stopped halfway and printed \"done\": 5000 \u00d7 211 = 1,055,000 of 2,104,377",
+  "M10": "0143's `downgrade` recreates an empty `status` column, which is not a rollback \u2014 snapshot `id, status` into a backup table before 0143",
+  "M11": "staging managed ~1,600 rows/sec, so 61.4M rows is roughly 10 hours even before `OFFSET`'s quadratic degradation",
+  "M12": "that `SET NOT NULL` takes ACCESS EXCLUSIVE and full-scans 61.4M rows, blocking all order traffic \u2014 add a `NOT VALID` CHECK, `VALIDATE CONSTRAINT`, then set NOT NULL"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.179323,
+ "judge_wall_ms": 18987,
+ "graded_at": "2026-09-03T21:33:53+0100"
+}

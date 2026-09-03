@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-bare-run5",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "Replace the per-event actor `fetchrow` with one `WHERE id = ANY($1)` batch fetch (or a join) \u2014 1,912 events currently mean 1,913 round trips",
+  "F2": "",
+  "F3": "Make `lookup_geo` non-blocking \u2014 it uses `requests` inside an async handler, so each uncached IP freezes the whole worker's event loop for up to 2 s",
+  "F4": "`CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` \u2014 no index starts with `org_id`",
+  "F5": "Bound `_request_timings` \u2014 it grows one float per request forever at ~120 req/s ... swap it for a fixed-size deque or a counter/bucket histogram",
+  "F6": "Bound `_geo_cache` too \u2014 it is keyed on client IP and never evicted ... use an LRU with a max size and a TTL.",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal \u2014 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 Postgres connections ... a Redis cache is optional after this",
+  "F10": "",
+  "F11": "would want a shorter key set than `(org_id, since, limit)`, since `since` defaults to a per-request timestamp and never repeats"
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.16170299999999999,
+ "judge_wall_ms": 22374,
+ "graded_at": "2026-09-03T21:35:39+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-bare-run1",
+ "items": {
+  "M1": false,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "fix: dual-write both columns in both old and new code for the duration of the rollout.",
+  "M3": "old-created rows have `state IS NULL`, failing new code's `state = PENDING` match) \u2014 any payment webhook landing on the \"wrong\" pod version silently updates 0 rows and still returns success, permanently stranding that order as pending",
+  "M4": "Five prod status spellings (`PAID`, `canceled`, `complete`, NULL \u2014 7,764 rows) have no `MAPPING` branch and will resolve to NULL forever",
+  "M5": "Backfill paginates with `OFFSET` while updating the same `WHERE state IS NULL` set, so each batch pushes the next batch out of range",
+  "M6": "Backfill runs as one open transaction; ... loses all progress on any disconnect \u2014 contradicting \"safe to re-run\"; fix: commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` still selects `o.status`; the grep was scoped to `app/` only and missed `jobs/` \u2014 it breaks at 02:00 UTC the day after 0143 runs",
+  "M8": "**Rollout step, between backfill and 0143:** verify `SELECT count(*) FROM orders WHERE state IS NULL` = 0.",
+  "M9": "staging's own log proves it (1,055,000/2,104,377 updated, then silently stopped)",
+  "M10": "0143's `downgrade()` re-adds `status` as an empty column \u2014 none of the dropped values come back, so rollback after 0143 runs on prod is not a real undo",
+  "M11": "at staging's rate (11 min/2.1M rows) 61M rows is hours long",
+  "M12": "Even clean, `SET NOT NULL` on 61M rows takes a full-table scan under an exclusive lock with no validated CHECK to skip it"
+ },
+ "score": 11,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.176388,
+ "judge_wall_ms": 21397,
+ "graded_at": "2026-09-03T21:34:01+0100"
+}

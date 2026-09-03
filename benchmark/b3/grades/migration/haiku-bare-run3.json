@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-bare-run3",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "'PAID' (5210 rows), 'canceled' (1988 rows), 'complete' (417 rows), and NULL (149 rows) will leave rows with NULL state. Migration 0143 will fail when trying to set state NOT NULL.",
+  "M5": "",
+  "M6": "The backfill runs the entire operation in a single transaction; ... Commit after each batch instead.",
+  "M7": "`jobs/nightly_finance_export.py` still references `orders.status`, which 0143 will drop. The nightly job will fail Friday 02:00 UTC",
+  "M8": "Before 0143: ... verify the backfill completes with zero NULL state rows",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 4,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.15848299999999998,
+ "judge_wall_ms": 18697,
+ "graded_at": "2026-09-03T21:33:02+0100"
+}

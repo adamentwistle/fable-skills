@@ -1,0 +1,18 @@
+1. Rollout order is wrong: after step 2 every existing order has `state` NULL, so `Order.from_row` raises `ValueError` and every read of a pre-existing order 500s until the backfill finishes; backfill must complete before the new app reads `state`.
+2. Same window silently loses payments: new pods' `mark_paid` matches `state = 0`, existing pending orders (3.87M) and rows written by old pods have `state` NULL, so the UPDATE hits 0 rows, still returns 2xx, and the provider never retries; add a `status`↔`state` sync trigger in 0142 (or dual-write in the app) so both columns are always populated during the transition.
+3. Backfill pagination is broken: `OFFSET` advances while the `state IS NULL` set shrinks, so it skips half the rows; staging proves it (1,055,000 of 2,104,377 updated); use keyset pagination on `id > last_id` and drop OFFSET.
+4. Backfill runs in one transaction: hours of row locks on 61M rows blocking `mark_paid`, vacuum starvation, and a pod eviction rolls back everything; commit per batch with a short sleep and run it as a restartable Job, not `kubectl run`.
+5. Unmapped values (`PAID`, `canceled`, `complete`, NULL: 7,764 rows) map to NULL, so 0143's SET NOT NULL fails; normalise with `lower(trim(status))`, map `canceled`→3, and get a product/finance decision for `complete` and NULL before anything ships.
+6. Backfill is not idempotent as claimed: unmapped rows stay NULL and are reselected every run; with OFFSET removed that is an infinite loop unless the mapping is exhaustive or the query excludes them.
+7. `SET NOT NULL` in 0143 takes ACCESS EXCLUSIVE and scans 61M rows, blocking all traffic and cancelling replica queries; add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL` (PG15 skips the scan), then drop the check.
+8. Dropping `status` breaks `jobs/nightly_finance_export.py`, which still selects and filters on `o.status`; the grep only covered `app/`; fix the export to filter on `state IN (1, 2)` and grep the whole repo, plus Looker, dbt, and any other DB consumers.
+9. Folding `PAID` into 1 changes the finance export's numbers (5,210 orders previously excluded); tell Finance before it lands.
+10. 0143 is irreversible: the downgrade recreates `status` empty; keep the column for one release after readers are switched, and drop it in a separate later migration.
+11. Timing: 61M rows at staging's rate is roughly 5 hours even after the fix; the backfill cannot fit in a 14:00 deploy window and must run ahead of the release, throttled while watching replica lag.
+12. `done += BATCH` overcounts and the final message reports loop count, not rows updated; use `cur.rowcount`.
+13. 0142's downgrade drops the index without CONCURRENTLY; add `postgresql_concurrently=True` in an autocommit block there too.
+14. `app/api/orders.py` maps the `status` query param by name; an unknown value must return 400, not a `KeyError` 500 (unverifiable from the PR, please show it).
+15. Before rollout: fix items 3 to 6, resolve item 5's mapping, rehearse 0142 → backfill → 0143 on a prod-sized snapshot and confirm `SELECT count(*) FROM orders WHERE state IS NULL` is 0.
+16. Between backfill and 0143 (in prod): confirm the same NULL count is 0, `ix_orders_state` is valid, and the sync trigger is still installed; do not run 0143 otherwise.
+17. After the app deploy: alert on `mark_paid` affecting 0 rows and on replica lag; drop the trigger and `status` only in the following release.
+18. This cannot ship Thursday as planned. Realistic shape: 0142 plus trigger and the fixed backfill this week, app switch next release, `status` drop the release after.

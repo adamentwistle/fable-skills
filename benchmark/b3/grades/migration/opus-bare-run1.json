@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-bare-run1",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "split it into a separate release a week later, after 0142 plus the backfill have soaked",
+  "M2": "Consider an intermediate app release that writes both `status` and `state` and reads `status` \u2014 it removes the whole ordering hazard in 7, 8 and 9",
+  "M3": "`Order.from_row` calls `OrderState(row[\"state\"])` and every one of the 61M rows still has `state = NULL` until the backfill finishes, so `get_order` raises",
+  "M4": "The `CASE` has no branch for `PAID` (5,210), `canceled` (1,988), `complete` (417) or NULL (149), so 7,764 rows get `state = NULL` and 0143's `SET NOT NULL` fails",
+  "M5": "it pages with `OFFSET` while the `WHERE state IS NULL` set shrinks under it, so every second batch is stepped over",
+  "M6": "The whole backfill runs inside one `conn.transaction()`, so on 61M rows it is a single hours-long transaction holding a snapshot open",
+  "M7": "Dropping `status` breaks `jobs/nightly_finance_export.py`, which selects `o.status` and filters `o.status IN ('paid','shipped')` \u2014 the grep was scoped to `app/`",
+  "M8": "Before 0143, require `SELECT count(*) FROM orders WHERE state IS NULL` to return 0, as a gate rather than an assumption.",
+  "M9": "that's why staging reported 2,104,377 to do and \"done: 1055000\"",
+  "M10": "the downgrade recreates `status` empty, so once it runs there is no way back",
+  "M11": "~1,600 rows/s (1.055M in 660s), so 61,437,902 rows is roughly 10 hours, not 11 minutes",
+  "M12": "`ALTER TABLE ... SET NOT NULL` takes ACCESS EXCLUSIVE and full-scans 61M rows"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.179243,
+ "judge_wall_ms": 19339,
+ "graded_at": "2026-09-03T21:33:27+0100"
+}

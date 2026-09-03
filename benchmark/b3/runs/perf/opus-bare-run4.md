@@ -1,0 +1,13 @@
+1. Do not ship the on-call proposal — 16 workers × 50 connections × 6 pods = 4,800 Postgres connections (well past a default `max_connections` of 100-200), 4× the workers multiplies the per-process memory leak rather than fixing it, and the cache does nothing for the two things actually paging you.
+2. Also reject the cache on its own terms: keyed on `(org_id, since, limit)` where `since` defaults to `now() - 30d` computed per request, every key is unique, so the hit rate is ~0 and every miss still blocks the pod.
+3. The pod restarts are not slowness — `lookup_geo` uses blocking `requests.get` inside an async handler, so each uncached IP freezes the whole event loop for up to 2 s; that is why `/healthz` misses its 3 s probe. Fix: async HTTP client (`httpx.AsyncClient`), or drop per-request geo entirely and resolve at write time.
+4. The memory leak is `_request_timings` — an unbounded list appended once per request; at 120 req/s that is ~8.6M floats after 20 h. Fix: `collections.deque(maxlen=...)` or a fixed-bucket histogram, keeping `/internal/metrics` working.
+5. `_geo_cache` is a second unbounded dict keyed by client IP with no eviction. Fix: bounded LRU with a TTL.
+6. Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` — no index on `org_id` exists, so the 1.4 s query scans 4.2M rows to find 1,912. Run `EXPLAIN (ANALYZE, BUFFERS)` before and after to confirm.
+7. The SQL has no `LIMIT`, so a client asking for 1,000 still pulls the entire 30 d window including `payload` JSONB. Fix: dedupe and limit in SQL (`DISTINCT ON (dedupe_key)` subquery, then `ORDER BY created_at DESC LIMIT $3`).
+8. `serialize_event` runs one `SELECT ... FROM users` per event — 1,912 round trips per request on a pool of 10. Fix: one `WHERE id = ANY($1)` batch fetch, then map in Python.
+9. The dedupe loop is `if ev["dedupe_key"] in seen` against a list — O(n²), ~1.8M comparisons for acme. Fix: use a `set` (moot once step 7 lands, but fix it either way).
+10. Add `CREATE UNIQUE INDEX CONCURRENTLY ON events (org_id, dedupe_key)` and `ON CONFLICT DO NOTHING` on the webhook insert path so duplicates never land, rather than being filtered on every read.
+11. Cap the mobile client's `limit=1000` at something a phone screen can use (50-100) with a cursor on `(created_at, id)` for paging.
+12. After 3, 4, 6, 7 and 8 are in, re-measure before touching workers or pool size — modest increases may still be warranted, but size them against `max_connections` and put PgBouncer in front if you need more.
+13. Unrelated but live: `/internal/metrics` indexes `s[int(n * 0.95)]`, which is in range today but will be off-by-one at the boundary if the list is ever bounded to an exact length — clamp it to `min(int(n * 0.95), n - 1)`.

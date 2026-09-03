@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-bare-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` runs one `SELECT ... FROM users` per event \u2014 1,912 round trips per request on a pool of 10. Fix: one `WHERE id = ANY($1)` batch fetch",
+  "F2": "The dedupe loop is `if ev[\"dedupe_key\"] in seen` against a list \u2014 O(n\u00b2), ~1.8M comparisons for acme. Fix: use a `set`",
+  "F3": "`lookup_geo` uses blocking `requests.get` inside an async handler, so each uncached IP freezes the whole event loop for up to 2 s ... Fix: async HTTP client (`httpx.AsyncClient`)",
+  "F4": "Add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)` \u2014 no index on `org_id` exists, so the 1.4 s query scans 4.2M rows",
+  "F5": "`_request_timings` \u2014 an unbounded list appended once per request; at 120 req/s that is ~8.6M floats after 20 h. Fix: `collections.deque(maxlen=...)`",
+  "F6": "`_geo_cache` is a second unbounded dict keyed by client IP with no eviction. Fix: bounded LRU with a TTL.",
+  "F7": "",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal \u2014 16 workers \u00d7 50 connections \u00d7 6 pods = 4,800 Postgres connections ... 4\u00d7 the workers multiplies the per-process memory leak rather than fixing it ... Also reject the cache on its own terms",
+  "F10": "",
+  "F11": "keyed on `(org_id, since, limit)` where `since` defaults to `now() - 30d` computed per request, every key is unique, so the hit rate is ~0"
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.159743,
+ "judge_wall_ms": 19523,
+ "graded_at": "2026-09-03T21:35:33+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-bare-run5",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "move 0143 \u2014 and the `status` drop as its own later change \u2014 to a subsequent release",
+  "M2": "Fix: dual-write and match on `(state = 0 OR (state IS NULL AND status = 'pending'))` until the backfill is verified complete.",
+  "M3": "`Order.from_row` calls `OrderState(row[\"state\"])`, which raises on NULL, so every read of a not-yet-backfilled order 500s the moment the first new pod is live.",
+  "M4": "The `CASE` has no arm for `PAID` (5,210), `canceled` (1,988), `complete` (417) or NULL (149), so it writes NULL for 7,764 rows and 0143's `SET NOT NULL` fails.",
+  "M5": "The backfill's `OFFSET` advances while the `state IS NULL` result set shrinks, so it skips every other block and exits when `offset >= remaining`",
+  "M6": "The whole backfill runs inside one `conn.transaction()`, so 61M row updates commit as a single transaction: unbounded WAL, table bloat, vacuum blocked, and replication lag",
+  "M7": "`jobs/nightly_finance_export.py` selects and filters on `o.status`; dropping the column breaks the 02:00 UTC export and Finance's Looker load the next morning. The grep covered only `app/`.",
+  "M8": "Between steps 3 and 4: require `SELECT count(*) FROM orders WHERE state IS NULL` to return 0 immediately before 0143",
+  "M9": "that is exactly your staging result (breaks at 1,055,000 \u2248 2,104,377/2, leaving ~1.05M rows NULL and printing \"done\")",
+  "M10": "0143's downgrade recreates `status` as an empty nullable column, so it is not a rollback \u2014 the data is gone.",
+  "M11": "~11 min for ~1M rows scales to roughly 11 hours for 61M, plus index maintenance. This does not fit a Thursday deploy window",
+  "M12": "`SET NOT NULL` takes ACCESS EXCLUSIVE and full-scans 61M rows, blocking all `orders` traffic for minutes."
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.181293,
+ "judge_wall_ms": 20210,
+ "graded_at": "2026-09-03T21:33:38+0100"
+}

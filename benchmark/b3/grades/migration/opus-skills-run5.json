@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run5",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Ship verdict: no. 0142 plus a dual-writing app release can go Thursday; the backfill and 0143 must not",
+  "M2": "The rolling deploy has no dual-write: for ~6 minutes old pods write only `status` and new pods write only `state` ... write both columns for one full release, stop writing `status` in the next.",
+  "M3": "step 2 ships code doing `OrderState(row[\"state\"])` before step 3 backfills anything, so every read of the 61.4M NULL rows raises `ValueError` \u2014 read `state` with a fallback to `status`",
+  "M4": "Four live spellings are absent from the `CASE` \u2014 `PAID` (5,210), `canceled` (1,988), `complete` (417), NULL (149) \u2014 and all stay NULL",
+  "M5": "it pages with `OFFSET` over `WHERE state IS NULL` while removing rows from that same set, so each batch advances 2\u00d7BATCH \u2014 drop `OFFSET` ... or keyset on `id > last_id`",
+  "M6": "The entire backfill runs in one transaction, so 61M row versions accumulate, progress is unrecoverable if the `kubectl run` pod is evicted, and the replicas get the WAL in one lump \u2014 commit per batch",
+  "M7": "Missed reader: the nightly finance export at 02:00 UTC selects `o.status` and filters `status IN ('paid','shipped')`, so 0143 breaks Finance's Looker load \u2014 the grep was scoped to `app/`",
+  "M8": "Gate between the backfill and 0143: `count(*) WHERE state IS NULL` must be 0, per-state counts must equal the mapped snapshot counts",
+  "M9": "Your staging log proves it: the loop stopped at exactly 1,055,000 ... leaving 1,049,377 of 2,104,377 rows NULL and unnoticed",
+  "M10": "0143's downgrade is not a rollback \u2014 it re-creates `status` empty, so the text is gone permanently; keep `status` for a full release, or export an id\u2192status before-image first.",
+  "M11": "staging's real rate of 1.055M rows in ~660s scales to roughly 10\u201311 hours for 61,437,902 rows \u2014 run it as a standalone resumable job over days, not as step 3 of a release",
+  "M12": "0143's `alter_column nullable=False` takes ACCESS EXCLUSIVE and full-scans 61.4M rows, blocking all traffic \u2014 add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`."
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.182583,
+ "judge_wall_ms": 21333,
+ "graded_at": "2026-09-03T21:34:00+0100"
+}

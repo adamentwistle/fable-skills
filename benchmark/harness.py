@@ -55,6 +55,11 @@ LEGACY = {
     "security": ("Orders module security review", "security-reflexes"),
 }
 _lock = threading.Lock()
+for _stream in (sys.stdout, sys.stderr):  # Windows consoles default to cp1252, which cannot print the report
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
 
 
 def say(msg):
@@ -101,8 +106,11 @@ def load_tasks(suite_dir, areas=None):
 
 
 def skills_bundle(skill_names, skills_dir):
-    parts = ["# Installed engineering-discipline skills", "",
-             "The following skills are installed in this environment. Apply whichever are relevant to the task at hand.", ""]
+    # Mirrors what happens when Claude Code activates a skill: the whole file lands in context as
+    # instructions to follow for the task at hand, not as optional reference material.
+    parts = ["# Activated engineering-discipline skills", "",
+             "The following skills have been activated for this task. Follow their instructions as you work; "
+             "where they ask for a step, an order of operations, or a reporting requirement, do it.", ""]
     for name in skill_names:
         p = skills_dir / name / "SKILL.md"
         if not p.exists():
@@ -120,8 +128,11 @@ def child_env():
 
 
 def claude_call(prompt, model, system_append=None, max_turns=4, effort=None, timeout=900, attempts=4, label=""):
+    # --strict-mcp-config with an empty config keeps the profile's MCP servers (and their tool
+    # definitions, which can run to 200K+ tokens) out of the solver's context entirely.
     cmd = [CLAUDE, "-p", "--model", model, "--disable-slash-commands", "--output-format", "json",
-           "--max-turns", str(max_turns), "--disallowedTools", *NO_TOOLS]
+           "--max-turns", str(max_turns), "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
+           "--disallowedTools", *NO_TOOLS]
     if system_append:
         cmd += ["--append-system-prompt", system_append]
     if effort:

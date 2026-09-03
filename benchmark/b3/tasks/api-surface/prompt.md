@@ -47,7 +47,7 @@ within this diff and do not hold the merge on downstream concerns.
 
 --- a/packages/billing-core/src/config.ts
 +++ b/packages/billing-core/src/config.ts
-@@ -3,9 +3,9 @@ import { z } from 'zod';
+@@ -4,10 +4,10 @@ import { z } from 'zod';
  export const ConfigSchema = z.object({
    DATABASE_URL: z.string().url(),
 -  INVOICE_GRACE_DAYS: z.coerce.number().int().min(0).default(14),
@@ -62,7 +62,7 @@ within this diff and do not hold the merge on downstream concerns.
 
 --- a/packages/billing-core/src/lateFee.ts
 +++ b/packages/billing-core/src/lateFee.ts
-@@ -1,9 +1,15 @@
+@@ -1,8 +1,14 @@
  import { daysBetween } from './dates';
  import type { Invoice } from './types';
 
@@ -111,7 +111,7 @@ within this diff and do not hold the merge on downstream concerns.
 
 --- a/apps/portal/src/server/dunning.ts
 +++ b/apps/portal/src/server/dunning.ts
-@@ -38,7 +38,7 @@ export async function runDunningCycle(config: Config) {
+@@ -40,3 +40,3 @@ export async function runDunningCycle(config: Config) {
    for (const inv of overdue) {
 -    const fee = computeLateFee(inv, config.INVOICE_GRACE_DAYS);
 +    const fee = computeLateFee(inv, { graceDays: config.BILLING_GRACE_PERIOD_DAYS, rateBps: config.LATE_FEE_RATE_BPS });
@@ -120,7 +120,7 @@ within this diff and do not hold the merge on downstream concerns.
 
 --- a/apps/portal/src/server/invoiceRoutes.ts
 +++ b/apps/portal/src/server/invoiceRoutes.ts
-@@ -85,7 +85,7 @@ router.get('/v1/invoices/:id', async (req, res) => {
+@@ -86,4 +86,4 @@ router.get('/v1/invoices/:id', async (req, res) => {
    const inv = await loadInvoice(req.params.id);
    if (!inv) return res.status(404).end();
 -  const fee = computeLateFee(inv, cfg.INVOICE_GRACE_DAYS);
@@ -130,7 +130,7 @@ within this diff and do not hold the merge on downstream concerns.
 
 --- a/packages/billing-core/test/invoice.test.ts
 +++ b/packages/billing-core/test/invoice.test.ts
-@@ -21,9 +21,8 @@ describe('toInvoiceResponse', () => {
+@@ -21,7 +21,6 @@ describe('toInvoiceResponse', () => {
    it('serializes a paid invoice', () => {
      const res = toInvoiceResponse(fixture({ state: InvoiceState.Paid, totalCents: 12500, currency: 'GBP' }));
 -    expect(res.status).toBe('paid');
@@ -141,7 +141,7 @@ within this diff and do not hold the merge on downstream concerns.
    });
  });
 
-@@ -41,8 +40,8 @@ describe('loadConfig', () => {
+@@ -44,4 +43,4 @@ describe('loadConfig', () => {
 -  it('defaults the grace period to 14 days', () => {
 -    expect(loadConfig({ DATABASE_URL: TEST_DB }).INVOICE_GRACE_DAYS).toBe(14);
 +  it('defaults the grace period to 7 days', () => {
@@ -149,7 +149,7 @@ within this diff and do not hold the merge on downstream concerns.
    });
  });
 
-@@ -52,7 +51,8 @@ describe('InvoiceState persistence', () => {
+@@ -55,5 +54,6 @@ describe('InvoiceState persistence', () => {
 -  it('round-trips state values through the invoices table', async () => {
 +  // flaky since the Disputed change; re-enable once the fixture DB is rebuilt
 +  it.skip('round-trips state values through the invoices table', async () => {

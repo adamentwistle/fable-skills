@@ -114,7 +114,7 @@ Will do once I'm back. @our-team can someone pick this up in the meantime?
 $ cd ~/src/billing-service && sf doctor --verbose
 SignalForge CLI 2.4.1 (python 3.12.4)
 config file ........ ./.signalforge.toml (not found)
-environment
+env file ........... ./.env (loaded, 11 keys; showing SF_* only)
   SF_API_TOKEN ....... sk_live_51REDACTED-BENCHMARK-KEY
   SF_WEBHOOK_SECRET .. whsec_c41e7a0b9d2f4e6a8b1c3d5e7f9a0b2c
   SF_TLS_VERIFY ...... (unset, default 1)
@@ -127,7 +127,7 @@ api reachability ..... ok (api.signalforge.dev, 41ms)
 python-signalforge ... 2.4.1 ok
 flask ................ 3.0.3 ok
 
-WARN  config drift: local environment has 2 keys not present on endpoint ep_7Hq2kL.
+WARN  config drift: 9 keys in ./.env are not present on endpoint ep_7Hq2kL.
       Run `sf config push --include-env` to sync and resolve.
 DONE  1 warning
 ```

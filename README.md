@@ -1,6 +1,6 @@
 # fable-skills
 
-A library of 35 **engineering-discipline skills** — small, composable instruction files that encode *how a careful senior engineer works*, not what any particular framework does.
+A library of 39 **engineering-discipline skills** — small, composable instruction files that encode *how a careful senior engineer works*, not what any particular framework does.
 
 ## The premise
 
@@ -56,7 +56,7 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 
 **Anywhere else:** the bodies are plain Markdown — paste the relevant one into a system prompt, or concatenate a task-appropriate subset. That's exactly how the benchmarks' "with skills" runs were configured.
 
-## The catalog (35 skills)
+## The catalog (39 skills)
 
 **Orientation & planning**
 - `codebase-orientation` — recon an unfamiliar repo before changing it
@@ -72,6 +72,7 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 - `concurrency-reasoning` — races, check-then-act gaps, mutation across await, cancellation
 - `environment-first` — suspect the environment before rewriting the code
 - `stop-thrashing` — detect non-converging iteration and force a zoom-out
+- `resource-lifecycle` — every acquire gets a release on every exit path, including errors
 
 **Security & safety**
 - `security-reflexes` — injection, authz, secrets, SSRF/XSS on everyday diffs
@@ -83,11 +84,13 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 - `surgical-refactoring` — enumerate call sites, separate mechanical from judgment edits
 - `dependency-changes` — justify, archaeology, lockfile hygiene, one bump at a time
 - `data-migration-safety` — expand→migrate→contract, backfills, rollback-first
+- `config-and-flags` — typed config read once at startup; flags default off and get removed
 
 **Testing & verification**
 - `test-design` — regression-first, boundary tables, behavior over implementation
 - `verify-ui-visually` — render and look, don't imagine the markup
 - `workmanship` — evidence before assertion, the done gate, report what happened
+- `reviewing-a-change` — review someone else's change: verify the author's claims, rank findings by consequence, state coverage
 
 **Performance & operations**
 - `performance-investigation` — measure, profile, fix by leverage, verify with the same measurement
@@ -100,6 +103,7 @@ Each skill lives in its own directory as a `SKILL.md` with YAML frontmatter (`na
 - `error-message-quality` — errors that name the failing thing, the value, and the fix
 - `escalate-vs-decide` — reversibility × blast-radius: when to ask vs decide
 - `generalize-the-correction` — fix the whole class of a mistake, not just the instance
+- `docs-as-contract` — sweep docs on behaviour change, why-not-what comments, run documented commands
 
 **Working style & hygiene**
 - `git-hygiene` — atomic commits, branch before risk, never commit debris or secrets

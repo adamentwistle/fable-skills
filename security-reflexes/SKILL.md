@@ -50,4 +50,4 @@ Discovering an existing vulnerability mid-task: report it (what, where, how expl
 
 ## Reporting
 
-For each boundary line from Step 0, one line in the report: source, sink, control applied, where. A boundary with no control is a finding, not an omission.
+For each boundary line from Step 0, one line in the report: source, sink, control applied, where. A boundary with no control is a finding, not an omission. This holds when the deliverable is a findings list: walk every path that reads or mutates a record and ask who is calling and whether they may touch this object; an identifier accepted from the request without an ownership check is a finding even when the code works.

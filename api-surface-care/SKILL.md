@@ -18,4 +18,6 @@ Before changing one:
 7. **Serialization is forever.** Anything persisted (DB rows, cached blobs, queued messages, files on disk) written in the old shape will be read by the new code — handle both shapes or migrate the data. Read one real old-shape record before assuming what it looks like.
 8. **Exercise the old shape once.** After the change, call the surface the way an existing consumer would (old argument order, old field name, old config key). It must either still work or fail with a message that names the replacement. "Compiles" is not evidence; a test you updated alongside the change is not evidence either.
 
+When the deliverable is a review of someone else's change, the same steps apply to their diff: classify each surface change, count their callers including the ones their sweep skipped, and list by name every consumer or claim you could not verify from the material rather than assuming it is fine. Then name the one check to run before merging (call the old shape, run the consumer's test, read the deploy config) as its own line.
+
 Exit check: "could code I cannot see be depending on the exact behavior I just changed?" If yes, the change needs a compatibility story, and the report must name the classification, the caller count, and what happens to the old shape.

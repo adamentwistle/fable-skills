@@ -47,4 +47,6 @@ Rerun the exact baseline command under the same conditions. Then run the correct
 
 ## Report
 
+When the deliverable is a findings list or a plan rather than a fix you measured, the measurement is the first item: name the baseline you would take (which request, which metric, which command) and say the same measurement is re-run after each change. Order the findings by their measured or estimated share of the cost and say how you attributed it (which instrument, or which arithmetic); mark any attribution you could not make from the material as unverified. Name which proposed fixes are constant-tuning or caching that you would defer until the underlying work is reduced.
+
 Include: the measurement command; baseline and final numbers with units, run count, spread and conditions ("p95 420ms → 95ms, median of 5, warm, prod build, dataset X"); what the profile showed; each change tried with its measured effect, including reverted ones; and the trade made — readability, memory, or freshness for speed. If the target is not met, say what remains and where the remaining time goes.

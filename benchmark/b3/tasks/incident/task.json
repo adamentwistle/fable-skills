@@ -1,0 +1,56 @@
+{
+  "area": "incident",
+  "title": "Production incident triage",
+  "discipline": "incident-diagnosis",
+  "skills": [
+    "incident-diagnosis",
+    "root-cause-debugging"
+  ],
+  "prompt_file": "prompt.md",
+  "answer_key_file": "answer-key.md",
+  "output_format": "numbered-findings",
+  "items": [
+    {
+      "id": "N1",
+      "short": "Onset 13:32 UTC tied to BST flag flip"
+    },
+    {
+      "id": "N2",
+      "short": "Only promo/discount confirms fail"
+    },
+    {
+      "id": "N3",
+      "short": "Rules out 4483 with evidence; no revert"
+    },
+    {
+      "id": "N4",
+      "short": "Discount major units vs minor-unit ints"
+    },
+    {
+      "id": "N5",
+      "short": "Stuck confirming carts cause 409s; scoped reset after flag-off"
+    },
+    {
+      "id": "N6",
+      "short": "Redis reconnects pre-existing, excluded"
+    },
+    {
+      "id": "N7",
+      "short": "Flag off first, before code fix"
+    },
+    {
+      "id": "N8",
+      "short": "Declines restart and FLUSHDB with reason"
+    },
+    {
+      "id": "N9",
+      "short": "Named signal and timing after flag revert"
+    },
+    {
+      "id": "N10",
+      "short": "Fix converts discount; rejects int coercion"
+    }
+  ],
+  "max_score": 10,
+  "design_notes": "The traceback and the discount=5.00 next to subtotal=4299 make the mechanism (N4) findable on inspection, so bare runs score there; the headroom is in what happens around it. Bare runs typically date onset to the alert or the last deploy and read the flag audit's 14:32 BST as a post-alert event, so they blame build 4478's rollout or 4483 instead of the flag flip (N1, N3); they list the redis reconnects as something to also look at rather than baselining them against the pre-onset rate (N6); they accept a pod restart as harmless alongside the flag revert (N8); they say 'monitor error rates' with no signal, value, or time that allows for the 30 s flag poll (N9); and they stop at the 500s without following one failing cart to its 409 retry, so the carts left in 'confirming' and their scoped reset are missed (N5)."
+}

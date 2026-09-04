@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run3",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 actor queries in serialize_event loop: 1000+ lookups per response for limit=1000; batch all actors in single WHERE id IN query.",
+  "F2": "Dedupe logic is O(n\u00b2): O(n) list lookup per iteration; change seen from list to set.",
+  "F3": "Blocking requests.get() in geo lookup holds event loop during 2 s timeout, stalls all workers and causes /healthz probe timeouts; replace with async httpx.AsyncClient.",
+  "F4": "Missing index on (org_id, created_at DESC) causes full scan of 4.2M events instead of 1.9k",
+  "F5": "Unbounded _request_timings list: 120 req/s \u00d7 20 h = 8.6M floats \u2248 69 MB per worker; implement ring-buffer or periodic clear.",
+  "F6": "Unbounded _geo_cache: grows with every new IP, no eviction; add TTL or LRU eviction policy.",
+  "F7": "",
+  "F8": "",
+  "F9": "**Do not ship proposal.** ... Bumping workers/pool will worsen memory leak; caching hides the problem. ... then revisit caching only if needed.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.146197,
+ "judge_wall_ms": 16601,
+ "graded_at": "2026-09-04T02:24:57+0100"
+}

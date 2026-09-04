@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-skills-run3",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": true,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "One `users` query per event inside `serialize_event` is an N+1 \u2014 1,912 round trips for acme; fetch the distinct actor ids once with `WHERE id = ANY($1)`",
+  "F2": "Dedupe uses `in` against a growing list, which is O(n\u00b2) \u2014 ~1.8M comparisons for acme's 1,912 rows and quadratic for any larger org; a `set` fixes it",
+  "F3": "`lookup_geo` uses the synchronous `requests` library inside an async handler, so each uncached IP blocks the whole event loop for up to its 2 s timeout",
+  "F4": "No index supports the query \u2014 `events` is indexed on `actor_id` and `kind` only, so every call scans 4.2M rows; add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` is an unbounded list appended by the middleware on *every* request across *all* routes ... replace with a fixed-size `collections.deque(maxlen=...)`",
+  "F6": "`_geo_cache` is an unbounded dict keyed on client IP with no eviction \u2014 replace with a bounded LRU",
+  "F7": "curl -w '%{time_total}\\n' -o /dev/null -s '.../api/v2/orgs/4127/activity?limit=1000'; done against a prod-sized dataset, warm, and record median + spread; re-run this exact command after each change below",
+  "F8": "Split wall from CPU on that request (time the handler vs. the DB call vs. the geo calls) so the 6\u201312 s is attributed to measured shares, not guessed",
+  "F9": "Reject step 1 of the proposal: 16 workers \u00d7 50 connections \u00d7 6 pods is 4,800 Postgres connections ... Reject step 2",
+  "F10": "",
+  "F11": "the cache key includes `since`, which defaults to `now() - 30 days` computed per request, so the key never repeats and the hit rate is ~0"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.163697,
+ "judge_wall_ms": 19592,
+ "graded_at": "2026-09-04T02:25:11+0100"
+}

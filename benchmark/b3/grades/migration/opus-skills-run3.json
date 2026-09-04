@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run3",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "split 0143 into the next release and keep `status` for a full cycle",
+  "M2": "",
+  "M3": "Step 2 deploys `OrderState(row[\"state\"])` while every pre-existing row still has `state` NULL, so every order read raises ValueError for the ~10 hours until step 4 \u2014 the app must keep reading `status` until the backfill reconciles.",
+  "M4": "The `CASE` has no arm for `PAID` (5,210), `canceled` (1,988), `complete` (417) or NULL (149), so 7,764 rows stay NULL and 0143's NOT NULL fails",
+  "M5": "`OFFSET` walks forward while updated rows leave the `state IS NULL` set, so each batch skips 5,000 rows \u2014 replace with keyset pagination",
+  "M6": "`with conn.transaction():` wraps the entire loop, so there are no batched commits and nothing is resumable despite the docstring \u2014 commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` reads `o.status` and was missed because the grep was scoped to `app/`",
+  "M8": "require `count(*) WHERE state IS NULL` = 0, and reconcile `GROUP BY state` against the status histogram above",
+  "M9": "`done: 1055000` is exactly 211\u00d75000, the loop hit an empty batch at offset 1,055,000 with 1,049,377 rows still NULL, and 49.9% of staging was left unmigrated",
+  "M10": "0143's downgrade re-adds an empty `status` column, so once it runs the free-text values are gone and rollback is a PITR restore",
+  "M11": "11 min on staging bought 1,055,000 rows \u2248 1,600 rows/s; prod's 61,437,902 rows is ~10.7 hours at that rate",
+  "M12": "`alter_column(\"orders\", \"state\", nullable=False)` takes ACCESS EXCLUSIVE and scans 61M rows \u2014 add a `NOT VALID` CHECK, `VALIDATE CONSTRAINT`, then set NOT NULL."
+ },
+ "score": 10,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.192057,
+ "judge_wall_ms": 25743,
+ "graded_at": "2026-09-04T02:24:21+0100"
+}

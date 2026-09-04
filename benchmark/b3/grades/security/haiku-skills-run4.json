@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": true,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "Query built with string formatting, not parameterized. `user_id` and `status` from the HTTP request are concatenated directly into SQL.",
+  "S2": "Connection is opened but never closed. This leaks database connections under load.",
+  "S3": "`order[0]` is an integer from the database; concatenating with `+` crashes with `TypeError`.",
+  "S4": "If `orders` is empty, `len(orders)` is 0, crashing with `ZeroDivisionError`.",
+  "S5": "Amounts are stored and computed as floats. This accumulates rounding errors and is unsafe for financial data.",
+  "S6": "No check that `pct` is 0\u2013100 or that `amount` is positive. Negative discount or 500% would not be caught.",
+  "S7": "`status` is never validated... Fix: Allowlist valid statuses on both the HTTP handler and here",
+  "S8": "accepts `user_id` from the request without verifying the authenticated user can access it. Any user can query any other user's orders.",
+  "S9": "",
+  "S10": "",
+  "S11": "Database errors, malformed rows, missing fields\u2014nothing is caught or logged. Fix: Add try/except blocks and log failures at the boundary",
+  "S12": "The discount calculation has no rounding rule... Fix: Apply a rounding rule explicitly",
+  "S13": "",
+  "S14": "Hardcoded indices (`o[1]`, `order[0]`) are error-prone; if the SELECT changes, these break silently or crash."
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.133182,
+ "judge_wall_ms": 21898,
+ "graded_at": "2026-09-04T02:26:00+0100"
+}

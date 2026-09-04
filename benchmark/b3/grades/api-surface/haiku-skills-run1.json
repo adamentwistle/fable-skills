@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "apps/portal/src/client/hooks/useInvoice.ts:23 \u2014 expects data.total_cents which is now nested as data.total.amount; update to read from correct path",
+  "P2": "apps/portal/src/client/components/InvoiceBadge.tsx:9 \u2014 checks status === 'paid' but API now returns 'settled'; update condition to 'settled'",
+  "P3": "inserting Disputed at position 2 shifts existing values; all DB rows with state=2 (old Paid) will be read as Disputed after deploy; requires DB migration to rewrite state values before code deploys",
+  "P4": "infra/helm/billing/values.prod.yaml:31 \u2014 rename INVOICE_GRACE_DAYS to BILLING_GRACE_PERIOD_DAYS and preserve value 21 (not default 7)",
+  "P5": "",
+  "P6": "toInvoiceResponse test assertions weakened to truthiness checks; restore specific assertions on status, amount, and currency values",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 5,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.442495,
+ "judge_wall_ms": 20350,
+ "graded_at": "2026-09-04T02:21:02+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run4",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "production has ~7364 rows with unmapped statuses ('PAID', 'canceled', 'complete', NULL) that will remain NULL",
+  "M5": "",
+  "M6": "",
+  "M7": "Missing reader: jobs/nightly_finance_export.py queries orders.status; will fail when column is dropped (Friday 02:00 UTC)",
+  "M8": "script should confirm state IS NULL count = 0 after running; migration 0143's ALTER NOT NULL will fail if any remain NULL",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 3,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.170702,
+ "judge_wall_ms": 24826,
+ "graded_at": "2026-09-04T02:24:10+0100"
+}

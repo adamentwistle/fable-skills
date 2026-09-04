@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run3",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": true,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "Prod data contains `status` values not in the CASE: `PAID` (5210 rows), `canceled` (1988 rows), `complete` (417 rows). These will remain NULL after backfill. Migration 0143 sets `state NOT NULL` and will fail.",
+  "M5": "",
+  "M6": "",
+  "M7": "`jobs/nightly_finance_export.py:4` queries `o.status`; grep was scoped to `app/` only and missed it.",
+  "M8": "No recount verification \u2014 Before/after counts must reconcile. After backfill completes, query `SELECT count(*) FROM orders WHERE state IS NOT NULL` and `WHERE state IS NULL` to confirm all rows migrated",
+  "M9": "",
+  "M10": "If 0143 fails (e.g., NOT NULL violation), `status` values are gone and cannot be recovered. Backup the affected rows before running the backfill, or accept that rollback must restore from a database snapshot.",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 4,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.172102,
+ "judge_wall_ms": 22326,
+ "graded_at": "2026-09-04T02:24:01+0100"
+}

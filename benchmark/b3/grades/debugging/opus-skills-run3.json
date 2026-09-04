@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": true,
+  "A8": true
+ },
+ "citations": {
+  "A1": "Cache is only populated when `_cache is None`, so after the first successful load the file is never read again \u2014 that's the root cause; store the file's `stat()` mtime and size alongside the data and reload when either changes.",
+  "A2": "Tempting non-fix: a TTL/expiry \u2014 it only shortens the stale window, and still serves wrong values for the whole interval.",
+  "A3": "Tempting non-fix: exposing a `clear_cache()` for callers to call \u2014 it moves the bug to every call site that forgets, and does nothing for an externally-edited file.",
+  "A4": "Cache key ignores `path`, so a second call with a different file silently returns the first file's config \u2014 key the cache dict by resolved absolute path.",
+  "A5": "No lock around the load, so two threads can both read and parse the file ... guard the load with a `threading.Lock` and re-check inside it.",
+  "A6": "The cached `dict` is returned by reference, so any caller mutating it corrupts every later reader ... return a `copy.deepcopy` or freeze it.",
+  "A7": "in one interpreter call `get_config()`, edit `config.json` on disk, call `get_config()` again; today the two returns are equal, and the fix is proven when the second returns the new value with no restart",
+  "A8": "`None` sentinel conflates \"not loaded\" with a legitimately empty config, so an empty `{}` file reloads on every call \u2014 use a module-level `_MISSING = object()` sentinel"
+ },
+ "score": 8,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.095967,
+ "judge_wall_ms": 11883,
+ "graded_at": "2026-09-04T02:21:57+0100"
+}

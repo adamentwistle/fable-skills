@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`total_cents` \u2192 `{amount, currency}` response shape breaks `apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents` now undefined)",
+  "P2": "`'paid'` \u2192 `'settled'` status rename breaks `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'` never matches) and `services/reconciler/reconcile.py:64`",
+  "P3": "`Disputed` inserted between `Open` and `Paid` in a numeric enum backing a `SMALLINT` persisted column (`repo.ts`) \u2014 shifts the integer value of `Paid` (2\u21923) and `Void` (3\u21924) for every existing row ... Must use `Disputed = 3` (append, don't insert) or an explicit migration",
+  "P4": "leaves `infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` setting the dead env var \u2014 with zod default now 7 (was 14/21 in those envs), prod silently drops grace period from 21 days to 7 on deploy; update Helm values in lockstep",
+  "P5": "turbo scoped to `[origin/main]` skipped `@acme/notifier`, `@acme/reconciler-client`, `@acme/scripts` \u2014 the packages holding the breakages in #1/#3",
+  "P6": "Test suite gutted meaningful assertions (`toBe('paid')`, `toBe(12500)`, `toBe('GBP')`) down to `toBeTruthy()`/`toBeDefined()`, and skips the state-persistence round-trip test ... restore real assertions before merge",
+  "P7": "Reviewer note asks to skip downstream-consumer review, but findings #4/#5 show in-repo consumers breaking \u2014 do not accept that scope limit as written",
+  "P8": "",
+  "P9": "",
+  "P10": "block merge until those packages are included in the run",
+  "P11": "`LATE_FEE_RATE_BPS` config exists and is wired into `dunning.ts` but not into `invoiceRoutes.ts` (still defaults to 150bps) \u2014 inconsistent rate application between the two call sites"
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.183902,
+ "judge_wall_ms": 22456,
+ "graded_at": "2026-09-04T02:21:42+0100"
+}

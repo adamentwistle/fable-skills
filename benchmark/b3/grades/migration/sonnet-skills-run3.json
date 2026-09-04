@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Contract phase (0143, drops `status`) is scheduled in the same Thursday window as expand+migrate with no soak time \u2014 run it as a separate, later deploy only after `state` is confirmed fully backfilled and every reader (including `jobs/`) is migrated.",
+  "M2": "`service.create_order` stops writing `status` the moment step 2's rolling deploy reaches each pod ... dual-write `status` until the contract phase",
+  "M3": "",
+  "M4": "prod's `PAID`, `canceled` (misspelled), `complete`, and NULL statuses (7,764 rows total) become `state = NULL` and stay that way \u2014 add explicit branches (or an `ELSE`)",
+  "M5": "Backfill pages with `OFFSET` while its own `UPDATE` removes rows from the `WHERE state IS NULL` set each batch, so later pages skip rows ... page by a stable key (e.g. `id > last_seen_id`)",
+  "M6": "The whole backfill runs inside one `with conn.transaction()` \u2014 a multi-hour job on 61M rows loses all progress if the pod is killed/OOMed/times out ... commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` reads `orders.status` and wasn't in scope for the \"grepped under app/\" check \u2014 it will silently drop any order created by new-code pods ... and hard-error at 02:00 UTC once 0143 drops the column",
+  "M8": "insert `SELECT count(*) FROM orders WHERE state IS NULL` between steps 3 and 4 and require it to be 0 before running 0143",
+  "M9": "this is already visible in the author's staging run (2,104,377 to backfill, only 1,055,000 done)",
+  "M10": "0143's `downgrade()` rebuilds `status` as empty `Text` with no reverse mapping from `state` \u2014 a rollback after contract permanently loses the string data",
+  "M11": "Staging timing (2.1M rows / 11 min) won't scale linearly to prod's 61.4M rows because `OFFSET` paging gets slower per page as the offset grows \u2014 re-time on a prod-sized copy after fixing #2 before trusting it fits the window.",
+  "M12": "0143's `alter_column(\"state\", nullable=False)` takes a full-table ACCESS EXCLUSIVE lock/scan on a live 61M-row table"
+ },
+ "score": 11,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.199082,
+ "judge_wall_ms": 33054,
+ "graded_at": "2026-09-04T02:24:43+0100"
+}

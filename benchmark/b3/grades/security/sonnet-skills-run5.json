@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": false,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "**Critical \u2014 SQL injection** (`get_user_orders`): query built with `%` string formatting directly into SQL.",
+  "S2": "**High \u2014 connection/cursor never closed**: `conn`/`cur` leak on every call, and leak on exception",
+  "S3": "`id` from SQLite is an int; `\"Order #\" + order[0]` raises `TypeError`. Fix: use an f-string / `str(order[0])`.",
+  "S4": "**High \u2014 division by zero** (`average_order_value`): empty `orders` list raises `ZeroDivisionError`.",
+  "S5": "**High \u2014 money stored/summed as float**: ... Floating point currency arithmetic drifts (e.g. `0.1 + 0.2`). Fix: use `Decimal` or integer cents consistently",
+  "S6": "negative `pct`, `pct > 100` ... Fix: validate `0 <= pct <= 100` and raise on violation.",
+  "S7": "**High \u2014 no input validation/allowlist on `status`** ... Fix: validate `status` against a known enum",
+  "S8": "**Critical \u2014 no authorization check**: ... Any authenticated caller can read any other user's orders by changing the parameter.",
+  "S9": "",
+  "S10": "",
+  "S11": "raises an unhandled `sqlite3.Error` that likely leaks a raw traceback (path, schema hints) to the HTTP response. Fix: catch `sqlite3.Error`, log with detail, return a sanitized error to the caller.",
+  "S12": "",
+  "S13": "",
+  "S14": "use positional tuple indexing**: fragile against column reordering ... Fix: use `sqlite3.Row` or named tuples and access by column name."
+ },
+ "score": 10,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.120732,
+ "judge_wall_ms": 15801,
+ "graded_at": "2026-09-04T02:26:24+0100"
+}

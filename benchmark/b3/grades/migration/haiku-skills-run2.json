@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run2",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": false,
+  "M9": false,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "prod has 'PAID' (5,210 rows), 'canceled' (1,988 rows), 'complete' (417 rows), plus 149 NULLs; none map, they stay NULL, migration 0143 NOT NULL constraint fails",
+  "M5": "",
+  "M6": "",
+  "M7": "jobs/nightly_finance_export.py not updated \u2013 still selects `o.status` after migration 0143 drops it; the export job will crash 02:00 UTC on the day after rollout",
+  "M8": "",
+  "M9": "",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 2,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.164932,
+ "judge_wall_ms": 19174,
+ "graded_at": "2026-09-04T02:23:56+0100"
+}

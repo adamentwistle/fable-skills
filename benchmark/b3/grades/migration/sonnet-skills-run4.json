@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": false
+ },
+ "citations": {
+  "M1": "Add/migrate/drop are all scheduled in the same Thursday window with no soak time between migrate and contract; fix: split 0143 into its own deploy at least a day after the backfill is confirmed reconciled.",
+  "M2": "`service.py`'s INSERT no longer sets `status`, so every order created by new-code pods gets `status = NULL` and silently drops out of the finance export's `status IN ('paid','shipped')` filter from the moment the rolling deploy starts; fix: keep writing both columns during the expand phase",
+  "M3": "",
+  "M4": "`MAPPING` has no branch for `PAID`, `canceled` (one L), `complete`, or NULL status \u2014 7,764 prod rows \u2014 so those rows stay `state IS NULL` forever",
+  "M5": "Backfill uses `OFFSET` against a `WHERE state IS NULL` filter that shrinks as rows get updated mid-run, so later batches skip unprocessed rows ... fix: paginate by keyset",
+  "M6": "The whole batch loop runs inside one outer `conn.transaction()`, so nothing is durably committed until the entire run finishes and a killed/timed-out job on 61M rows rolls back all progress ... fix: commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` reads `orders.status` directly and was missed because the grep was scoped to `app/`",
+  "M8": "Required gate between rollout steps 3 and 4: `SELECT count(*) FROM orders WHERE state IS NULL` must be 0 (or every remaining row explicitly triaged) before running 0143.",
+  "M9": "confirmed by the PR's own staging output (2,104,377 to backfill, only 1,055,000 updated)",
+  "M10": "0143's `downgrade()` recreates `status` as an empty nullable Text column with no data mapped back from `state`; fix: map `state` back to the string by name in `downgrade`.",
+  "M11": "staging processed 2.1M rows (only half of those, per #1) in 11 min; prod is 61.4M rows, ~29x; fix: retime the corrected script against a prod-sized copy before trusting the window.",
+  "M12": ""
+ },
+ "score": 10,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.179017,
+ "judge_wall_ms": 23084,
+ "graded_at": "2026-09-04T02:24:41+0100"
+}

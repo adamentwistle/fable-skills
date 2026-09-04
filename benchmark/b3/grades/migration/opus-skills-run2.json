@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run2",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Split the release: 0142 + dual-write app + backfill in 2026.36; 0143 no earlier than 2026.37, after `status` has gone unread for several days.",
+  "M2": "No dual write: during the 6-minute rolling deploy old pods insert `status` only and new pods insert `state` only, so each half writes rows the other cannot read \u2014 write both columns for one full release.",
+  "M3": "the app ships at step 2 while every existing row has `state` NULL, and `Order.from_row` calls `OrderState(row[\"state\"])`, which raises on NULL \u2014 every read of a pre-existing order 500s for the whole backfill window.",
+  "M4": "The `CASE` has no arm for `PAID` (5,210), `canceled` (1,988), `complete` (417), or the 149 NULL-status rows, so all 7,764 stay NULL and 0143's `SET NOT NULL` aborts.",
+  "M5": "it re-queries `WHERE state IS NULL` but pages with `OFFSET`, so every row it updates leaves the result set and the next offset jumps past unmigrated rows \u2014 fix by keyset paging on `id > last_id`",
+  "M6": "The whole loop is inside one `conn.transaction()`, so it is neither batched nor resumable and would hold a single 61M-row write transaction open \u2014 commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` selects and filters on `orders.status`; 0143 drops the column and the 02:00 UTC Friday export into Finance's Looker model breaks \u2014 the grep was scoped to `app/` only.",
+  "M8": "After the backfill: require `count(*) WHERE state IS NULL = 0` and each state count to equal the sum of its source status counts (state 2 must be 38,102,551 plus whatever `complete` maps to) \u2014 reconcile before 0143 is allowed to run.",
+  "M9": "The staging run already proves it: 2,104,377 rows in, `done: 1055000 rows updated` out \u2014 that is N/2, exactly what the offset bug predicts, so roughly a million staging rows are still NULL and nobody noticed.",
+  "M10": "0143 has no rollback: its `downgrade` recreates `status` as an empty nullable column, so the source data is unrecoverable the second it runs \u2014 `status` is the before-image and must survive.",
+  "M11": "staging did 1,000,000 rows in 627s, about 1,595 rows/s; 61,437,902 prod rows is roughly 10.7 hours, not 11 minutes \u2014 it does not fit a Thursday deploy window.",
+  "M12": "0143's `SET NOT NULL` takes ACCESS EXCLUSIVE and full-scans 61M rows \u2014 add `CHECK (state IS NOT NULL) NOT VALID`, `VALIDATE CONSTRAINT`, then `SET NOT NULL`."
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.180857,
+ "judge_wall_ms": 19167,
+ "graded_at": "2026-09-04T02:24:09+0100"
+}

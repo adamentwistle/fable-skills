@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run1",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "Expand, migrate and contract are collapsed into one Thursday window; `0143` belongs in a separate release days after the backfill reconciles.",
+  "M2": "from the moment step 2 deploys, new orders are written with `status` NULL, so `status IN ('paid','shipped')` silently omits them from the Finance Looker load \u2014 dual-write both columns instead.",
+  "M3": "`OrderState(row[\"state\"])` raises `ValueError` on NULL, so every pre-existing order 500s for the hours between step 2 and step 4",
+  "M4": "`MAPPING` covers only the five lowercase spellings, so `PAID` (5210), `canceled` (1988), `complete` (417) and NULL (149) fall through to NULL",
+  "M5": "each updated batch leaves the result set, so the next `OFFSET` skips that many still-unmigrated rows \u2014 fix by keyset paging on `id > last_id`",
+  "M6": "`with conn.transaction():` wraps the whole loop, so this is one transaction over 61M rows, not a batched backfill \u2014 commit per batch so it is resumable",
+  "M7": "`jobs/nightly_finance_export.py` selects and filters on `o.status` and was missed because the grep was scoped to `app/`",
+  "M8": "Between the fixed backfill and `0143`: `SELECT count(*) FROM orders WHERE state IS NULL` must return 0",
+  "M9": "Staging already failed this way and was read as green: `done: 1055000` is exactly 211 batches of 5000 ... 1,049,377 staging rows still have `state IS NULL` today",
+  "M10": "`0143`'s downgrade recreates `status` empty, so it restores the schema and not the data \u2014 rename to `status_deprecated` and drop it a release later instead.",
+  "M11": "prod's 61.4M rows are 29.2\u00d7 staging, giving 5.4 hours at the linear floor",
+  "M12": "`op.alter_column(..., nullable=False)` takes ACCESS EXCLUSIVE and full-scans 61M rows \u2014 add a `NOT VALID` check, `VALIDATE CONSTRAINT`, then `SET NOT NULL`"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17906700000000003,
+ "judge_wall_ms": 20062,
+ "graded_at": "2026-09-04T02:24:07+0100"
+}

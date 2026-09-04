@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` still accesses `data.total_cents`",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` still checks `status === 'paid'`",
+  "P3": "Adding `Disputed` as state value 2 shifts `Paid` from 2\u21923, corrupting all existing paid invoices to appear as disputed without a data migration",
+  "P4": "`INVOICE_GRACE_DAYS` still exists in ... `infra/helm/billing/values.prod.yaml`, `infra/helm/billing/values.staging.yaml`, and `docs/runbooks/dunning.md`; rename all to `BILLING_GRACE_PERIOD_DAYS`",
+  "P5": "",
+  "P6": "Test degraded, not updated: `toInvoiceResponse` test now only checks `toBeTruthy()` and `toBeDefined()` ... restore actual value assertions",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 5,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.445225,
+ "judge_wall_ms": 25230,
+ "graded_at": "2026-09-04T02:21:07+0100"
+}

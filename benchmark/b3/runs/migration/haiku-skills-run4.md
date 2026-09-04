@@ -1,0 +1,6 @@
+1. Missing reader: jobs/nightly_finance_export.py queries orders.status; will fail when column is dropped (Friday 02:00 UTC); update to use state and OrderState enum.
+2. Incomplete backfill mapping: production has ~7364 rows with unmapped statuses ('PAID', 'canceled', 'complete', NULL) that will remain NULL; extend CASE mapping or provide safe defaults.
+3. Backfill script's OFFSET pagination is flawed: can skip or reprocess rows if unmapped statuses exist; use keyset pagination (WHERE id > last_id) or pre-filter to known statuses.
+4. No post-backfill verification: script should confirm state IS NULL count = 0 after running; migration 0143's ALTER NOT NULL will fail if any remain NULL.
+5. Before Thursday 14:00 deploy: audit production status distribution (7364 rows across 4 unmapped values); extend mapping or decide safe defaults; test backfill with dry-run to confirm coverage.
+6. **Cannot ship Thursday**: migration 0143's NOT NULL constraint will fail; requires fixes to issues 1–4 and pre-deploy validation of backfill completeness.

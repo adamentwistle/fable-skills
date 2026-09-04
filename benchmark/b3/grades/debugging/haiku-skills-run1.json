@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-skills-run1",
+ "items": {
+  "A1": true,
+  "A2": false,
+  "A3": true,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never invalidates after first read; track file modification time and reload when mtime changes.",
+  "A2": "",
+  "A3": "Tempting but won't work\u2014remove caching entirely: solves staleness but forces I/O on every call, defeating the caching purpose.",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 2,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.083402,
+ "judge_wall_ms": 7990,
+ "graded_at": "2026-09-04T02:21:33+0100"
+}

@@ -1,0 +1,18 @@
+**Block the merge.** Numbered, worst first.
+
+1. `Disputed` inserted mid-enum renumbers Paid 2→3 and Void 3→4, and `invoices.state` is a persisted SMALLINT — every existing paid row now reads as Disputed and every void row as Paid; append `Disputed` last (or pin explicit values) and ship a data migration if you renumber.
+2. The one test that would have caught that (`round-trips state values`, seeds `state: 2`/`3`, expects Paid/Void) was skipped as "flaky since the Disputed change" — it is not flaky, it is correctly failing; un-skip and fix the enum.
+3. `services/notifier/src/reminders.ts:57` still calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` — positional number against the new options object, so `opts.graceDays` is undefined and the fee is `NaN`; migrate the call.
+4. `scripts/backfill-late-fees.js:22` has the same broken positional call and is plain JS with no typecheck at all; migrate it and confirm what it wrote if it has run on the branch.
+5. Green CI is not evidence here — `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts`, which are exactly the packages holding the broken callers; re-run unfiltered before merge.
+6. `infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: "21"` (staging `"14"`) and zod strips unknown keys silently, so prod would fall to the new default of 7 and start charging late fees 14 days early; update both values files in this PR.
+7. `docs/runbooks/dunning.md:18` documents raising `INVOICE_GRACE_DAYS` as the incident lever to pause late fees — that lever becomes a no-op; update the runbook in the same change.
+8. The reviewer note is contradicted by the author's own sweep: `useInvoice.ts:23` reads `data.total_cents`, `InvoiceBadge.tsx:9` matches `status === 'paid'`, and `reconciler/reconcile.py:64` matches both — three unmigrated first-party consumers, so either migrate them here or serve both shapes.
+9. `total.amount` is not just nested, it changed type from integer cents to a decimal string, which breaks the reconciler's `== ledger_cents` comparison and mis-renders zero-decimal currencies; keep integer minor units (`amount_cents`).
+10. `toInvoiceResponse` is also the payload for the `billing.invoice.updated` event via `events.ts`, so this is an event-schema break the PR description never mentions and no sweep covered — enumerate subscribers, and note in-flight/queued old-shape messages still exist.
+11. Version goes 2.3.1 → 2.4.0 for changes that remove a config key, retype a response field and change a status value — that is semver-major; bump to 3.0.0 or `^2` consumers pick this up automatically.
+12. The serializer test was weakened, not updated — `toBeTruthy()`/`toBeDefined()` would pass with the wrong status, wrong amount and wrong currency; assert `'settled'` and `{amount: '125.00', currency: 'GBP'}`.
+13. `invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS`, so the fee shown on the invoice can differ from the fee actually charged whenever the configured rate is not 150; pass the config value in both.
+14. The consumer sweep was scoped to `apps services` and three literal patterns, so `scripts/`, `infra/`, `docs/` and any non-literal use of `paid`/`total_cents` are unverified — I cannot confirm from this material that no other reader exists.
+
+One check before merge: run `turbo run typecheck test` with no filter, and un-skip the persistence test — that alone should surface findings 1–5.

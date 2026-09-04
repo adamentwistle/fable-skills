@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `actor_id` DB lookup per event (N+1) instead of batching with a single `WHERE id = ANY($1)`",
+  "F2": "",
+  "F3": "`lookup_geo` calls `requests.get` synchronously inside an async handler, once per event, blocking the event loop ... replace with an async HTTP client (httpx) or run in a thread pool.",
+  "F4": "add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` is also an unbounded list appended on every request forever \u2014 same leak pattern as `_geo_cache`, contributes to RSS growth; cap or reset it.",
+  "F6": "`_geo_cache` is an unbounded dict that never evicts \u2014 that's the RSS growth to 2.1GB over 20h ... cap it (LRU/TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "bumping workers 4\u219216 and pool max 10\u219250 across 6 pods could put ~480 connections against Postgres, likely exceeding `max_connections`, and does nothing for the sync-`requests` blocking problem. ... Skip the Redis response cache for now",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.151887,
+ "judge_wall_ms": 18667,
+ "graded_at": "2026-09-04T02:25:37+0100"
+}

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "M1": false,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": false,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "`create_order` in the new app code stops writing `orders.status` at all ... write both `status` and `state` during the expand phase.",
+  "M3": "`Order.from_row` does `OrderState(row[\"state\"])` which raises on NULL \u2014 every existing-order read breaks from deploy until backfill finishes",
+  "M4": "`MAPPING` CASE has no ELSE and no WHEN for `'PAID'`, `'canceled'`, `'complete'`, or NULL status (5,210+1,988+417+149 = 7,764 prod rows) \u2014 those rows stay `state IS NULL` forever",
+  "M5": "Backfill pages with `OFFSET` over the same `WHERE state IS NULL` set it's shrinking via UPDATE in the same transaction \u2014 rows get skipped as the filtered set moves under the offset; page by `id > last_seen_id` instead",
+  "M6": "The whole backfill runs inside one `conn.transaction()` around all batches, not committed per batch ... holds one long transaction/lock set for the full run; commit each batch.",
+  "M7": "`jobs/nightly_finance_export.py` reads `o.status` and lives under `jobs/`, outside the `app/` grep the author ran \u2014 it will break at 02:00 UTC once 0143 drops the column",
+  "M8": "require `SELECT count(*) FROM orders WHERE state IS NULL` = 0 as a hard gate before running 0143",
+  "M9": "",
+  "M10": "0143's `downgrade()` re-adds `status` as an empty nullable Text column with no data from `state` \u2014 this is not a working rollback",
+  "M11": "Staging did 2,104,377 rows in 11 min; prod is 61,437,902 rows (~29x) \u2014 extrapolated runtime is ~5+ hours, not sized to the Thursday window",
+  "M12": "0143's `SET NOT NULL` ... take AccessExclusiveLock with a full-table scan/rewrite on 61M rows, no lock_timeout ... add a `NOT VALID` CHECK + `VALIDATE CONSTRAINT` ahead of time to make the NOT NULL scan-free"
+ },
+ "score": 10,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.183807,
+ "judge_wall_ms": 23884,
+ "graded_at": "2026-09-04T02:24:31+0100"
+}

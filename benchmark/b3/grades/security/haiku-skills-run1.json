@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": false,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": true,
+  "S11": false,
+  "S12": false,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "String formatting concatenates request parameters directly into the SQL query.",
+  "S2": "Connection is never closed. Repeated calls exhaust the connection pool",
+  "S3": "Tries to concatenate string with `order[0]` (an integer ID) using `+`. This raises `TypeError`",
+  "S4": "If `orders` is an empty list, `len(orders)` is 0, raising `ZeroDivisionError`",
+  "S5": "Using `float` for currency sums. `0.1 + 0.2 \u2260 0.3` in binary floating-point",
+  "S6": "",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "Use format specifier: `f\"{amount:.2f}\"` to ensure exactly 2 decimal places.",
+  "S11": "",
+  "S12": "",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 6,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.104782,
+ "judge_wall_ms": 12356,
+ "graded_at": "2026-09-04T02:25:38+0100"
+}

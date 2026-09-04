@@ -1,0 +1,6 @@
+1. Cache set once, never invalidated after first load — fix: check the file's mtime (or hash) each call and reload when it changes.
+2. `_cache is None` guard only fires on first call, not on file change — fix: don't gate reload on cache emptiness; gate it on staleness.
+3. Tempting fix "just remove the cache and always read the file" — not root-cause-correct: reintroduces disk I/O on every call (perf regression the cache existed to avoid) rather than fixing invalidation.
+4. Tempting fix "add a TTL and reload every N seconds" — doesn't address it: still serves stale data for up to N seconds and reloads unnecessarily when the file hasn't changed; papers over rather than detects the actual change.
+5. Tempting fix "expose a `reload_config()` the caller must remember to invoke" — doesn't address it: pushes the invalidation responsibility onto every caller, so the bug just resurfaces wherever someone forgets to call it.
+6. Tempting fix "make `_cache` non-global / instance attribute" — irrelevant: scope of the cache variable isn't the defect, staleness detection is.

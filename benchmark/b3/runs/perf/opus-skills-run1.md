@@ -1,0 +1,13 @@
+1. Do not ship the on-call proposal. 16 workers × pool max 50 × 6 pods = up to 4,800 Postgres connections (default `max_connections` is 100), 16 workers multiplies the memory leak per pod ~4×, and a 60 s Redis cache still leaves every miss blocking the event loop — it hides the symptom on warm keys and pages you on cold ones.
+2. Baseline first: `EXPLAIN (ANALYZE, BUFFERS)` on the events SELECT with org 4127 / 30 d, and 5× `curl -w %{time_total}` against the route for acme and a <50-event org; re-run both after each change below.
+3. No index serves this query — `events` has indexes on `actor_id` and `kind` only, so the filter is a seq scan of 4.21M rows; add `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC)`. This is the 1.2–1.6 s in the slow log.
+4. Blocking `requests.get` inside the async handler stops the whole worker's event loop for up to 2 s per uncached IP, which is why `/healthz` misses the 3 s liveness probe; switch to an async client (`httpx.AsyncClient`, shared) or drop geo off the request path entirely and resolve it at write time.
+5. `_request_timings` grows one float per request forever — at 120 req/s that's ~8.6M entries in 20 h, matching the 310 MB → 2.1 GB RSS climb; replace with `collections.deque(maxlen=...)` or a fixed-bucket histogram. This is the OOM.
+6. `_geo_cache` is an unbounded dict keyed on client IP with no eviction — second leak; bound it with an LRU cap and a TTL.
+7. `serialize_event` issues one `SELECT ... FROM users` per event, so limit=1000 is 1,000 round trips; fetch actors once with `WHERE id = ANY($1)` on the distinct actor ids, or join `users` into the main query.
+8. Dedupe uses `in` against a Python list, which is O(n²) — ~1.8M comparisons at acme's 1,912 rows and 500k at limit=1000; use a `set` for membership.
+9. The query fetches every row in the window and only slices to `limit` after dedupe, so `limit` saves no I/O; push both into SQL — `SELECT DISTINCT ON (dedupe_key) ... ORDER BY dedupe_key, created_at DESC` in a subquery, re-sorted `created_at DESC` with `LIMIT $3` outside.
+10. `/internal/metrics` sorts the entire timings list on every call — bounded once step 5 lands, but confirm the cap keeps that sort under a millisecond.
+11. Only after 3–9 measure again; if p95 is still over target, then tune pool size — and set it from measured concurrency against `max_connections`, not to 50.
+12. Run the correctness suite specifically on dedupe order and the `limit` boundary; the SQL dedupe must keep the same newest-wins row and the same result count as the Python version.
+13. Longer term, `limit=1000` in one shot is the wrong client contract — offer keyset pagination on `(created_at, id)` so the mobile Activity tab pulls 50 and scrolls.

@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `SELECT ... FROM users` per row, sequentially awaited \u2014 that's 1,900+ round trips (N+1); batch with one `SELECT id, display_name, avatar_url FROM users WHERE id = ANY($1)`",
+  "F2": "`seen: list[str]` + `if ev[\"dedupe_key\"] in seen` is O(n\u00b2) dedupe over up to thousands of rows; make `seen` a `set`.",
+  "F3": "`lookup_geo` makes a **synchronous** `requests.get` call inside an async endpoint \u2014 this blocks the entire event loop for that worker",
+  "F4": "no index on (org_id, created_at) \u2014 the query does a full scan/sort of 4.2M rows every call; add `CREATE INDEX events_org_id_created_at_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings: list[float]` also grows unbounded for the life of the process \u2014 same leak pattern, feeds into the same OOM; cap it (ring buffer)",
+  "F6": "`_geo_cache: dict[str, dict]` is a module-level dict with no eviction \u2014 it grows one entry per unique IP forever ... Bound it (LRU/TTL cache)",
+  "F7": "",
+  "F8": "",
+  "F9": "bumping to 16/50 now would mainly let more blocked-event-loop requests pile up concurrently, hiding the real bug and increasing DB connection pressure (6 pods \u00d7 16 workers \u00d7 50 = 4800 potential connections). ... Response caching (Redis, 60s) is reasonable as a later optimization for hot orgs, not as the fix",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.15412700000000001,
+ "judge_wall_ms": 17598,
+ "graded_at": "2026-09-04T02:25:28+0100"
+}

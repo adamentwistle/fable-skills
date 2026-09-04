@@ -1,4 +1,15 @@
-# benchmark/ — recovery manifest
+# benchmark/
+
+Two generations of benchmark live here.
+
+- **`b3/` is current** (September 2026, Haiku 4.5 / Sonnet 5 / Opus 5 / Fable 5.1, nine areas, n = 5, blind-graded, reproducible with `harness.py`). See [`b3/README.md`](b3/README.md) for the protocol and layout; the results are in the repo README.
+- **`tasks/`, `runs/`, `grading/` are the July 2026 benchmarks** (Opus 4.8 and Sonnet 5), recovered verbatim from the session transcript as described below. Benchmark 3 reuses their four task areas unchanged.
+
+`harness.py` is the runner for both: standard library only, drives headless `claude -p`, needs a logged-in Claude Code and no API key.
+
+---
+
+# July 2026 benchmarks: recovery manifest
 
 **Provenance warning: every file in this directory was reconstructed from a Claude Code session transcript, not from the original working files. Treat contents as recovered evidence, not a runnable harness.**
 

@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run4",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": true,
+  "A7": true,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the cache is loaded once and has no invalidation \u2014 `if _cache is None` is the only condition that ever reads the file, so after the first call nothing on disk can trigger a reload; fix by storing the file's identity (`os.stat` \u2192 `st_mtime_ns`, `st_size`, `st_ino`/`st_dev`) alongside the parsed data and re-stat'ing on every call",
+  "A2": "Not a fix \u2014 a TTL / periodic expiry: it only shortens the staleness window, still serves stale values for up to the TTL",
+  "A3": "Not a fix \u2014 an explicit `reload_config()` for callers to call: correctness now depends on every call site remembering, which is the same failure with more surface.",
+  "A4": "the cache ignores `path`, so the first caller's file is returned to every later caller regardless of the path they pass; fix by keying the cache dict on the resolved absolute path",
+  "A5": "",
+  "A6": "Returning the shared mutable dict lets any caller's mutation silently become everyone's config ... fix by returning a deep copy or an immutable view.",
+  "A7": "write `{\"v\":1}` to `config.json`, call `get_config()`, overwrite the file with `{\"v\":2}`, call `get_config()` again in the same process \u2014 it returns `v=1`. Fix is proven when the second call returns `v=2`",
+  "A8": ""
+ },
+ "score": 6,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.101757,
+ "judge_wall_ms": 14131,
+ "graded_at": "2026-09-04T02:22:00+0100"
+}

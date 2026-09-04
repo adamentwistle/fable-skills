@@ -4,49 +4,57 @@ A library of 39 **engineering-discipline skills** — small, composable instruct
 
 ## The premise
 
-The most capable Claude models don't just know more — they *work* more carefully. Fable 5 reaches for a codebase's own conventions before writing, proves a bug's cause before fixing it, sweeps edge cases before declaring done, and reports what it actually verified rather than what it assumes. A strong-but-lighter model like Opus 4.8 *can* do all of that too — it just doesn't always reach for those habits unprompted.
+The most capable Claude models don't just know more — they *work* more carefully. Fable 5 reaches for a codebase's own conventions before writing, proves a bug's cause before fixing it, sweeps edge cases before declaring done, and reports what it actually verified rather than what it assumes. A strong-but-lighter model like Opus 5 or Sonnet 5 *can* do all of that too — it just doesn't always reach for those habits unprompted.
 
 These skills close that gap. Fable identified the places where a less deliberate run tends to fall short of its own ceiling — orientation, root-cause discipline, security reflexes, edge-case coverage, honest reporting — and wrote each habit down as an explicit, always-available checklist. Load them into a session and a model follows the discipline on purpose instead of leaving it to chance. The goal is simple: **Fable-level output from whatever model is driving.**
 
 Each skill is one focused habit. They fire situationally — a debugging task pulls in `root-cause-debugging`, a diff touching user input pulls in `security-reflexes`, a schema change pulls in `data-migration-safety` — so the model carries the right discipline into the right moment without drowning in guidance.
 
-## Does it actually help? Benchmarks
+## Does it actually help? Benchmark 3 (September 2026, current models)
 
-Same method throughout: run an identical task through fresh agents with **no guidance** vs. **with the relevant skill files**, then score the outputs against a fixed answer key. Benchmark 1 uses Opus 4.8; Benchmark 2 runs both Opus 4.8 and Sonnet 5. These are directional signals, not statistical proofs.
+Same idea throughout: run an identical task through fresh headless sessions with **no skills** and **with the relevant skill files**, then score every output blind against a fixed answer key. Benchmark 3 is the one to cite. It runs on the current model line-up, uses the actual `SKILL.md` files rather than summaries, and every run, grade and cost figure is committed under [`benchmark/b3/`](benchmark/b3/) with a reproducible harness.
 
-**The full assets are in [`benchmark/`](benchmark/)** — seeded tasks, answer keys, all 62 raw run outputs, the blind-grader prompts, and the per-item score tables — so every number below is auditable and re-gradable rather than take-my-word-for-it. (They were reconstructed verbatim from the original session transcript; each file carries a provenance header, and the recovery manifest in `benchmark/README.md` lists the known gaps.)
+**Method.** Nine task areas (four reused verbatim from the July benchmarks, five new ones designed and then adversarially verified by a separate agent), each with a 7 to 14 item answer key. Every cell is **5 independent runs** of a headless Claude Code session (`claude -p`) with no tools, no installed skills, and no MCP servers, so the bare condition is genuinely bare. The with-skills condition gets the task's two or three skill files appended to the system prompt as activated skills. An Opus 5 judge grades one candidate at a time with model names redacted, returning a true/false per item with a verbatim citation. 315 graded runs in total; solver cost about $51 and judging about $46 at list price, all through a normal Claude Code login.
 
-### Benchmark 1 — Security code review (n=1, blind-graded)
+Mean score per cell, bare → with skills (Δ), n = 5 each:
 
-The same task was run through two fresh agents and both reviews were scored **blind** by an independent third agent. **Task:** review a Python orders module seeded with **14 latent issues** (SQL injection, connection leak, division-by-zero, float-money drift, a missing authorization check, …).
-
-| | Issues found (of 14) | Notable |
-|---|:---:|---|
-| **Without skills** | **10 / 14** | Solid: caught the injection, the leak, div-by-zero, float money |
-| **With skills** | **13 / 14** | Caught everything the control did **plus the IDOR / broken object-level authorization flaw the bare run missed entirely** — the single highest-severity issue in the file — plus an explicit rounding policy, result-set pagination, and robust row access |
-
-The skill-guided run didn't just find *more* — it found the issue that mattered most. Walking the `security-reflexes` checklist ("every mutating path: WHO is calling and MAY they touch THIS object?") surfaced an authorization gap the unprompted review sailed past.
-
-### Benchmark 2 — Three areas × two models, n=5 per cell, blind-graded
-
-Three fresh tasks (root-cause debugging, a racy rate limiter, a CSV revenue parser), each seeded with a fixed answer key. Every cell is **5 independent runs**; all 60 outputs per area were scored **blind** by an independent grader that knew neither the model nor whether skills were applied. Mean issues found:
-
-| Area | Opus 4.8 — bare | Opus 4.8 — skills | Sonnet 5 — bare | Sonnet 5 — skills |
+| Area (max) | Haiku 4.5 | Sonnet 5 | Opus 5 | Fable 5.1 bare |
 |---|:---:|:---:|:---:|:---:|
-| **Root-cause debugging** (/8) | 5.2 · 65% | **7.8 · 98%** | 4.4 · 55% | 6.4 · 80% |
-| **Concurrency** (/7) | 6.4 · 91% | **7.0 · 100%** | 6.0 · 86% | 7.0 · 100% |
-| **Edge / numerical** (/9) | 8.2 · 91% | **9.0 · 100%** | 8.6 · 96% | 9.0 · 100% |
+| security review (14) | 5.8 → **8.4** (+2.6) | 10.0 → **11.2** (+1.2) | 13.6 → **14.0** (+0.4) | 13.0 |
+| untrusted content / injection (11) | 2.2 → **4.4** (+2.2) | 9.6 → **10.4** (+0.8) | 10.2 → **11.0** (+0.8) | 10.6 |
+| shared-interface change review (11) | 4.0 → **5.8** (+1.8) | 7.6 → **9.2** (+1.6) | 10.8 → **11.0** (+0.2) | 11.0 |
+| honest reporting (10) | 4.2 → **5.4** (+1.2) | 7.0 → **8.8** (+1.8) | 9.0 → **10.0** (+1.0) | 10.0 |
+| slow-endpoint investigation (11) | 5.0 → **6.8** (+1.8) | 7.6 → **7.8** (+0.2) | 7.8 → **9.0** (+1.2) | 8.8 |
+| migration + backfill review (12) | 2.8 → **3.8** (+1.0) | 8.4 → **9.8** (+1.4) | 11.8 → 11.6 (−0.2) | 12.0 |
+| concurrency (7) | 5.0 → 5.2 (+0.2) | 6.0 → 6.0 (0.0) | 6.2 → 6.4 (+0.2) | 6.8 |
+| root-cause debugging (8) | 2.8 → 2.4 (−0.4) | 4.0 → 3.4 (−0.6) | 6.0 → **7.0** (+1.0) | 6.2 |
+| edge cases / numerics (9) | 7.0 → 6.2 (−0.8) | 8.6 → 8.6 (0.0) | 9.0 → 9.0 (0.0) | 9.0 |
+| **mean of cell percentages** | **44% → 53%** | **74% → 80%** | **90% → 95%** | **94%** |
 
-Four findings:
+Five findings:
 
-1. **Skills lift both models in every area** — biggest on debugging (Opus +2.6, Sonnet +2.0), where the task rewards *process*; smallest on the edge task, whose "list every edge case" prompt already forces exhaustiveness (both models near-saturate).
-2. **Skills bring the cheaper model above the stronger bare one.** Sonnet 5 + skills matches or beats bare Opus 4.8 in all three areas (6.4 vs 5.2, 7.0 vs 6.4, 9.0 vs 8.2). That is the parity thesis, measured: the discipline files close the model gap.
-3. **But raw capability still matters at the subtle end.** Opus + skills leads Sonnet + skills on debugging (7.8 vs 6.4) almost entirely on one item — a config of JSON `null` defeating the `is None` cache guard — caught by Opus-with-skills 4/5 times and by Sonnet **0/5 in any condition**. Skills prompt the right *class* of thinking; the hardest single insight still needed the stronger model.
-4. **Variance shrank with skills** — with-skills scores cluster at the top rather than spreading (Opus debugging 7–8 with vs 5–6 without), so the gain is greater consistency, not just a higher mean.
+1. **Every model gains on average, and the weaker the model the bigger the gain:** +9 points for Haiku 4.5, +6 for Sonnet 5, +5 for Opus 5. The lift is concentrated in the six review-and-report tasks, where the skills change what the model *does* (walks the boundaries, enumerates the consumers, states what it could not verify) rather than what it knows.
+2. **Opus 5 with skills matches Fable 5.1 bare.** 95% vs 94% averaged over the nine areas: ahead on debugging, security, injection and performance, tied on three, behind by 0.4 on concurrency and migration. That is the parity thesis measured on the current line-up: the discipline files close most of one model tier.
+3. **One tier is the limit.** Sonnet 5 with skills reaches Opus 5 bare on honest reporting, injection, performance and concurrency but stays behind on security, interface review, migration and debugging. Haiku 4.5 with skills never reaches Sonnet 5 bare. Skills prompt the right class of thinking; the subtler findings still need the stronger model.
+4. **Where they do not help, and one place they hurt.** The two saturated tasks (concurrency, edge cases) leave nothing to gain above Sonnet. On the debugging task Haiku and Sonnet score slightly lower with skills (within the run-to-run spread); its remaining items are a JSON-`null` sentinel bug that only Opus-class models find and a reproduce-and-verify step that a terse findings format discourages. Haiku also loses 0.8 on the edge-case task: a 10K-character skill bundle can crowd a small model's attention.
+5. **Consistency improves with skills.** Spread shrinks in most cells (interface review, Haiku sd 1.3 → 0.7; honest reporting, Sonnet 1.7 → 0.7; migration, Sonnet 2.0 → 0.7), and Opus with skills hits the ceiling with zero variance on four of nine areas. The gain is a higher floor, not just a higher mean.
 
-The Opus numbers here were produced by an earlier author-scored pass too; the blind re-grade reproduced them almost exactly (debugging 5.2 vs 5.4, concurrency and the with-skills scores identical), which is the main reason to trust the rest.
+**Two iterations, both kept.** Iteration 1 ran with the skills as rewritten by Fable 5.1 at the start of this pass. Its per-item tables showed the same misses across models even with the skills loaded: the reproduce-and-verify line, the baseline measurement, the pre-merge check, the consumers or claims the reviewer could not verify. Seven skills gained one rule (the requested output format never drops those lines), and the affected cells were re-run as iteration 2, which is the table above. Injection improved for all three models (+1.4, +0.8, +0.8) and Opus debugging by +1.2; Haiku and Sonnet debugging lost 0.6 each. The iteration-1 runs and grades stay under [`benchmark/b3/iteration-1/`](benchmark/b3/iteration-1/).
 
-**Honest caveats:** n=5 per cell is still small — directional, not conclusive. The baselines are already strong, so the gain is "good → near-complete," not "broken → fixed." Grading is an LLM applying an objective checklist, not a human. The edge task saturates, compressing its signal.
+**Reproduce it** (needs the `claude` CLI logged in; no API key):
+
+```
+python benchmark/harness.py run    --suite b3 --areas all --models haiku,sonnet,opus,fable --conditions bare --n 5
+python benchmark/harness.py run    --suite b3 --areas all --models haiku,sonnet,opus --conditions skills --n 5
+python benchmark/harness.py grade  --suite b3 --judge opus
+python benchmark/harness.py report --suite b3
+```
+
+**Caveats, stated plainly.** n = 5 per cell is directional, not conclusive; differences under about 0.5 are within noise. The judge is a model applying an objective checklist with citations, not a human. Runs are single-turn with no tools, so this measures what a model says about a problem, not how it behaves across an agentic session. The skills were delivered as system-prompt instructions; other placements were not measured. The five new tasks were designed and verified by Fable 5.1 agents, so an author-model bias in Fable's favour is possible, and Fable bare still misses items on six of them.
+
+### Earlier results (July 2026, Opus 4.8 and Sonnet 5)
+
+The July benchmarks are preserved verbatim under [`benchmark/tasks`](benchmark/tasks/), [`runs`](benchmark/runs/) and [`grading`](benchmark/grading/) (recovered from the session transcript; see [`benchmark/README.md`](benchmark/README.md)). They reported large lifts on the debugging task (Opus 4.8 5.2 → 7.8 of 8, Sonnet 5 4.4 → 6.4) and a security review that went from 10 to 13 of 14. Read them with one fact in mind: their with-skills condition used two- or three-sentence *condensed summaries* of the skills in the user prompt, and in the debugging area that summary spelled out the reproduce-and-verify step and the shared-mutable-return edge case that the answer key rewards. Benchmark 3 replaced that protocol with the real skill files, and the July debugging lift does not reproduce under it. The July numbers are history; the table above is the claim.
 
 ## Using the skills
 
@@ -137,4 +145,4 @@ The verification agents deliberately pin `model: opus` — the point is a cheap 
 
 ## Attribution
 
-Skills authored by Fable to lift lighter models to its own working standard. Benchmark run and scored with Claude Opus 4.8.
+Skills authored by Fable to lift lighter models to its own working standard. Benchmark 3 run through headless Claude Code on Haiku 4.5, Sonnet 5, Opus 5 and Fable 5.1, blind-graded by Opus 5; the July 2026 benchmarks were run and scored with Claude Opus 4.8.

@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "M1": true,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": false,
+  "M9": true,
+  "M10": true,
+  "M11": false,
+  "M12": true
+ },
+ "citations": {
+  "M1": "hold 0143, ship only 0142+backfill Thursday, land 0143 later once the unmapped rows are resolved",
+  "M2": "",
+  "M3": "`mark_paid`'s `WHERE state = $3` (PENDING) will match 0 rows for any order still NULL/unbackfilled, so the payment webhook returns 2xx while the order silently never flips to paid",
+  "M4": "prod's `PAID`, `canceled` (single-L), `complete`, and null status (7,764 rows total, per the prod GROUP BY) map to `state = NULL`",
+  "M5": "Backfill uses `OFFSET` against a `state IS NULL` set that shrinks as it updates \u2014 this skips roughly every other batch",
+  "M6": "Backfill script wraps the whole batch loop in one `conn.transaction()` \u2014 it isn't actually committing per batch, so a killed/OOM'd job rolls back all progress",
+  "M7": "`jobs/nightly_finance_export.py` (under `jobs/`, outside the `app/`-scoped grep) still selects `o.status` \u2014 it breaks the first time it runs after 0143 drops the column",
+  "M8": "",
+  "M9": "staging's own log proves it (`1,055,000` updated out of `2,104,377` reported, half the total)",
+  "M10": "0143's `downgrade()` recreates `status` as empty nullable text with no data restored from `state`",
+  "M11": "",
+  "M12": "`alter_column(\"orders\", \"state\", nullable=False)` in 0143 takes an ACCESS EXCLUSIVE lock for a full-table verification scan on 61M rows"
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.20381700000000003,
+ "judge_wall_ms": 35797,
+ "graded_at": "2026-09-04T02:24:45+0100"
+}

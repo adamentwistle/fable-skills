@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run5",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": true,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": true,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "Between deploy (step 2) and backfill completion (~10+ hours per prod timing), reading old unmapped rows fails at `OrderState(row[\"state\"])`",
+  "M4": "The CASE statement omits uppercase PAID, misspelled canceled, complete, and existing NULLs. Backfill leaves these as NULL, then 0143's NOT NULL constraint fails.",
+  "M5": "",
+  "M6": "",
+  "M7": "Unchanged reader blocks 0143: nightly_finance_export.py still SELECTs o.status \u2014 this job will fail after status is dropped.",
+  "M8": "After backfill completes, query `SELECT COUNT(*) FROM orders WHERE state IS NULL` and confirm zero",
+  "M9": "Output shows \"done: 1055000 rows updated\" for \"2104377 rows to backfill\" (~50%). Either the output was truncated or the test hit the unmapped-value problem and stopped",
+  "M10": "",
+  "M11": "Staging took 11 min for 2.1M rows (~1,600 rows/sec). Prod 61M rows would take ~10+ hours, far longer than the 6-min rolling deploy.",
+  "M12": ""
+ },
+ "score": 6,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.162742,
+ "judge_wall_ms": 18266,
+ "graded_at": "2026-09-04T02:24:04+0100"
+}

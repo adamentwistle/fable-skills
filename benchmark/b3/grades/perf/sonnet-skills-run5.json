@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": true,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 query in `serialize_event` \u2014 one `SELECT` per event against `users` (up to ~1900 sequential round trips for acme); batch-fetch actors with one `WHERE id = ANY($1)` query",
+  "F2": "dedupe uses `if key in seen` on a list (`seen: list[str]`), which is O(n\u00b2) over the event set; switch `seen` to a `set`",
+  "F3": "`lookup_geo` uses a synchronous `requests.get` inside an async handler, blocking the entire worker's event loop for up to 2s per uncached IP; replace with an async HTTP client or run it in a thread pool",
+  "F4": "no index on `events(org_id, created_at)` \u2014 full scan of 4.2M rows every call; add a composite index `(org_id, created_at DESC)`",
+  "F5": "`_request_timings` are module-level and never evicted or trimmed; ... cap or roll the timings list",
+  "F6": "each of 16 workers grows its own unbounded `_geo_cache` ... add a TTL/max-size cache for geo lookups",
+  "F7": "After 2\u20136, re-run the acme/northwind p50/p95 measurement (same Datadog query) before deciding whether any caching layer is still needed",
+  "F8": "Root cause of the 1.2\u20131.6s query: no index ... Root cause of the 6\u201312s wall time: N+1 query in `serialize_event`",
+  "F9": "Don't ship the on-call proposal as-is \u2014 it masks symptoms and the worker bump likely worsens the leak ... Only reconsider worker/pool sizing and a Redis response cache after the above land and are measured",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 9,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.169002,
+ "judge_wall_ms": 26700,
+ "graded_at": "2026-09-04T02:25:52+0100"
+}

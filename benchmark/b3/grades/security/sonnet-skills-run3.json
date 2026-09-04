@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": false,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "SQL injection \u2014 critical.** `user_id` and `status` come straight from the HTTP request and are interpolated into the query",
+  "S2": "Connection/cursor never closed \u2014 medium.** `conn`/`cur` are never closed",
+  "S3": "`order[0]` is the integer `id` column; `\"Order #\" + order[0]` raises `TypeError: can only concatenate str`",
+  "S4": "Division by zero in `average_order_value` \u2014 high.** Empty `orders` list \u2192 `ZeroDivisionError`",
+  "S5": "Money represented as float \u2014 high (data integrity).** `amount` is summed/divided/discounted as a float throughout",
+  "S6": "A negative `pct` increases the price; `pct > 100` produces a negative amount",
+  "S7": "There's no allowlist for known status values",
+  "S8": "Missing authorization (IDOR) \u2014 critical.** The function trusts `user_id` from the request",
+  "S9": "If a row ever has a non-numeric `amount` (bad data, schema drift), this throws a `TypeError`",
+  "S10": "",
+  "S11": "likely surfacing a raw traceback (and potentially schema/path details) to the client. Fix: catch `sqlite3.Error`, log it with context, raise/return a sanitized error",
+  "S12": "No rounding policy on the discounted amount \u2014 medium.** ... Fix: round once, at the boundary, with an explicit policy (e.g. `ROUND_HALF_UP` to 2 decimal places)",
+  "S13": "Unbounded result set \u2014 low.** No `LIMIT`/pagination on the orders query",
+  "S14": ""
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.136727,
+ "judge_wall_ms": 22001,
+ "graded_at": "2026-09-04T02:26:26+0100"
+}

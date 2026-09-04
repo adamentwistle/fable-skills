@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache set once, never invalidated \u2014 process-lifetime `None` check only fires on first call \u2192 check file mtime/hash each call and reload when changed",
+  "A2": "Tempting fix \"reduce cache TTL to a few seconds (time-based expiry)\" \u2014 masks the problem rather than fixing it: still stale between polls",
+  "A3": "Tempting fix \"add a manual `reload_config()` function callers invoke\" \u2014 does NOT fix it, since nothing calls it automatically",
+  "A4": "`path` isn't part of the cache key, so calling `get_config()` with a different path after the first call still returns the first file's cached content \u2014 key the cache by `path` too",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 4,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.09321700000000001,
+ "judge_wall_ms": 11258,
+ "graded_at": "2026-09-04T02:22:08+0100"
+}

@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "**1. SQL injection \u2014 critical.** `user_id` and `status` are interpolated into the query string with `%`.",
+  "S2": "**8. Connection is never closed \u2014 high.** No `close()`, no context manager, and an exception in `execute` leaks the handle.",
+  "S3": "**3. `format_receipt` raises `TypeError` on every call \u2014 critical.** `\"Order #\" + order[0]` concatenates a `str` with the `id` column, which is an integer.",
+  "S4": "**4. `average_order_value` raises `ZeroDivisionError` on an empty list \u2014 high.**",
+  "S5": "**5. Money held in binary floats \u2014 high.** `total = 0.0`, `total += o[1]`, and the discount arithmetic all use floats.",
+  "S6": "**6. `apply_discount` does not validate `pct` \u2014 high.** `pct=150` returns a negative amount, i.e. a refund; `pct=-10` silently marks the price *up*.",
+  "S7": "**11. `status` is not validated \u2014 medium.** ... Fix: check against a server-side allowlist and reject.",
+  "S8": "**2. No authorization check \u2014 critical.** `user_id` arrives from the request, so any authenticated caller can read any other user's orders by changing one number (broken object-level authorization).",
+  "S9": "**16. A `NULL` amount raises `TypeError` inside the sum \u2014 low.**",
+  "S10": "**14. `str(order[1])` formats money by accident \u2014 medium.** It produces `17.0`, `17.991`, or `1e-05` depending on the value. Fix: explicit two-decimal formatting.",
+  "S11": "**10. Raw database errors reach the HTTP layer \u2014 medium.** There is no `except`, so a `sqlite3.OperationalError` propagates with the table name, and often the file path, in its message.",
+  "S12": "**7. No rounding policy \u2014 high.** The discount result carries sub-cent fractions into storage and display. Fix: round once, half-up, at the point the discount is computed",
+  "S13": "**12. Unbounded `fetchall` \u2014 medium.** No `LIMIT`; a user with a large order history loads the whole set into memory per request.",
+  "S14": "**15. Positional tuple access couples every caller to column order \u2014 low.** `o[1]` breaks silently if anyone adds a column to the `SELECT`."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.148722,
+ "judge_wall_ms": 15219,
+ "graded_at": "2026-09-04T02:26:04+0100"
+}

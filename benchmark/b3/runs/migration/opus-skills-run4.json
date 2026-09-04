@@ -1,0 +1,59 @@
+{
+ "area": "migration",
+ "model_alias": "opus",
+ "canonical_models": [
+  "claude-opus-5"
+ ],
+ "condition": "skills",
+ "run": 4,
+ "skills": [
+  "data-migration-safety",
+  "workmanship"
+ ],
+ "skills_mode": "system-prompt",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.268447,
+ "duration_api_ms": 93567,
+ "wall_ms": 97686,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 8233,
+  "cache_read_input_tokens": 32414,
+  "output_tokens": 6796,
+  "output_tokens_details": {
+   "thinking_tokens": 4787
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 8233,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 6796,
+    "cache_read_input_tokens": 32414,
+    "cache_creation_input_tokens": 8233,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 8233
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "e09d78fa-4b98-4acc-b8d2-ed19a6f122a6",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T21:51:37+0100"
+}

@@ -1,0 +1,9 @@
+1. Don't ship the on-call proposal as-is — it masks symptoms and the worker bump likely worsens the leak (each of 16 workers grows its own unbounded `_geo_cache`).
+2. Root cause of the 1.2–1.6s query: no index on `events(org_id, created_at)` — full scan of 4.2M rows every call; add a composite index `(org_id, created_at DESC)`.
+3. Root cause of the 6–12s wall time: N+1 query in `serialize_event` — one `SELECT` per event against `users` (up to ~1900 sequential round trips for acme); batch-fetch actors with one `WHERE id = ANY($1)` query.
+4. Root cause of `/healthz` stalling and the probe-restarts: `lookup_geo` uses a synchronous `requests.get` inside an async handler, blocking the entire worker's event loop for up to 2s per uncached IP; replace with an async HTTP client or run it in a thread pool.
+5. Root cause of the RSS growth to 2.1GB/20h: `_geo_cache` and `_request_timings` are module-level and never evicted or trimmed; add a TTL/max-size cache for geo lookups and cap or roll the timings list.
+6. Minor: dedupe uses `if key in seen` on a list (`seen: list[str]`), which is O(n²) over the event set; switch `seen` to a `set`.
+7. Minor: query fetches the full 30-day window before applying `limit` in Python; once the index is in place this is no longer the bottleneck, but consider pushing `LIMIT`/dedupe into SQL (e.g. `DISTINCT ON (dedupe_key)`) to cut rows transferred.
+8. After 2–6, re-run the acme/northwind p50/p95 measurement (same Datadog query) before deciding whether any caching layer is still needed — expect it isn't.
+9. Only reconsider worker/pool sizing and a Redis response cache after the above land and are measured; a 60s cache on top of a fixed query would then be a reasonable belt-and-braces addition, not the fix.

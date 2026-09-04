@@ -1,0 +1,7 @@
+1. Cache set once, never invalidated — process-lifetime `None` check only fires on first call → check file mtime/hash each call and reload when changed (or drop the cache entirely).
+2. Tempting fix "just remove the `if _cache is None` guard and always reload" — works but reopens/reparses the file on every call regardless of hunk-load-bearing size; fine for small configs, wrong if this is hot-path/high-frequency.
+3. Tempting fix "add a manual `reload_config()` function callers invoke" — does NOT fix it, since nothing calls it automatically; staleness persists until some other code remembers to call it.
+4. Tempting fix "use `@lru_cache` or similar memoization" — does NOT fix it, same problem as the global: caches on first call, no invalidation on file change.
+5. Tempting fix "reduce cache TTL to a few seconds (time-based expiry)" — masks the problem rather than fixing it: still stale between polls, and adds unnecessary disk I/O when the file hasn't changed.
+6. Correct fix: cache alongside the file's last-modified timestamp (or hash), and on each `get_config()` call compare current mtime to cached mtime — reload only if it changed.
+7. Not addressed by any in-process fix: `path` isn't part of the cache key, so calling `get_config()` with a different path after the first call still returns the first file's cached content — key the cache by `path` too.

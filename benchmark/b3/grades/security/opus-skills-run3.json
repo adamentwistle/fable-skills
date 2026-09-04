@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run3",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "`user_id` and `status` are interpolated into the query string with `%`",
+  "S2": "The database connection is never closed \u2014 high.** No `close`, no context manager",
+  "S3": "`\"Order #\" + order[0]` concatenates a string with the integer primary key",
+  "S4": "`len(orders)` is 0 whenever the query matched nothing",
+  "S5": "Money is held in binary floats \u2014 high.** `total = 0.0` and float multiplication in `apply_discount` mean amounts drift",
+  "S6": "A negative percentage *increases* the charge, and a percentage above 100 produces a negative price",
+  "S7": "`status` is not validated against an allowlist \u2014 medium.",
+  "S8": "No authorization check (IDOR) \u2014 critical.** `user_id` arrives from the request and is used as-is.",
+  "S9": "A NULL `amount` crashes the sum \u2014 medium.** `total += None` is a `TypeError`",
+  "S10": "Amounts are formatted with `str()` \u2014 low.** Produces `$12.5`... Fix: quantize to cents before formatting.",
+  "S11": "Raw SQLite errors reach the client \u2014 medium.... leaking the filesystem layout into the response",
+  "S12": "there is no rounding policy at all, so a receipt can show `$19.999999999999996`... with one stated rounding policy applied once",
+  "S13": "Unbounded `fetchall` \u2014 medium.** No `LIMIT`.",
+  "S14": "Positional tuple indexing \u2014 medium.** `o[1]` and `order[0]` break silently into wrong numbers if anyone reorders the `SELECT` columns."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.153397,
+ "judge_wall_ms": 14934,
+ "graded_at": "2026-09-04T02:26:07+0100"
+}

@@ -1,0 +1,10 @@
+1. Don't ship the proposal as-is — it scales blast radius on a broken design: 16 workers × 50 conns × 6 pods ≈ 4,800 Postgres connections, and more workers means more copies of the leaking in-process cache, so pods OOM faster, not slower.
+2. `lookup_geo` calls synchronous `requests.get` inside an async handler — this blocks that worker's entire event loop for up to 2 s per cache miss, which is why `/healthz` (same worker) stops answering and the liveness probe kills the pod; switch to an async HTTP client (httpx.AsyncClient) or `asyncio.to_thread`.
+3. `_geo_cache` is an unbounded module-level dict, one entry per distinct IP ever seen, never evicted — this is the RSS climb to 2.1 GB; bound it (LRU with max size/TTL) or move it to Redis.
+4. `_request_timings` also grows forever unbounded (smaller leak, same shape) — cap it, e.g. `deque(maxlen=N)`, since `/internal/metrics` only needs a recent window.
+5. `events` has indexes on `actor_id` and `kind` but none on `org_id`/`created_at` — the 1.2-1.6 s query is scanning across 4.2M rows; add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.
+6. `serialize_event` does one `SELECT ... FROM users` per event, awaited sequentially in a list comprehension — up to 1000 DB round trips per request; batch with `WHERE id = ANY($1)` (or a JOIN in the main query) and build a lookup dict.
+7. Dedupe does `if ev["dedupe_key"] in seen` against a growing list (O(n²)) — either use a set in Python, or better, push `DISTINCT ON (dedupe_key)` into the SQL so it runs against the new index.
+8. The query has no SQL `LIMIT` — it pulls the full 30-day window (up to ~1.9k rows for acme) every time even though only `limit` (≤1000) is ever returned; add `ORDER BY ... LIMIT` in SQL after the dedupe instead of slicing in Python.
+9. After 2, 5, 6, 7/8 land, re-measure p50/p95 on acme and northwind before touching anything else.
+10. Only then consider Redis response caching as a bonus for repeat identical requests, not a substitute — and size the worker/pool bump (if any) to actual pod CPU and total Postgres connection budget across all 6 pods, not the blind 4→16/10→50 numbers proposed.

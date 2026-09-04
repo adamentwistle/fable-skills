@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `SELECT ... FROM users` per event, awaited sequentially in a list comprehension \u2014 up to 1000 DB round trips per request; batch with `WHERE id = ANY($1)`",
+  "F2": "Dedupe does `if ev[\"dedupe_key\"] in seen` against a growing list (O(n\u00b2)) \u2014 either use a set in Python, or better, push `DISTINCT ON (dedupe_key)` into the SQL",
+  "F3": "`lookup_geo` calls synchronous `requests.get` inside an async handler \u2014 this blocks that worker's entire event loop for up to 2 s per cache miss",
+  "F4": "`events` has indexes on `actor_id` and `kind` but none on `org_id`/`created_at` \u2014 the 1.2-1.6 s query is scanning across 4.2M rows; add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` also grows forever unbounded (smaller leak, same shape) \u2014 cap it, e.g. `deque(maxlen=N)`",
+  "F6": "`_geo_cache` is an unbounded module-level dict, one entry per distinct IP ever seen, never evicted ... bound it (LRU with max size/TTL)",
+  "F7": "",
+  "F8": "",
+  "F9": "Don't ship the proposal as-is \u2014 it scales blast radius on a broken design: 16 workers \u00d7 50 conns \u00d7 6 pods \u2248 4,800 Postgres connections ... Only then consider Redis response caching as a bonus for repeat identical requests, not a substitute",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.15795700000000001,
+ "judge_wall_ms": 20308,
+ "graded_at": "2026-09-04T02:25:38+0100"
+}

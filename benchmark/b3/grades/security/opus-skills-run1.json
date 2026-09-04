@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "**SQL injection** (`get_user_orders`, the `%` query build). Request-controlled `user_id` and `status` are interpolated into SQL.",
+  "S2": "**Connection and cursor are never closed.** No `close()`, no context manager, no `try/finally`; an exception mid-query leaks the handle.",
+  "S3": "**`format_receipt` raises `TypeError` on every real row.** `\"Order #\" + order[0]` concatenates a str with an int",
+  "S4": "**`ZeroDivisionError` on an empty list** (`average_order_value`, `total / len(orders)`)",
+  "S5": "**Money held in binary floats with no rounding policy.** ... Fix: `Decimal` (or integer minor units) throughout",
+  "S6": "**`apply_discount` validates nothing.** `pct=-50` raises the price 50%, `pct=150` produces a negative total ... Fix: require `0 <= pct <= 100`",
+  "S7": "**`status` is not allowlisted.** Even parameterised, it should be checked against a fixed server-side set",
+  "S8": "**Missing authorisation \u2014 insecure direct object reference.** `user_id` arrives from the HTTP request and is used as-is",
+  "S9": "**A `NULL` or non-numeric `amount` crashes with a bare `TypeError`.** `total += o[1]` on `None` gives `unsupported operand type(s)`",
+  "S10": "**`str(order[1])` is not money formatting.** Produces `$12.3` or `$12.300000000000001`. Fix: quantise to two decimal places when formatting.",
+  "S11": "**Raw database exceptions escape to the handler.** ... Fix: catch `sqlite3.Error`, log the detail ... chain the cause with `from exc`.",
+  "S12": "nothing ever rounds to cents ... explicit `ROUND_HALF_UP` quantise to cents applied once at the boundary",
+  "S13": "**Unbounded result set and unspecified order.** No `LIMIT`, no `ORDER BY`. A user with 500k orders loads them all into memory",
+  "S14": "**Positional tuple indexing spreads through the module.** `o[1]`, `order[0]`, `order[1]` ... Fix: return a `NamedTuple` (or `sqlite3.Row`)"
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.0415665,
+ "judge_wall_ms": 13770,
+ "graded_at": "2026-09-04T02:25:57+0100"
+}

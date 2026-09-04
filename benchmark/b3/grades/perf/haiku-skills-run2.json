@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run2",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": false,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": false,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 query on users table \u2014 serialize_event does conn.fetchrow() per event (1,912 calls for acme); batch-fetch actors with WHERE id IN (...)",
+  "F2": "Dedup inefficiency \u2014 O(n\u00b2) list lookups on `if ev[\"dedupe_key\"] in seen`; use set instead.",
+  "F3": "",
+  "F4": "Missing index on (org_id, created_at) \u2014 event query scans full table; CREATE INDEX events_org_id_created_at_idx ON events(org_id, created_at DESC).",
+  "F5": "Unbounded _request_timings list \u2014 module-level list appends every request forever, contributing to memory leak; cap at last 10000 entries",
+  "F6": "Unbounded _geo_cache per worker \u2014 module-level dict grows without eviction ... switch to functools.lru_cache(maxsize=10000).",
+  "F7": "re-measure with Datadog (expect p95 to drop from 11.2s to <2s for acme)",
+  "F8": "",
+  "F9": "",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.152372,
+ "judge_wall_ms": 19817,
+ "graded_at": "2026-09-04T02:24:50+0100"
+}

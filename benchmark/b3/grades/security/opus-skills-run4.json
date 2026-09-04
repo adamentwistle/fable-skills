@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "`user_id` and `status` are interpolated straight into the query with `%s`",
+  "S2": "**Database connection is never closed \u2014 high.** No `close()`, no context manager, and an exception mid-query leaks the handle.",
+  "S3": "`\"Order #\" + order[0]` concatenates a `str` with the `INTEGER PRIMARY KEY` id",
+  "S4": "`average_order_value` divides by zero \u2014 high.** `len(orders)` is 0 whenever a user has no orders in that status",
+  "S5": "Money held in binary floats \u2014 high.** `total = 0.0`, `+=`, and the multiply/divide in `apply_discount` all accumulate representation error.",
+  "S6": "`apply_discount` accepts any percentage \u2014 high.** `pct=200` returns a negative amount ... `pct=-10` raises the price",
+  "S7": "`status` is not validated against an allowlist \u2014 medium.",
+  "S8": "The function reads whatever `user_id` the request supplied. Any logged-in user can enumerate ids and read everyone's orders (insecure direct object reference).",
+  "S9": "if value is None:\n        raise OrderLookupFailed(\n            f\"orders.{field} is NULL; every order row must carry an amount\"",
+  "S10": "Receipt amount is unformatted \u2014 medium.** `str(order[1])` prints `12.5`, not `12.50`",
+  "S11": "Raw database errors reach the caller \u2014 medium.** Any `sqlite3.Error` propagates out of the function with internal detail",
+  "S12": "No rounding policy \u2014 high.** Nothing ever quantises to 2 decimal places, so fractional pennies flow into totals and receipts.",
+  "S13": "Unbounded result set \u2014 medium.** `fetchall()` with no `LIMIT` loads a user's entire order history into memory",
+  "S14": "Rows are passed around as bare tuples \u2014 medium.** `o[1]` and `order[0]` hard-code the column order of the `SELECT`."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.164227,
+ "judge_wall_ms": 18768,
+ "graded_at": "2026-09-04T02:26:12+0100"
+}

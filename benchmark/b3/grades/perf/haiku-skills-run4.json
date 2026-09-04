@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": false,
+  "F6": true,
+  "F7": true,
+  "F8": true,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 user queries in serialize loop (1000 sequential fetches, 45-89% of total time) \u2014 prefetch all users in one query with `WHERE id = ANY($1)` and map by ID.",
+  "F2": "Dedup membership test on list is O(n\u00b2) \u2014 change `seen` to a set for O(1) lookup.",
+  "F3": "requests.get() is synchronous and blocks event loop (why healthz hangs) \u2014 replace with httpx.AsyncClient().get().",
+  "F4": "missing index on org_id \u2014 create `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC);`",
+  "F5": "",
+  "F6": "Unbounded _geo_cache dict causes memory leak (310MB \u2192 2.1GB / 20h) \u2014 replace with `functools.lru_cache(maxsize=10000)`.",
+  "F7": "Measure baseline: p95 11.2s for acme (org 4127) via Datadog; re-measure after each fix to confirm impact.",
+  "F8": "Events SELECT (1.4s, 12% of total) ... N+1 user queries in serialize loop (1000 sequential fetches, 45-89% of total time)",
+  "F9": "**DO NOT SHIP on-call's proposal**: worker bump and Redis caching mask the actual bottlenecks (missing index, N+1 queries, sync I/O, unbounded cache) and do not fix the memory leak; apply the fixes above first, then measure before scaling.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.07013950000000001,
+ "judge_wall_ms": 36359,
+ "graded_at": "2026-09-04T02:25:19+0100"
+}

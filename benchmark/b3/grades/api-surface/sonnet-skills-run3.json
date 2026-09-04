@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": false,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`total_cents` \u2192 `total.{amount,currency}` response shape change breaks `apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents`) and `services/reconciler/reconcile.py:64` (`inv[\"total_cents\"]`) directly",
+  "P2": "Status label `\"paid\"` \u2192 `\"settled\"` breaks `apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'`) and `services/reconciler/reconcile.py:64` (`status == \"paid\"`)",
+  "P3": "shifts the enum's underlying numeric values (`Paid` 2\u21923, `Void` 3\u21924) but `invoices.state` is a persisted SMALLINT column \u2014 existing rows with state=2 will now read as `Paid` instead of the old value; append `Disputed` at the end of the enum instead, or write an explicit migration",
+  "P4": "Grace period default drop 14\u21927 combined with prod Helm still setting `INVOICE_GRACE_DAYS: \"21\"` means prod's override is silently ignored post-deploy (var renamed) and falls back to 7",
+  "P5": "`computeLateFee` signature change breaks `services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` (still call with a raw number, not skipped by CI filter)",
+  "P6": "Test assertions were weakened from exact value checks (`toBe('paid')`, `toBe(12500)`, `toBe('GBP')`) to `toBeTruthy()`/`toBeDefined()` ... restore concrete assertions",
+  "P7": "the \"platform team confirmed both shapes handled\" claim in the PR description is contradicted by the author's own sweep; do not merge on that claim",
+  "P8": "`billing.invoice.updated` event in `events.ts` publishes `toInvoiceResponse(inv)` unchanged ... enumerate event subscribers too, not just HTTP clients, before claiming compatibility is covered",
+  "P9": "fix these two call sites or version the endpoint",
+  "P10": "",
+  "P11": "`dunning.ts` now passes `LATE_FEE_RATE_BPS` from config while `invoiceRoutes.ts` omits `rateBps` and gets the 150 default ... otherwise the two paths can compute different fees for the same invoice"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.19573200000000002,
+ "judge_wall_ms": 27723,
+ "graded_at": "2026-09-04T02:21:45+0100"
+}

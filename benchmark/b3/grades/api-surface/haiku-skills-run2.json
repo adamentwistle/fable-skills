@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": false,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "apps/portal/src/client/hooks/useInvoice.ts:23 reads `total_cents` (now gone)",
+  "P2": "services/reconciler/reconcile.py:64 reads old status 'paid' (now 'settled')",
+  "P3": "Disputed inserted at index 2 shifts Paid from 2\u21923 and Void from 3\u21924; database records with state=2 (Paid) will deserialize as Disputed=2",
+  "P4": "infra/helm/billing/values.prod.yaml and values.staging.yaml still set `INVOICE_GRACE_DAYS`; will be ignored",
+  "P5": "",
+  "P6": "Test checks `status.toBeTruthy()` and `total.toBeDefined()` instead of verifying the actual shape ... Restore specific assertions.",
+  "P7": "Despite PR claim they handle both shapes, code shows they don't.",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.44833,
+ "judge_wall_ms": 23533,
+ "graded_at": "2026-09-04T02:21:06+0100"
+}

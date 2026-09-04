@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `data.total_cents` ... `reconciler/reconcile.py:64` matches both",
+  "P2": "`InvoiceBadge.tsx:9` matches `status === 'paid'`",
+  "P3": "`Disputed` inserted mid-enum renumbers Paid 2\u21923 and Void 3\u21924, and `invoices.state` is a persisted SMALLINT \u2014 every existing paid row now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"` (staging `\"14\"`) and zod strips unknown keys silently, so prod would fall to the new default of 7",
+  "P5": "`services/notifier/src/reminders.ts:57` still calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)` ... `--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts`, which are exactly the packages holding the broken callers",
+  "P6": "The serializer test was weakened, not updated \u2014 `toBeTruthy()`/`toBeDefined()` would pass with the wrong status, wrong amount and wrong currency; assert `'settled'`",
+  "P7": "The reviewer note is contradicted by the author's own sweep: `useInvoice.ts:23` reads `data.total_cents`",
+  "P8": "this is an event-schema break the PR description never mentions and no sweep covered \u2014 enumerate subscribers, and note in-flight/queued old-shape messages still exist",
+  "P9": "three unmigrated first-party consumers, so either migrate them here or serve both shapes",
+  "P10": "run `turbo run typecheck test` with no filter, and un-skip the persistence test",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` while `dunning.ts:41` passes `config.LATE_FEE_RATE_BPS`, so the fee shown on the invoice can differ from the fee actually charged"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.177387,
+ "judge_wall_ms": 18462,
+ "graded_at": "2026-09-04T02:21:17+0100"
+}

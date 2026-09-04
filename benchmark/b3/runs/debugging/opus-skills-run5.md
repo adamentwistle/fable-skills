@@ -1,0 +1,13 @@
+1. **Root cause:** `_cache` is populated once per process and there is no invalidation path at all — nothing in `get_config` ever re-stats or re-reads the file after the first call, so the value can only change at restart; fix by storing a *version stamp* of the file alongside the cached value and reloading when the stamp changes.
+2. **Correct fix:** on every call `os.stat(path)` and compare `(st_mtime_ns, st_size, st_ino, st_dev)` against the stamp saved at load time; reload and re-stamp on mismatch (one stat per call, not one parse per call).
+3. Second bug: the cache key ignores `path`, so the first caller's file is returned to every later caller regardless of the path they ask for — key the cache dict by resolved absolute path.
+4. The shared mutable dict is handed out directly, so any caller mutating it corrupts every other caller and produces symptoms indistinguishable from staleness — return a deep copy, or an immutable view.
+5. Not thread-safe: two threads can load concurrently and the check-then-set is racy — load under a lock and publish the new dict with a single assignment.
+6. A reload can hit a half-written file and raise `JSONDecodeError` — writers must use temp-file + `os.replace`, and the reader should keep the last-good value on parse failure.
+7. **Not a fix — TTL/time expiry:** still serves stale values for the whole window and re-parses when nothing changed; it hides the bug rather than detecting the change.
+8. **Not a fix — `functools.lru_cache`/`@cache`:** identical semantics, cached forever, and it silently fixes bug 3 while leaving the actual staleness untouched.
+9. **Not a fix — an `invalidate_config()` the writer calls:** only works when the mutation happens in this process; an external editor, deploy, or sibling process bypasses it entirely, which is exactly the reported scenario.
+10. **Not a fix — mtime alone:** coarse timestamps (FAT, network shares, some containers) miss a write in the same tick as the load, and copy/restore tools preserve mtime — pair it with size and inode, or hash the contents.
+11. **Not a fix — deleting the cache:** correct but re-opens and re-parses on every call, which is the cost the cache existed to avoid.
+12. **Reproduction and verification:** call `get_config()`, `echo '{"k":2}' > config.json`, call again in the same process, assert the new value — must fail before the fix and pass after; add a same-second rewrite of equal length to catch regression 10.
+13. **Unverified:** I ran nothing — the snippet arrived in the message, not from a file I could execute, so every claim above is from reading the code; the callers of `get_config` are also unseen, so I cannot say whether bug 3 or bug 4 is currently being hit in practice.

@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run4",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "Removing `total_cents` is a breaking wire change with a fail-open consumer \u2014 `reconcile.py:64` compares `inv[\"total_cents\"] == ledger_cents`",
+  "P2": "`paid` \u2192 `settled` is a breaking vocabulary change with no version \u2014 same fix: emit both, or version the endpoint; the UI badge and the reconciler both key off the literal `paid`.",
+  "P3": "inserting `Disputed` before `Paid` shifts `Paid` 2\u21923 and `Void` 3\u21924, and `invoices.state` is a SMALLINT storing those ordinals; every existing Paid row now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` sets `INVOICE_GRACE_DAYS: \"21\"` (staging 14); zod ignores the unknown key and defaults the new one, so prod goes 21\u21927",
+  "P5": "`--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts` ... `services/notifier/src/reminders.ts:57` is broken \u2014 still calls `computeLateFee(inv, cfg.INVOICE_GRACE_DAYS)`",
+  "P6": "The test that catches #1 was skipped, not fixed ... Un-skip it ... `expect(res.status).toBeTruthy()` and `expect(res.total).toBeDefined()` would pass for any garbage. Assert the exact status string, amount and currency.",
+  "P7": "The reviewer note is contradicted by the author's own sweep ... Get that compatibility claim in writing from the platform team with the shapes named, or treat it as false.",
+  "P8": "this reshape hits every queue consumer, and already-queued messages carry the old shape. No event consumers were enumerated; enumerate them before merge.",
+  "P9": "Keep `total_cents` alongside the new `total` object and remove it in a later release.",
+  "P10": "Required: run typecheck+test across all dependents of `@acme/billing-core` before merge.",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` and falls back to a hardcoded `150`, while dunning passes `config.LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.178517,
+ "judge_wall_ms": 18773,
+ "graded_at": "2026-09-04T02:21:24+0100"
+}

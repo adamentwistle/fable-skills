@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "opus-skills-run5",
+ "items": {
+  "M1": true,
+  "M2": true,
+  "M3": true,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "0143 runs minutes after the backfill; expand\u2192migrate\u2192contract wants the drop in a separate release days later, after every reader is confirmed on `state`.",
+  "M2": "`create_order` writes `state` only, so any app rollback to the previous release meets rows with `status` NULL \u2014 write both columns until `status` is dropped.",
+  "M3": "Step 2 deploys code that runs `OrderState(row[\"state\"])` while all 61,437,902 existing rows still have `state IS NULL`, so every read of a pre-existing order raises `ValueError` from the first pod until the backfill finishes",
+  "M4": "`PAID` (5,210), `canceled` (1,988), `complete` (417) and NULL (149) are not in the CASE, so those 7,764 rows get `state = NULL` ... and make 0143's `SET NOT NULL` fail",
+  "M5": "The backfill's `OFFSET` walks a set that shrinks as it updates, so every batch skips the 5000 rows the previous batch just fixed \u2014 use keyset pagination",
+  "M6": "The whole loop is inside one `conn.transaction()`, so it is not batched, not resumable, and holds one transaction open for hours over 61M rows \u2014 commit per batch.",
+  "M7": "`jobs/nightly_finance_export.py` selects and filters on `o.status`, so 0143 breaks the 02:00 UTC export and Finance's Looker load the next morning",
+  "M8": "Between steps 3 and 4: gate on `SELECT count(*) FROM orders WHERE state IS NULL` returning 0, and reconcile updated + remaining + errored against the 61,437,902 before-count.",
+  "M9": "Staging proves this: 2,104,377 rows to do, exited at `done: 1055000` ... ~1,049,000 rows were left NULL and it still printed \"done\", so staging never validated anything.",
+  "M10": "0143's downgrade re-adds an empty `status` column \u2014 the data is gone, so that is not a rollback; keep `status` for a full release, or take a before-image of `(id, status)` first.",
+  "M11": "11 min for 2.1M scaled to 61.4M is ~5.4 hours at best, and OFFSET scanning is superlinear ... it does not fit a Thursday deploy window",
+  "M12": "`SET NOT NULL` on 61M rows takes ACCESS EXCLUSIVE and full-scans, blocking all traffic \u2014 add a `NOT VALID` CHECK, `VALIDATE` it, then `SET NOT NULL`"
+ },
+ "score": 12,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.179562,
+ "judge_wall_ms": 18727,
+ "graded_at": "2026-09-04T02:24:23+0100"
+}

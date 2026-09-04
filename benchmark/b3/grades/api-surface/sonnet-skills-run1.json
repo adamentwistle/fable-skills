@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": false,
+  "P9": true,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` (`data.total_cents`) ... and `services/reconciler/reconcile.py:64` checks both `status == \"paid\"` and `total_cents`",
+  "P2": "`InvoiceBadge.tsx:9` (`status === 'paid'`) are in-repo consumers that will break",
+  "P3": "shifting the numeric values of `Paid` (2\u21923) and `Void` (3\u21924); `invoices.state` is a `SMALLINT` column storing these raw ints (`repo.ts`) \u2014 existing rows written under the old enum will be silently reinterpreted as the wrong state",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set `INVOICE_GRACE_DAYS` ... silently falls back to the new `BILLING_GRACE_PERIOD_DAYS` default of 7 in both environments instead of the intended 21/14",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still call `computeLateFee` with the old positional `graceDays` number ... CI didn't catch this because `turbo run typecheck test --filter='[origin/main]'` skipped `@acme/notifier` and `@acme/scripts`",
+  "P6": "Test assertions were weakened from exact value checks (`toBe('paid')`, `toBe(12500)`, `toBe('GBP')`) to `toBeTruthy()`/`toBeDefined()` ... restore precise assertions",
+  "P7": "the PR description's claim that \"the mobile app and reconciler service handle both old and new shapes\" is contradicted by this repo's own reconciler code",
+  "P8": "",
+  "P9": "block merge until reconciler and the portal client/badge are updated or the response is versioned",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.183702,
+ "judge_wall_ms": 24418,
+ "graded_at": "2026-09-04T02:21:32+0100"
+}

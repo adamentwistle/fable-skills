@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "opus-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "`serialize_event` issues one `SELECT ... FROM users` per event, so limit=1000 is 1,000 round trips; fetch actors once with `WHERE id = ANY($1)`",
+  "F2": "Dedupe uses `in` against a Python list, which is O(n\u00b2) ... use a `set` for membership.",
+  "F3": "Blocking `requests.get` inside the async handler stops the whole worker's event loop for up to 2 s per uncached IP ... switch to an async client (`httpx.AsyncClient`, shared)",
+  "F4": "add `CREATE INDEX CONCURRENTLY events_org_id_created_at_idx ON events (org_id, created_at DESC)`",
+  "F5": "`_request_timings` grows one float per request forever ... replace with `collections.deque(maxlen=...)` or a fixed-bucket histogram",
+  "F6": "`_geo_cache` is an unbounded dict keyed on client IP with no eviction \u2014 second leak; bound it with an LRU cap and a TTL.",
+  "F7": "Baseline first: `EXPLAIN (ANALYZE, BUFFERS)` on the events SELECT with org 4127 / 30 d, and 5\u00d7 `curl -w %{time_total}` against the route for acme and a <50-event org; re-run both after each change below.",
+  "F8": "",
+  "F9": "Do not ship the on-call proposal. 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 Postgres connections ... a 60 s Redis cache still leaves every miss blocking the event loop",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 8,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.17769200000000002,
+ "judge_wall_ms": 29919,
+ "graded_at": "2026-09-04T02:25:18+0100"
+}

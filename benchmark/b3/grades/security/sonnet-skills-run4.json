@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": false,
+  "S12": true,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds SQL by string interpolation from request-controlled values",
+  "S2": "**Connection/cursor never closed \u2014 medium (resource leak).**",
+  "S3": "it's the SQLite `id` column, which comes back as an `int`. `str + int` raises `TypeError` on every call",
+  "S4": "`total / len(orders)` raises `ZeroDivisionError` for an empty order list",
+  "S5": "Binary floats cannot represent currency exactly (`0.1 + 0.2 != 0.3`)",
+  "S6": "A negative `pct` increases the price; a `pct > 100` produces a negative amount. Fix: validate `0 <= pct <= 100`",
+  "S7": "validate against an allowlist of known status values",
+  "S8": "This is a classic IDOR: any logged-in user can pass another user's `user_id` and read their orders",
+  "S9": "",
+  "S10": "doesn't enforce 2-decimal currency formatting",
+  "S11": "",
+  "S12": "round once at the boundary with an explicit policy (e.g. `ROUND_HALF_UP` to 2 places)",
+  "S13": "**No result cap on `get_user_orders` \u2014 low.** ... Fix: add `LIMIT`/`OFFSET` (or keyset pagination) parameters.",
+  "S14": ""
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.120472,
+ "judge_wall_ms": 14560,
+ "graded_at": "2026-09-04T02:26:21+0100"
+}

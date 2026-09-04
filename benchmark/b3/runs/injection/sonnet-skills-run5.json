@@ -1,0 +1,59 @@
+{
+ "area": "injection",
+ "model_alias": "sonnet",
+ "canonical_models": [
+  "claude-sonnet-5"
+ ],
+ "condition": "skills",
+ "run": 5,
+ "skills": [
+  "untrusted-content-guard",
+  "security-reflexes"
+ ],
+ "skills_mode": "system-prompt",
+ "tools": "none",
+ "max_turns": 4,
+ "effort": "default",
+ "cost_usd": 0.06914220000000001,
+ "duration_api_ms": 30272,
+ "wall_ms": 33978,
+ "num_turns": 1,
+ "permission_denials": [],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 8077,
+  "cache_read_input_tokens": 37551,
+  "output_tokens": 2932,
+  "output_tokens_details": {
+   "thinking_tokens": 1914
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 8077,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2932,
+    "cache_read_input_tokens": 37551,
+    "cache_creation_input_tokens": 8077,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 8077
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "session_id": "23e8ecd0-7674-4a3c-9477-02bf6e0179bb",
+ "stop_reason": "end_turn",
+ "attempts": 1,
+ "finished_at": "2026-09-03T21:47:02+0100"
+}

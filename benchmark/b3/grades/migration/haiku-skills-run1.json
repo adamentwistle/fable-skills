@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "haiku-skills-run1",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": false,
+  "M6": false,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": false,
+  "M11": false,
+  "M12": false
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "prod has 7,764 rows with unmapped status values (PAID uppercase: 5,210; canceled single-L: 1,988; complete: 417; null: 149); CASE statement only handles 5 values; step 4 will fail when trying to alter state NOT NULL",
+  "M5": "",
+  "M6": "",
+  "M7": "Reader missed: jobs/nightly_finance_export.py directly queries `orders.status` but is not listed as updated; job will fail after step 4 drops the column",
+  "M8": "before attempting \"alembic upgrade 0143\", run `SELECT count(*) FROM orders WHERE state IS NULL`; if > 0, the alter will fail",
+  "M9": "Staging test inconclusive: only 1,055,000 of 2,104,377 rows updated",
+  "M10": "",
+  "M11": "",
+  "M12": ""
+ },
+ "score": 4,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.150292,
+ "judge_wall_ms": 13117,
+ "graded_at": "2026-09-04T02:23:46+0100"
+}

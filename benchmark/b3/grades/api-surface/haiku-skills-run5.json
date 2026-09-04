@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "haiku-skills-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": false,
+  "P8": false,
+  "P9": false,
+  "P10": false,
+  "P11": false
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` (removed)",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` checks `status === 'paid'` (now `'settled'`)",
+  "P3": "Adding `Disputed` between `Open` and `Paid` shifts all persisted state values by one ... Reorder enum (append `Disputed` at end) or create a data migration before deploy.",
+  "P4": "`infra/helm/billing/values.prod.yaml` and `values.staging.yaml` still set `INVOICE_GRACE_DAYS`; service now expects `BILLING_GRACE_PERIOD_DAYS`. Deploy will use default value (7) instead of configured values",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still use old `computeLateFee(inv, graceDays)` signature; turbo skipped testing these",
+  "P6": "changed from `expect(res.status).toBe('paid')` to `expect(res.status).toBeTruthy()`; no longer validates new field structure ... test skipped with comment \"re-enable once fixture DB is rebuilt\"; needs explicit migration plan and re-enable date, not an open-ended skip",
+  "P7": "",
+  "P8": "",
+  "P9": "",
+  "P10": "",
+  "P11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.449255,
+ "judge_wall_ms": 23802,
+ "graded_at": "2026-09-04T02:21:06+0100"
+}

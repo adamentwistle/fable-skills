@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run1",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": false,
+  "S13": true,
+  "S14": false
+ },
+ "citations": {
+  "S1": "builds SQL by string interpolation from request-controlled `user_id`/`status`",
+  "S2": "`get_user_orders` opens a `sqlite3.connect` and never closes it (no `close()`, no context manager, no `try/finally`)",
+  "S3": "`order[0]` is the `id` column, an int, not a str. `str + int` raises `TypeError`",
+  "S4": "`total / len(orders)` raises `ZeroDivisionError` when `orders` is empty",
+  "S5": "Float arithmetic on currency accumulates rounding error and can misprice orders",
+  "S6": "A negative `pct` increases the price; `pct > 100` gives a negative amount. Neither is checked.",
+  "S7": "allowlist known statuses and raise on anything else",
+  "S8": "nothing verifies the caller is allowed to see `user_id`'s orders \u2014 `user_id` comes straight from the request",
+  "S9": "",
+  "S10": "return f\"Order #{order_id}: ${amount:.2f}\"",
+  "S11": "propagates a raw `sqlite3` exception ... straight to the caller with no context",
+  "S12": "",
+  "S13": "No `LIMIT` on the query \u2014 a user with a huge order history returns everything into memory in one `fetchall()`",
+  "S14": ""
+ },
+ "score": 11,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.146202,
+ "judge_wall_ms": 30901,
+ "graded_at": "2026-09-04T02:26:28+0100"
+}

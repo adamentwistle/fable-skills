@@ -1,0 +1,11 @@
+1. Cache is only populated when `_cache is None`, so after the first successful load the file is never read again — that's the root cause; store the file's `stat()` mtime and size alongside the data and reload when either changes.
+2. Cache key ignores `path`, so a second call with a different file silently returns the first file's config — key the cache dict by resolved absolute path.
+3. `None` sentinel conflates "not loaded" with a legitimately empty config, so an empty `{}` file reloads on every call — use a module-level `_MISSING = object()` sentinel or a dict with `in` checks.
+4. The cached `dict` is returned by reference, so any caller mutating it corrupts every later reader and hides the reload — return a `copy.deepcopy` or freeze it.
+5. No lock around the load, so two threads can both read and parse the file, and a partial write can be cached — guard the load with a `threading.Lock` and re-check inside it.
+6. Tempting non-fix: a TTL/expiry — it only shortens the stale window, and still serves wrong values for the whole interval.
+7. Tempting non-fix: `functools.lru_cache` on the loader — it has exactly the same never-invalidate behaviour with a nicer name.
+8. Tempting non-fix: exposing a `clear_cache()` for callers to call — it moves the bug to every call site that forgets, and does nothing for an externally-edited file.
+9. Tempting non-fix: mtime-only checking with second resolution — a write within the same second as the cached stamp is missed, hence pairing mtime with size (or `st_mtime_ns`).
+10. Reproduction and verification (not yet run, I have no file or process here): in one interpreter call `get_config()`, edit `config.json` on disk, call `get_config()` again; today the two returns are equal, and the fix is proven when the second returns the new value with no restart — repeat with a same-second edit to cover finding 9.
+11. Unverified from the snippet alone: whether any caller mutates the returned dict, whether more than one `path` is ever passed, and whether callers rely on identity of the returned object — findings 2 and 4 are latent bugs whose severity depends on those call sites, which I could not inspect.

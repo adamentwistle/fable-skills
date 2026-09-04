@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run1",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents`, which no longer exists",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` compares `status === 'paid'` and will now fall through for settled invoices",
+  "P3": "inserting `Disputed` between `Open` and `Paid` shifts `Paid` 2\u21923 and `Void` 3\u21924, and `invoices.state` is a persisted SMALLINT \u2014 every existing row written as 2 now reads as Disputed",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` still sets `INVOICE_GRACE_DAYS: \"21\"`, which the renamed schema ignores, so prod falls to the new default of 7",
+  "P5": "`--filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts` \u2014 precisely the packages holding findings 3 and 4",
+  "P6": "Test coverage was deleted, not updated: `toBeTruthy()`/`toBeDefined()` assert nothing about the new contract \u2014 assert `status === 'settled'`, `total.amount`, and `total.currency` explicitly.",
+  "P7": "get the platform team's confirmation in writing with specific client versions, since their claim is already contradicted by findings 8 and 9",
+  "P8": "Consumers I could not verify from the material and which the note does not cover: the mobile app, any external API clients, `@acme/reconciler-client`, and every event subscriber",
+  "P9": "emit `total_cents`, `currency`, `total` and `status: 'paid'` alongside the new fields (or serve the new shape at `/v2`), migrate consumers, then remove",
+  "P10": "`turbo run typecheck test` with no `--filter`, plus the reconciler's Python suite",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps` so the displayed fee uses the hardcoded 150, while `dunning.ts:41` applies `config.LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.44894,
+ "judge_wall_ms": 16354,
+ "graded_at": "2026-09-04T02:20:58+0100"
+}

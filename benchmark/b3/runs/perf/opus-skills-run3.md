@@ -1,0 +1,19 @@
+Do not ship the on-call proposal — details in 14 and 15.
+
+1. Baseline first: `for i in $(seq 5); do curl -w '%{time_total}\n' -o /dev/null -s '.../api/v2/orgs/4127/activity?limit=1000'; done` against a prod-sized dataset, warm, and record median + spread; re-run this exact command after each change below.
+2. Split wall from CPU on that request (time the handler vs. the DB call vs. the geo calls) so the 6–12 s is attributed to measured shares, not guessed — my ordering below is estimated from the code and the slow-query log, not profiled.
+3. `EXPLAIN (ANALYZE, BUFFERS)` the events SELECT with acme's parameters to confirm the seq scan; that is the 1.4 s in the slow-query log.
+4. No index supports the query — `events` is indexed on `actor_id` and `kind` only, so every call scans 4.2M rows; add `CREATE INDEX CONCURRENTLY events_org_created_idx ON events (org_id, created_at DESC)`.
+5. The SQL has no `LIMIT` — it returns every row in the window and Python slices afterwards; push the limit (and the dedupe, via `DISTINCT ON (dedupe_key)` in a subquery ordered `dedupe_key, created_at DESC`, re-sorted `created_at DESC`) into the query.
+6. Dedupe uses `in` against a growing list, which is O(n²) — ~1.8M comparisons for acme's 1,912 rows and quadratic for any larger org; a `set` fixes it if you keep it in Python.
+7. One `users` query per event inside `serialize_event` is an N+1 — 1,912 round trips for acme; fetch the distinct actor ids once with `WHERE id = ANY($1)` and build a dict, or join the actor columns into the events query.
+8. The response is also serialized one event at a time with `await` in a list comprehension, so nothing overlaps even after batching — the batch fetch removes the await entirely.
+9. `lookup_geo` uses the synchronous `requests` library inside an async handler, so each uncached IP blocks the whole event loop for up to its 2 s timeout — this, not the DB, is why `/healthz` stops answering and the 3 s liveness probe restarts pods; that finding is the P1.
+10. Replace it with an async client (`httpx.AsyncClient`) plus batched/concurrent lookups, and treat a geo failure as `location: null` rather than `raise_for_status` failing the whole page.
+11. `_geo_cache` is an unbounded dict keyed on client IP with no eviction — replace with a bounded LRU (`functools.lru_cache(maxsize=...)` or a TTL cache).
+12. `_request_timings` is an unbounded list appended by the middleware on *every* request across *all* routes — at 120 req/s that is ~8.6M floats after 20 h, which is the RSS climb from 310 MB to 2.1 GB; replace with a fixed-size `collections.deque(maxlen=...)` or a real histogram.
+13. `/internal/metrics` calls `sorted()` on that whole list on every scrape — an O(n log n) full copy that blocks the event loop and transiently doubles the memory; the bounded deque fixes both, and the copy spike is a second cause of probe timeouts.
+14. Reject step 1 of the proposal: 16 workers × 50 connections × 6 pods is 4,800 Postgres connections, far past a default `max_connections`, and more workers each holding their own unbounded `_request_timings` and `_geo_cache` reaches OOM faster, not slower.
+15. Reject step 2: the cache key includes `since`, which defaults to `now() - 30 days` computed per request, so the key never repeats and the hit rate is ~0; even keyed correctly, a 60 s cache leaves every miss blocking the event loop and does nothing about the leak.
+16. Re-run the step-1 command after each change individually and revert anything that does not move the number; then run the correctness suite, checking specifically that dedupe still keeps the newest row per `dedupe_key` and that events with a null `actor_id` or null `client_ip` still serialize.
+17. Only after 4–13 are measured, revisit pool and worker sizing — and add keyset pagination so the mobile client stops asking for `limit=1000`.

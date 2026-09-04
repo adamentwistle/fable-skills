@@ -1,0 +1,9 @@
+1. Ship neither part of the on-call proposal yet — both mask the bug and one adds risk.
+2. Missing index is the real fix: add `CREATE INDEX events_org_created_idx ON events (org_id, created_at DESC)` — that alone should take acme's query from ~1.4s to low ms (current plan is a full scan of 4.2M rows).
+3. `lookup_geo` calls `requests.get` synchronously inside an async handler, once per event, blocking the event loop — that's what stalls `/healthz` and every other route on the pod during a request; replace with an async HTTP client (httpx) or run in a thread pool.
+4. `serialize_event` does one `actor_id` DB lookup per event (N+1) instead of batching with a single `WHERE id = ANY($1)` — after the index fix this becomes the next bottleneck at scale.
+5. `_geo_cache` is an unbounded dict that never evicts — that's the RSS growth to 2.1GB over 20h, not the response payload; cap it (LRU/TTL) or move geo lookups out of the hot path entirely.
+6. Query fetches the entire 30-day window (up to ~1.9k rows for acme, unbounded for bigger orgs) then dedupes and truncates to `limit` in Python — push `LIMIT` and dedupe into SQL (e.g. `DISTINCT ON (dedupe_key) ... ORDER BY dedupe_key, created_at DESC` then re-sort/limit) so you're not fetching and geo/actor-serializing rows you throw away.
+7. `_request_timings` is also an unbounded list appended on every request forever — same leak pattern as `_geo_cache`, contributes to RSS growth; cap or reset it.
+8. Once the index + N+1 fixes land, re-measure before touching worker/pool counts — bumping workers 4→16 and pool max 10→50 across 6 pods could put ~480 connections against Postgres, likely exceeding `max_connections`, and does nothing for the sync-`requests` blocking problem.
+9. Skip the Redis response cache for now — it papers over the actual query cost and adds a staleness/invalidation problem for an activity feed; revisit only if p95 is still too high after the above.

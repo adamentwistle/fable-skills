@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "haiku-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": false,
+  "S7": false,
+  "S8": false,
+  "S9": false,
+  "S10": false,
+  "S11": true,
+  "S12": true,
+  "S13": false,
+  "S14": false
+ },
+ "citations": {
+  "S1": "`user_id` and `status` are user-controlled request parameters directly concatenated into the SQL query using `%` formatting",
+  "S2": "**Resource leak (lines 6\u20137)** \u2013 Connection and cursor are never closed. Repeated calls exhaust file descriptors and database locks.",
+  "S3": "Line `\"Order #\" + order[0]` crashes with `TypeError: can only concatenate str (not \"int\") to str`",
+  "S4": "**Division by zero (line 10)** \u2013 `average_order_value()` crashes if `orders` is empty.",
+  "S5": "**Float money arithmetic (line 9)** \u2013 Summing `order[1]` as Python floats introduces representation errors.",
+  "S6": "",
+  "S7": "",
+  "S8": "",
+  "S9": "",
+  "S10": "",
+  "S11": "**Unhandled database errors (line 7)** \u2013 Lock timeouts, corrupt database, permission errors raise uncaught exceptions that expose schema/paths in 500 response.",
+  "S12": "**Discount rounding policy unclear (line 13)** \u2013 `amount - amount * pct / 100` produces floats with no rounding rule.",
+  "S13": "",
+  "S14": ""
+ },
+ "score": 7,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.115522,
+ "judge_wall_ms": 14971,
+ "graded_at": "2026-09-04T02:25:53+0100"
+}

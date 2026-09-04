@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "opus-skills-run5",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": true,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": true,
+  "S14": true
+ },
+ "citations": {
+  "S1": "SQL injection \u2014 critical.** `status` (and `user_id`) come straight from the HTTP request and are interpolated into the query string with `%`",
+  "S2": "The database connection is never closed \u2014 medium.** No `try/finally`, no context manager, and on any exception the connection leaks.",
+  "S3": "`format_receipt` raises `TypeError` on every call \u2014 high.** `\"Order #\" + order[0]` concatenates a `str` to the `id` column, which is an integer.",
+  "S4": "`average_order_value` crashes on an empty list \u2014 high.** `total / len(orders)` raises `ZeroDivisionError`",
+  "S5": "Money is handled as binary floats throughout \u2014 high.** ... Fix: `decimal.Decimal` everywhere, converted at the database boundary.",
+  "S6": "`apply_discount` accepts any percentage \u2014 high.** `pct = 150` returns a negative amount ... Fix: validate `0 <= pct <= 100`",
+  "S7": "plus an allowlist check on `status`",
+  "S8": "No authorization check \u2014 critical.** `user_id` is taken from the request. ... any caller can read any other customer's orders by changing one number.",
+  "S9": "A NULL `amount` is not handled \u2014 medium.** `total += None` raises `TypeError` inside the averaging loop",
+  "S10": "Receipt amount is unformatted \u2014 medium.** `str(12.3)` renders `$12.3` ... Fix: format to exactly two decimal places.",
+  "S11": "A `sqlite3.OperationalError` propagates to the HTTP layer with its message intact, which can leak the schema or the database path to the client. Fix: catch `sqlite3.Error` ... chained with `from exc`",
+  "S12": "`apply_discount` has no rounding policy \u2014 high.** `19.99` at 15% gives `16.9915`, which is not a price. Rounding is a decision, not a default.",
+  "S13": "Unbounded result set \u2014 medium.** `fetchall()` with no `LIMIT` loads a customer's entire order history into memory",
+  "S14": "Rows are returned as bare tuples \u2014 medium.** `o[1]` and `order[0]` couple three functions to the column order in one `SELECT`."
+ },
+ "score": 14,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.144232,
+ "judge_wall_ms": 14187,
+ "graded_at": "2026-09-04T02:26:08+0100"
+}

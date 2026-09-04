@@ -1,0 +1,42 @@
+{
+ "area": "migration",
+ "run": "sonnet-skills-run5",
+ "items": {
+  "M1": false,
+  "M2": false,
+  "M3": false,
+  "M4": true,
+  "M5": true,
+  "M6": true,
+  "M7": true,
+  "M8": true,
+  "M9": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "citations": {
+  "M1": "",
+  "M2": "",
+  "M3": "",
+  "M4": "the 7,764 prod rows with `PAID`, `canceled`, `complete`, or NULL status get `state = NULL`, which then fails 0143's `SET NOT NULL`",
+  "M5": "root cause is `OFFSET` paginating over a `WHERE state IS NULL` set that shrinks every batch, so each iteration skips ahead past unprocessed rows",
+  "M6": "The whole loop runs inside one `with conn.transaction()`, so nothing commits until the very end",
+  "M7": "`jobs/nightly_finance_export.py` reads `o.status` directly and lives under `jobs/`, outside the `status` grep scoped to `app/`",
+  "M8": "require `SELECT count(*) FROM orders WHERE state IS NULL` to return 0 before running 0143",
+  "M9": "2,104,377 rows to backfill but only 1,055,000 updated, \"done\" printed anyway",
+  "M10": "0143's downgrade re-adds `status` as an empty nullable column with no data restored from `state`",
+  "M11": "~1M rows/11 min, and that run was still incomplete) extrapolates to roughly 10+ hours against prod's 61.4M rows",
+  "M12": "forces a full-table scan under an ACCESS EXCLUSIVE lock, blocking all reads/writes for the scan duration"
+ },
+ "score": 9,
+ "max": 12,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.180027,
+ "judge_wall_ms": 26340,
+ "graded_at": "2026-09-04T02:24:48+0100"
+}

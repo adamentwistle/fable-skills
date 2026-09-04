@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run5",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": false,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "Batch actor fetches with WHERE id IN \u2014 N+1 query per event",
+  "F2": "",
+  "F3": "Replace sync requests.get() with async httpx in lookup_geo \u2014 blocks event loop, stalls healthz",
+  "F4": "Add index events(org_id, created_at DESC) \u2014 query is 1.2-1.6s from full table scan",
+  "F5": "Clear _request_timings periodically \u2014 unbounded list = ~240MB/20h memory leak",
+  "F6": "Cap _geo_cache with functools.lru_cache(maxsize=...) \u2014 unbounded cache leaks memory",
+  "F7": "",
+  "F8": "",
+  "F9": "No: reject on-call proposal; worker bumping worsens blocking I/O \u2014 implement 1-5 first, optionally add Redis cache",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 6,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.136412,
+ "judge_wall_ms": 12547,
+ "graded_at": "2026-09-04T02:24:58+0100"
+}

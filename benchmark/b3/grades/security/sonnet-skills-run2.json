@@ -1,0 +1,46 @@
+{
+ "area": "security",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "S1": true,
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5": true,
+  "S6": true,
+  "S7": true,
+  "S8": true,
+  "S9": false,
+  "S10": true,
+  "S11": true,
+  "S12": true,
+  "S13": false,
+  "S14": true
+ },
+ "citations": {
+  "S1": "builds SQL by string formatting on request-controlled values",
+  "S2": "`conn` and `cur` leak on every call (no `close()`, no context manager, no try/finally)",
+  "S3": "`\"Order #\" + order[0]` raises `TypeError: can only concatenate str`",
+  "S4": "Empty `orders` list ... raises `ZeroDivisionError`",
+  "S5": "Binary floats can't represent money exactly ... use integer minor units (cents) or use `decimal.Decimal`",
+  "S6": "A negative `pct`, `pct > 100` ... Fix: validate `0 <= pct <= 100`",
+  "S7": "`status` should be validated against the known set of order statuses",
+  "S8": "any user can read any other user's orders (IDOR)",
+  "S9": "",
+  "S10": "never shows two decimal places. Fix: format with `f\"{amount:.2f}\"`",
+  "S11": "likely leaking a stack trace / internals to the client ... raise a sanitized application-level error",
+  "S12": "Result isn't rounded to currency precision ... round once at the boundary using the chosen rounding policy",
+  "S13": "",
+  "S14": "use named access (sqlite3 `Row` factory or a dataclass) instead of positional tuple indexing"
+ },
+ "score": 12,
+ "max": 14,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.120927,
+ "judge_wall_ms": 14016,
+ "graded_at": "2026-09-04T02:26:14+0100"
+}

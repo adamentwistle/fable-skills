@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "sonnet-skills-run4",
+ "items": {
+  "F1": true,
+  "F2": true,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": true,
+  "F9": true,
+  "F10": false,
+  "F11": true
+ },
+ "citations": {
+  "F1": "`serialize_event` does one `SELECT ... FROM users` per event, sequentially awaited \u2014 batch this into a single `WHERE id = ANY($1)` (or join)",
+  "F2": "then dedupes with `if key in seen` on a plain list, which is O(n\u00b2)",
+  "F3": "`lookup_geo` uses synchronous `requests.get` ... blocking the whole asyncio event loop thread for up to 2s per uncached IP ... Fix: use an async HTTP client (httpx.AsyncClient) or move the call off the event loop.",
+  "F4": "`events` has no index on `(org_id, created_at)`, so the query is a sequential scan over all 4.2M rows for every call \u2014 add a composite index `events(org_id, created_at DESC)`",
+  "F5": "`_request_timings` is appended to on every request and never trimmed \u2014 cap it (ring buffer / reservoir) or replace with a proper histogram.",
+  "F6": "`_geo_cache` is an unbounded dict keyed by IP, never evicted, growing forever \u2014 bound it (LRU with a max size, or a TTL)",
+  "F7": "re-measure endpoint p95 via the same Datadog view",
+  "F8": "Root cause of the 1.2-1.6s DB time ... Root cause of the remaining 5-10s and of the healthz outage: `lookup_geo` uses synchronous `requests.get`",
+  "F9": "Don't ship the on-call proposal as-is \u2014 it doesn't touch the root causes and the pool math is dangerous. ... 16 workers \u00d7 pool max 50 \u00d7 6 pods = up to 4,800 connections \u2014 that alone can take down Postgres",
+  "F10": "",
+  "F11": "the mobile client never sends `since`, so the handler computes it as `now() - 30d` fresh on every call (sub-second precision) \u2014 almost never a cache hit"
+ },
+ "score": 10,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.18192199999999997,
+ "judge_wall_ms": 29881,
+ "graded_at": "2026-09-04T02:25:49+0100"
+}

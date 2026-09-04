@@ -1,6 +1,6 @@
 {
  "suite": "b3",
- "generated": "2026-09-03T21:36:41+0100",
+ "generated": "2026-09-04T02:26:53+0100",
  "judges": [
   "claude-opus-5"
  ],
@@ -50,24 +50,24 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 6,
+   "mean": 5.8,
    "max": 11,
-   "pct": 0.5454545454545454,
-   "sd": 0.6324555320336759,
+   "pct": 0.5272727272727272,
+   "sd": 0.7483314773547883,
    "min": 5,
    "maxs": 7,
-   "cost": 0.07296856,
+   "cost": 0.053160700000000005,
    "items": {
     "P1": 1.0,
     "P2": 1.0,
     "P3": 1.0,
     "P4": 1.0,
-    "P5": 0.6,
+    "P5": 0.4,
     "P6": 1.0,
-    "P7": 0.2,
+    "P7": 0.4,
     "P8": 0.0,
     "P9": 0.0,
-    "P10": 0.2,
+    "P10": 0.0,
     "P11": 0.0
    }
   },
@@ -102,25 +102,25 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 8.6,
+   "mean": 9.2,
    "max": 11,
-   "pct": 0.7818181818181817,
-   "sd": 1.2,
+   "pct": 0.8363636363636363,
+   "sd": 1.1661903789690602,
    "min": 8,
    "maxs": 11,
-   "cost": 0.07192575999999999,
+   "cost": 0.06453824,
    "items": {
     "P1": 1.0,
     "P2": 1.0,
     "P3": 1.0,
     "P4": 1.0,
-    "P5": 0.8,
+    "P5": 1.0,
     "P6": 1.0,
     "P7": 1.0,
     "P8": 0.4,
-    "P9": 0.6,
-    "P10": 0.6,
-    "P11": 0.2
+    "P9": 0.8,
+    "P10": 0.4,
+    "P11": 0.6
    }
   },
   {
@@ -154,13 +154,13 @@
    "model": "opus",
    "cond": "skills",
    "n": 5,
-   "mean": 10.6,
+   "mean": 11,
    "max": 11,
-   "pct": 0.9636363636363636,
-   "sd": 0.4898979485566356,
-   "min": 10,
+   "pct": 1.0,
+   "sd": 0.0,
+   "min": 11,
    "maxs": 11,
-   "cost": 0.252322,
+   "cost": 0.2212934,
    "items": {
     "P1": 1.0,
     "P2": 1.0,
@@ -169,7 +169,7 @@
     "P5": 1.0,
     "P6": 1.0,
     "P7": 1.0,
-    "P8": 0.6,
+    "P8": 1.0,
     "P9": 1.0,
     "P10": 1.0,
     "P11": 1.0
@@ -383,18 +383,18 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 3,
+   "mean": 2.4,
    "max": 8,
-   "pct": 0.375,
-   "sd": 0.6324555320336759,
+   "pct": 0.3,
+   "sd": 0.4898979485566356,
    "min": 2,
-   "maxs": 4,
-   "cost": 0.02984266,
+   "maxs": 3,
+   "cost": 0.03198074,
    "items": {
     "A1": 1.0,
-    "A2": 0.6,
-    "A3": 1.0,
-    "A4": 0.4,
+    "A2": 0.8,
+    "A3": 0.6,
+    "A4": 0.0,
     "A5": 0.0,
     "A6": 0.0,
     "A7": 0.0,
@@ -429,22 +429,22 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 4,
+   "mean": 3.4,
    "max": 8,
-   "pct": 0.5,
-   "sd": 1.4142135623730951,
-   "min": 2,
-   "maxs": 6,
-   "cost": 0.03577608,
+   "pct": 0.425,
+   "sd": 0.4898979485566356,
+   "min": 3,
+   "maxs": 4,
+   "cost": 0.039526240000000004,
    "items": {
     "A1": 1.0,
     "A2": 1.0,
-    "A3": 0.6,
-    "A4": 0.8,
-    "A5": 0.2,
+    "A3": 1.0,
+    "A4": 0.4,
+    "A5": 0.0,
     "A6": 0.0,
     "A7": 0.0,
-    "A8": 0.4
+    "A8": 0.0
    }
   },
   {
@@ -475,22 +475,22 @@
    "model": "opus",
    "cond": "skills",
    "n": 5,
-   "mean": 5.8,
+   "mean": 7,
    "max": 8,
-   "pct": 0.725,
-   "sd": 0.4,
-   "min": 5,
-   "maxs": 6,
-   "cost": 0.0999799,
+   "pct": 0.875,
+   "sd": 0.6324555320336759,
+   "min": 6,
+   "maxs": 8,
+   "cost": 0.1210007,
    "items": {
     "A1": 1.0,
     "A2": 1.0,
     "A3": 1.0,
     "A4": 1.0,
-    "A5": 1.0,
-    "A6": 0.8,
-    "A7": 0.0,
-    "A8": 0.0
+    "A5": 0.8,
+    "A6": 1.0,
+    "A7": 1.0,
+    "A8": 0.2
    }
   },
   {
@@ -714,19 +714,19 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 4.8,
+   "mean": 5.4,
    "max": 10,
-   "pct": 0.48,
-   "sd": 0.4,
+   "pct": 0.54,
+   "sd": 1.019803902718557,
    "min": 4,
-   "maxs": 5,
-   "cost": 0.08670684000000001,
+   "maxs": 7,
+   "cost": 0.09233128,
    "items": {
     "H1": 1.0,
     "H2": 0.0,
-    "H3": 0.0,
+    "H3": 0.2,
     "H4": 1.0,
-    "H5": 0.0,
+    "H5": 0.4,
     "H6": 0.0,
     "H7": 0.0,
     "H8": 0.8,
@@ -764,13 +764,13 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 9,
+   "mean": 8.8,
    "max": 10,
-   "pct": 0.9,
-   "sd": 0.6324555320336759,
+   "pct": 0.8800000000000001,
+   "sd": 0.7483314773547883,
    "min": 8,
    "maxs": 10,
-   "cost": 0.1778508,
+   "cost": 0.17459632,
    "items": {
     "H1": 1.0,
     "H2": 1.0,
@@ -781,7 +781,7 @@
     "H7": 0.8,
     "H8": 1.0,
     "H9": 1.0,
-    "H10": 1.0
+    "H10": 0.8
    }
   },
   {
@@ -820,7 +820,7 @@
    "sd": 0.0,
    "min": 10,
    "maxs": 10,
-   "cost": 0.3533381,
+   "cost": 0.3522326,
    "items": {
     "H1": 1.0,
     "H2": 1.0,
@@ -890,25 +890,25 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 3,
+   "mean": 4.4,
    "max": 11,
-   "pct": 0.2727272727272727,
-   "sd": 0.6324555320336759,
-   "min": 2,
-   "maxs": 4,
-   "cost": 0.04724536,
+   "pct": 0.4,
+   "sd": 0.8,
+   "min": 3,
+   "maxs": 5,
+   "cost": 0.04917082,
    "items": {
     "I1": 1.0,
-    "I2": 0.2,
-    "I3": 0.0,
-    "I4": 0.8,
+    "I2": 0.4,
+    "I3": 0.2,
+    "I4": 0.6,
     "I5": 0.0,
-    "I6": 0.0,
-    "I7": 0.0,
+    "I6": 0.8,
+    "I7": 0.2,
     "I8": 0.0,
     "I9": 1.0,
     "I10": 0.0,
-    "I11": 0.0
+    "I11": 0.2
    }
   },
   {
@@ -942,13 +942,13 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 9.6,
+   "mean": 10.4,
    "max": 11,
-   "pct": 0.8727272727272727,
-   "sd": 1.019803902718557,
-   "min": 8,
+   "pct": 0.9454545454545454,
+   "sd": 0.4898979485566356,
+   "min": 10,
    "maxs": 11,
-   "cost": 0.07414304000000001,
+   "cost": 0.06842140000000001,
    "items": {
     "I1": 1.0,
     "I2": 1.0,
@@ -957,10 +957,10 @@
     "I5": 1.0,
     "I6": 1.0,
     "I7": 1.0,
-    "I8": 0.2,
+    "I8": 0.6,
     "I9": 0.8,
-    "I10": 0.8,
-    "I11": 0.8
+    "I10": 1.0,
+    "I11": 1.0
    }
   },
   {
@@ -994,13 +994,13 @@
    "model": "opus",
    "cond": "skills",
    "n": 5,
-   "mean": 10.2,
+   "mean": 11,
    "max": 11,
-   "pct": 0.9272727272727272,
-   "sd": 0.4,
-   "min": 10,
+   "pct": 1.0,
+   "sd": 0.0,
+   "min": 11,
    "maxs": 11,
-   "cost": 0.1694583,
+   "cost": 0.18524870000000002,
    "items": {
     "I1": 1.0,
     "I2": 1.0,
@@ -1010,7 +1010,7 @@
     "I6": 1.0,
     "I7": 1.0,
     "I8": 1.0,
-    "I9": 0.2,
+    "I9": 1.0,
     "I10": 1.0,
     "I11": 1.0
    }
@@ -1073,25 +1073,25 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 3.6,
+   "mean": 3.8,
    "max": 12,
-   "pct": 0.3,
-   "sd": 1.019803902718557,
+   "pct": 0.31666666666666665,
+   "sd": 1.3266499161421599,
    "min": 2,
-   "maxs": 5,
-   "cost": 0.112753,
+   "maxs": 6,
+   "cost": 0.0501971,
    "items": {
     "M1": 0.0,
     "M2": 0.0,
-    "M3": 0.0,
+    "M3": 0.2,
     "M4": 1.0,
-    "M5": 0.2,
+    "M5": 0.0,
     "M6": 0.0,
     "M7": 1.0,
-    "M8": 0.6,
-    "M9": 0.8,
-    "M10": 0.0,
-    "M11": 0.0,
+    "M8": 0.8,
+    "M9": 0.4,
+    "M10": 0.2,
+    "M11": 0.2,
     "M12": 0.0
    }
   },
@@ -1127,26 +1127,26 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 9.4,
+   "mean": 9.8,
    "max": 12,
-   "pct": 0.7833333333333333,
-   "sd": 0.4898979485566356,
+   "pct": 0.8166666666666668,
+   "sd": 0.7483314773547883,
    "min": 9,
-   "maxs": 10,
-   "cost": 0.15893456,
+   "maxs": 11,
+   "cost": 0.1241952,
    "items": {
-    "M1": 0.4,
+    "M1": 0.6,
     "M2": 0.6,
-    "M3": 0.6,
+    "M3": 0.4,
     "M4": 1.0,
     "M5": 1.0,
-    "M6": 0.8,
+    "M6": 1.0,
     "M7": 1.0,
-    "M8": 1.0,
+    "M8": 0.8,
     "M9": 0.8,
-    "M10": 0.8,
+    "M10": 1.0,
     "M11": 0.8,
-    "M12": 0.6
+    "M12": 0.8
    }
   },
   {
@@ -1181,16 +1181,16 @@
    "model": "opus",
    "cond": "skills",
    "n": 5,
-   "mean": 12,
+   "mean": 11.6,
    "max": 12,
-   "pct": 1.0,
-   "sd": 0.0,
-   "min": 12,
+   "pct": 0.9666666666666667,
+   "sd": 0.8,
+   "min": 10,
    "maxs": 12,
-   "cost": 0.3357286,
+   "cost": 0.27237700000000004,
    "items": {
-    "M1": 1.0,
-    "M2": 1.0,
+    "M1": 0.8,
+    "M2": 0.8,
     "M3": 1.0,
     "M4": 1.0,
     "M5": 1.0,
@@ -1261,23 +1261,23 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 6.4,
+   "mean": 6.8,
    "max": 11,
-   "pct": 0.5818181818181819,
-   "sd": 0.4898979485566356,
+   "pct": 0.6181818181818182,
+   "sd": 0.7483314773547883,
    "min": 6,
-   "maxs": 7,
-   "cost": 0.056926859999999996,
+   "maxs": 8,
+   "cost": 0.06950978000000001,
    "items": {
     "F1": 1.0,
-    "F2": 0.8,
-    "F3": 1.0,
+    "F2": 0.6,
+    "F3": 0.8,
     "F4": 1.0,
-    "F5": 0.4,
+    "F5": 0.8,
     "F6": 1.0,
-    "F7": 0.2,
-    "F8": 0.0,
-    "F9": 1.0,
+    "F7": 0.6,
+    "F8": 0.2,
+    "F9": 0.8,
     "F10": 0.0,
     "F11": 0.0
    }
@@ -1313,13 +1313,13 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 7.4,
+   "mean": 7.8,
    "max": 11,
-   "pct": 0.6727272727272727,
-   "sd": 0.8,
-   "min": 7,
-   "maxs": 9,
-   "cost": 0.06781432,
+   "pct": 0.7090909090909091,
+   "sd": 1.469693845669907,
+   "min": 6,
+   "maxs": 10,
+   "cost": 0.07117624,
    "items": {
     "F1": 1.0,
     "F2": 0.8,
@@ -1328,7 +1328,7 @@
     "F5": 1.0,
     "F6": 1.0,
     "F7": 0.4,
-    "F8": 0.0,
+    "F8": 0.4,
     "F9": 1.0,
     "F10": 0.0,
     "F11": 0.2
@@ -1368,10 +1368,10 @@
    "mean": 9,
    "max": 11,
    "pct": 0.8181818181818182,
-   "sd": 0.0,
-   "min": 9,
-   "maxs": 9,
-   "cost": 0.1763126,
+   "sd": 0.6324555320336759,
+   "min": 8,
+   "maxs": 10,
+   "cost": 0.1779764,
    "items": {
     "F1": 1.0,
     "F2": 1.0,
@@ -1380,10 +1380,10 @@
     "F5": 1.0,
     "F6": 1.0,
     "F7": 1.0,
-    "F8": 0.0,
+    "F8": 0.4,
     "F9": 1.0,
-    "F10": 0.2,
-    "F11": 0.8
+    "F10": 0.0,
+    "F11": 0.6
    }
   },
   {
@@ -1446,26 +1446,26 @@
    "model": "haiku",
    "cond": "skills",
    "n": 5,
-   "mean": 7.8,
+   "mean": 8.4,
    "max": 14,
-   "pct": 0.5571428571428572,
-   "sd": 0.7483314773547883,
-   "min": 7,
-   "maxs": 9,
-   "cost": 0.032834579999999995,
+   "pct": 0.6,
+   "sd": 1.7435595774162693,
+   "min": 6,
+   "maxs": 11,
+   "cost": 0.04313512,
    "items": {
     "S1": 1.0,
     "S2": 1.0,
     "S3": 1.0,
     "S4": 1.0,
     "S5": 1.0,
-    "S6": 0.4,
+    "S6": 0.6,
     "S7": 0.2,
     "S8": 0.2,
     "S9": 0.0,
-    "S10": 0.8,
-    "S11": 0.6,
-    "S12": 0.2,
+    "S10": 0.4,
+    "S11": 0.8,
+    "S12": 0.8,
     "S13": 0.0,
     "S14": 0.4
    }
@@ -1504,13 +1504,13 @@
    "model": "sonnet",
    "cond": "skills",
    "n": 5,
-   "mean": 11.6,
+   "mean": 11.2,
    "max": 14,
-   "pct": 0.8285714285714285,
-   "sd": 0.4898979485566356,
-   "min": 11,
+   "pct": 0.7999999999999999,
+   "sd": 0.7483314773547883,
+   "min": 10,
    "maxs": 12,
-   "cost": 0.07849096,
+   "cost": 0.07598336,
    "items": {
     "S1": 1.0,
     "S2": 1.0,
@@ -1519,12 +1519,12 @@
     "S5": 1.0,
     "S6": 1.0,
     "S7": 1.0,
-    "S8": 0.4,
+    "S8": 1.0,
     "S9": 0.2,
-    "S10": 0.8,
-    "S11": 1.0,
-    "S12": 0.8,
-    "S13": 1.0,
+    "S10": 0.6,
+    "S11": 0.8,
+    "S12": 0.6,
+    "S13": 0.6,
     "S14": 0.4
    }
   },
@@ -1568,7 +1568,7 @@
    "sd": 0.0,
    "min": 14,
    "maxs": 14,
-   "cost": 0.3745176,
+   "cost": 0.4561509,
    "items": {
     "S1": 1.0,
     "S2": 1.0,
@@ -1922,14 +1922,14 @@
    "model": "haiku",
    "cond": "skills",
    "run": 1,
-   "score": 6,
+   "score": 5,
    "max": 11,
    "items": {
     "P1": true,
     "P2": true,
     "P3": true,
     "P4": true,
-    "P5": true,
+    "P5": false,
     "P6": true,
     "P7": false,
     "P8": false,
@@ -1938,8 +1938,8 @@
     "P11": false
    },
    "incomplete": [],
-   "cost": 0.10610699999999999,
-   "wall_ms": 72664,
+   "cost": 0.07460950000000001,
+   "wall_ms": 97857,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -1968,8 +1968,8 @@
     "P11": false
    },
    "incomplete": [],
-   "cost": 0.090297,
-   "wall_ms": 38518,
+   "cost": 0.058854500000000004,
+   "wall_ms": 68837,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -1982,36 +1982,6 @@
    "model": "haiku",
    "cond": "skills",
    "run": 3,
-   "score": 7,
-   "max": 11,
-   "items": {
-    "P1": true,
-    "P2": true,
-    "P3": true,
-    "P4": true,
-    "P5": true,
-    "P6": true,
-    "P7": false,
-    "P8": false,
-    "P9": false,
-    "P10": true,
-    "P11": false
-   },
-   "incomplete": [],
-   "cost": 0.0286584,
-   "wall_ms": 62835,
-   "canonical": [
-    "claude-haiku-4-5-20251001"
-   ],
-   "judge": [
-    "claude-opus-5"
-   ]
-  },
-  {
-   "area": "api-surface",
-   "model": "haiku",
-   "cond": "skills",
-   "run": 4,
    "score": 5,
    "max": 11,
    "items": {
@@ -2028,8 +1998,38 @@
     "P11": false
    },
    "incomplete": [],
-   "cost": 0.107177,
-   "wall_ms": 67598,
+   "cost": 0.047625,
+   "wall_ms": 70208,
+   "canonical": [
+    "claude-haiku-4-5-20251001"
+   ],
+   "judge": [
+    "claude-opus-5"
+   ]
+  },
+  {
+   "area": "api-surface",
+   "model": "haiku",
+   "cond": "skills",
+   "run": 4,
+   "score": 7,
+   "max": 11,
+   "items": {
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "P4": true,
+    "P5": true,
+    "P6": true,
+    "P7": true,
+    "P8": false,
+    "P9": false,
+    "P10": false,
+    "P11": false
+   },
+   "incomplete": [],
+   "cost": 0.0436145,
+   "wall_ms": 37696,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -2058,8 +2058,8 @@
     "P11": false
    },
    "incomplete": [],
-   "cost": 0.0326034,
-   "wall_ms": 71623,
+   "cost": 0.0411,
+   "wall_ms": 58376,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -2238,8 +2238,8 @@
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.497205,
-   "wall_ms": 48375,
+   "cost": 0.29964999999999997,
+   "wall_ms": 75482,
    "canonical": [
     "claude-opus-5"
    ],
@@ -2268,8 +2268,8 @@
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.16715750000000001,
-   "wall_ms": 39438,
+   "cost": 0.185068,
+   "wall_ms": 47090,
    "canonical": [
     "claude-opus-5"
    ],
@@ -2298,8 +2298,8 @@
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.1775575,
-   "wall_ms": 42567,
+   "cost": 0.21664299999999997,
+   "wall_ms": 63492,
    "canonical": [
     "claude-opus-5"
    ],
@@ -2312,7 +2312,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 4,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "P1": true,
@@ -2322,14 +2322,14 @@
     "P5": true,
     "P6": true,
     "P7": true,
-    "P8": false,
+    "P8": true,
     "P9": true,
     "P10": true,
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.1763325,
-   "wall_ms": 43406,
+   "cost": 0.187218,
+   "wall_ms": 47933,
    "canonical": [
     "claude-opus-5"
    ],
@@ -2342,7 +2342,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 5,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "P1": true,
@@ -2352,14 +2352,14 @@
     "P5": true,
     "P6": true,
     "P7": true,
-    "P8": false,
+    "P8": true,
     "P9": true,
     "P10": true,
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.2433575,
-   "wall_ms": 79206,
+   "cost": 0.217888,
+   "wall_ms": 62838,
    "canonical": [
     "claude-opus-5"
    ],
@@ -2522,6 +2522,36 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 1,
+   "score": 8,
+   "max": 11,
+   "items": {
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "P4": true,
+    "P5": true,
+    "P6": true,
+    "P7": true,
+    "P8": false,
+    "P9": true,
+    "P10": false,
+    "P11": false
+   },
+   "incomplete": [],
+   "cost": 0.0913188,
+   "wall_ms": 23030,
+   "canonical": [
+    "claude-sonnet-5"
+   ],
+   "judge": [
+    "claude-opus-5"
+   ]
+  },
+  {
+   "area": "api-surface",
+   "model": "sonnet",
+   "cond": "skills",
+   "run": 2,
    "score": 11,
    "max": 11,
    "items": {
@@ -2538,38 +2568,8 @@
     "P11": true
    },
    "incomplete": [],
-   "cost": 0.024696,
-   "wall_ms": 27729,
-   "canonical": [
-    "claude-sonnet-5"
-   ],
-   "judge": [
-    "claude-opus-5"
-   ]
-  },
-  {
-   "area": "api-surface",
-   "model": "sonnet",
-   "cond": "skills",
-   "run": 2,
-   "score": 8,
-   "max": 11,
-   "items": {
-    "P1": true,
-    "P2": true,
-    "P3": true,
-    "P4": true,
-    "P5": true,
-    "P6": true,
-    "P7": true,
-    "P8": false,
-    "P9": true,
-    "P10": false,
-    "P11": false
-   },
-   "incomplete": [],
-   "cost": 0.201204,
-   "wall_ms": 23192,
+   "cost": 0.056871599999999994,
+   "wall_ms": 20070,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -2582,24 +2582,24 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 3,
-   "score": 8,
+   "score": 10,
    "max": 11,
    "items": {
     "P1": true,
     "P2": true,
     "P3": true,
     "P4": true,
-    "P5": false,
+    "P5": true,
     "P6": true,
     "P7": true,
     "P8": true,
     "P9": true,
     "P10": false,
-    "P11": false
+    "P11": true
    },
    "incomplete": [],
-   "cost": 0.021476000000000002,
-   "wall_ms": 24910,
+   "cost": 0.0583516,
+   "wall_ms": 21690,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -2612,7 +2612,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
-   "score": 8,
+   "score": 9,
    "max": 11,
    "items": {
     "P1": true,
@@ -2625,11 +2625,11 @@
     "P8": false,
     "P9": false,
     "P10": true,
-    "P11": false
+    "P11": true
    },
    "incomplete": [],
-   "cost": 0.0557914,
-   "wall_ms": 20251,
+   "cost": 0.057249600000000005,
+   "wall_ms": 20522,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -2653,13 +2653,13 @@
     "P6": true,
     "P7": true,
     "P8": false,
-    "P9": false,
-    "P10": true,
+    "P9": true,
+    "P10": false,
     "P11": false
    },
    "incomplete": [],
-   "cost": 0.056461399999999995,
-   "wall_ms": 19576,
+   "cost": 0.0588996,
+   "wall_ms": 23099,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -3865,8 +3865,8 @@
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.0326115,
-   "wall_ms": 28594,
+   "cost": 0.0531275,
+   "wall_ms": 62799,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -3883,17 +3883,17 @@
    "max": 8,
    "items": {
     "A1": true,
-    "A2": false,
+    "A2": true,
     "A3": true,
-    "A4": true,
+    "A4": false,
     "A5": false,
     "A6": false,
     "A7": false,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.0229542,
-   "wall_ms": 32787,
+   "cost": 0.0279403,
+   "wall_ms": 32725,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -3906,12 +3906,12 @@
    "model": "haiku",
    "cond": "skills",
    "run": 3,
-   "score": 3,
+   "score": 2,
    "max": 8,
    "items": {
     "A1": true,
     "A2": true,
-    "A3": true,
+    "A3": false,
     "A4": false,
     "A5": false,
     "A6": false,
@@ -3919,8 +3919,8 @@
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.0261442,
-   "wall_ms": 31031,
+   "cost": 0.0309353,
+   "wall_ms": 47246,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -3946,8 +3946,8 @@
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.038109199999999996,
-   "wall_ms": 59458,
+   "cost": 0.0233253,
+   "wall_ms": 32356,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -3960,21 +3960,21 @@
    "model": "haiku",
    "cond": "skills",
    "run": 5,
-   "score": 4,
+   "score": 2,
    "max": 8,
    "items": {
     "A1": true,
     "A2": true,
-    "A3": true,
-    "A4": true,
+    "A3": false,
+    "A4": false,
     "A5": false,
     "A6": false,
     "A7": false,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.029394199999999995,
-   "wall_ms": 43887,
+   "cost": 0.0245753,
+   "wall_ms": 31878,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -4122,7 +4122,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 1,
-   "score": 6,
+   "score": 7,
    "max": 8,
    "items": {
     "A1": true,
@@ -4131,12 +4131,12 @@
     "A4": true,
     "A5": true,
     "A6": true,
-    "A7": false,
+    "A7": true,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.15903499999999998,
-   "wall_ms": 35202,
+   "cost": 0.16855,
+   "wall_ms": 34013,
    "canonical": [
     "claude-opus-5"
    ],
@@ -4149,7 +4149,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 2,
-   "score": 6,
+   "score": 7,
    "max": 8,
    "items": {
     "A1": true,
@@ -4158,12 +4158,12 @@
     "A4": true,
     "A5": true,
     "A6": true,
-    "A7": false,
+    "A7": true,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.043064500000000006,
-   "wall_ms": 22314,
+   "cost": 0.1157155,
+   "wall_ms": 32657,
    "canonical": [
     "claude-opus-5"
    ],
@@ -4176,7 +4176,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 3,
-   "score": 6,
+   "score": 8,
    "max": 8,
    "items": {
     "A1": true,
@@ -4185,12 +4185,12 @@
     "A4": true,
     "A5": true,
     "A6": true,
-    "A7": false,
-    "A8": false
+    "A7": true,
+    "A8": true
    },
    "incomplete": [],
-   "cost": 0.09914999999999999,
-   "wall_ms": 32732,
+   "cost": 0.050021499999999997,
+   "wall_ms": 26721,
    "canonical": [
     "claude-opus-5"
    ],
@@ -4210,14 +4210,14 @@
     "A2": true,
     "A3": true,
     "A4": true,
-    "A5": true,
+    "A5": false,
     "A6": true,
-    "A7": false,
+    "A7": true,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.110375,
-   "wall_ms": 36406,
+   "cost": 0.143671,
+   "wall_ms": 33211,
    "canonical": [
     "claude-opus-5"
    ],
@@ -4230,7 +4230,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 5,
-   "score": 5,
+   "score": 7,
    "max": 8,
    "items": {
     "A1": true,
@@ -4238,13 +4238,13 @@
     "A3": true,
     "A4": true,
     "A5": true,
-    "A6": false,
-    "A7": false,
+    "A6": true,
+    "A7": true,
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.08827499999999999,
-   "wall_ms": 24175,
+   "cost": 0.1270455,
+   "wall_ms": 40069,
    "canonical": [
     "claude-opus-5"
    ],
@@ -4392,12 +4392,12 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 1,
-   "score": 2,
+   "score": 3,
    "max": 8,
    "items": {
     "A1": true,
     "A2": true,
-    "A3": false,
+    "A3": true,
     "A4": false,
     "A5": false,
     "A6": false,
@@ -4405,8 +4405,8 @@
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.0598268,
-   "wall_ms": 10153,
+   "cost": 0.0638388,
+   "wall_ms": 8852,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -4419,33 +4419,6 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 2,
-   "score": 3,
-   "max": 8,
-   "items": {
-    "A1": true,
-    "A2": true,
-    "A3": false,
-    "A4": true,
-    "A5": false,
-    "A6": false,
-    "A7": false,
-    "A8": false
-   },
-   "incomplete": [],
-   "cost": 0.029638400000000002,
-   "wall_ms": 9838,
-   "canonical": [
-    "claude-sonnet-5"
-   ],
-   "judge": [
-    "claude-opus-5"
-   ]
-  },
-  {
-   "area": "debugging",
-   "model": "sonnet",
-   "cond": "skills",
-   "run": 3,
    "score": 4,
    "max": 8,
    "items": {
@@ -4459,8 +4432,35 @@
     "A8": false
    },
    "incomplete": [],
-   "cost": 0.0296784,
-   "wall_ms": 9894,
+   "cost": 0.0339826,
+   "wall_ms": 11214,
+   "canonical": [
+    "claude-sonnet-5"
+   ],
+   "judge": [
+    "claude-opus-5"
+   ]
+  },
+  {
+   "area": "debugging",
+   "model": "sonnet",
+   "cond": "skills",
+   "run": 3,
+   "score": 3,
+   "max": 8,
+   "items": {
+    "A1": true,
+    "A2": true,
+    "A3": true,
+    "A4": false,
+    "A5": false,
+    "A6": false,
+    "A7": false,
+    "A8": false
+   },
+   "incomplete": [],
+   "cost": 0.0326226,
+   "wall_ms": 8877,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -4473,21 +4473,21 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
-   "score": 6,
+   "score": 4,
    "max": 8,
    "items": {
     "A1": true,
     "A2": true,
     "A3": true,
     "A4": true,
-    "A5": true,
+    "A5": false,
     "A6": false,
     "A7": false,
-    "A8": true
+    "A8": false
    },
    "incomplete": [],
-   "cost": 0.0297784,
-   "wall_ms": 10381,
+   "cost": 0.0333426,
+   "wall_ms": 9953,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -4500,21 +4500,21 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 5,
-   "score": 5,
+   "score": 3,
    "max": 8,
    "items": {
     "A1": true,
     "A2": true,
     "A3": true,
-    "A4": true,
+    "A4": false,
     "A5": false,
     "A6": false,
     "A7": false,
-    "A8": true
+    "A8": false
    },
    "incomplete": [],
-   "cost": 0.0299584,
-   "wall_ms": 11076,
+   "cost": 0.0338446,
+   "wall_ms": 10582,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -5812,8 +5812,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.08300750000000001,
-   "wall_ms": 107156,
+   "cost": 0.08903750000000002,
+   "wall_ms": 121210,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -5826,14 +5826,14 @@
    "model": "haiku",
    "cond": "skills",
    "run": 2,
-   "score": 5,
+   "score": 6,
    "max": 10,
    "items": {
     "H1": true,
     "H2": false,
     "H3": false,
     "H4": true,
-    "H5": false,
+    "H5": true,
     "H6": false,
     "H7": false,
     "H8": true,
@@ -5841,8 +5841,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.0707531,
-   "wall_ms": 107671,
+   "cost": 0.099085,
+   "wall_ms": 157845,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -5870,8 +5870,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.09477870000000001,
-   "wall_ms": 178076,
+   "cost": 0.11191199999999998,
+   "wall_ms": 184007,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -5884,14 +5884,14 @@
    "model": "haiku",
    "cond": "skills",
    "run": 4,
-   "score": 5,
+   "score": 7,
    "max": 10,
    "items": {
     "H1": true,
     "H2": false,
-    "H3": false,
+    "H3": true,
     "H4": true,
-    "H5": false,
+    "H5": true,
     "H6": false,
     "H7": false,
     "H8": true,
@@ -5899,8 +5899,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.0993018,
-   "wall_ms": 122025,
+   "cost": 0.07641,
+   "wall_ms": 115314,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -5928,8 +5928,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.0856931,
-   "wall_ms": 138774,
+   "cost": 0.0852119,
+   "wall_ms": 158184,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -6102,8 +6102,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.4087700000000001,
-   "wall_ms": 122934,
+   "cost": 0.42729,
+   "wall_ms": 122001,
    "canonical": [
     "claude-opus-5"
    ],
@@ -6131,8 +6131,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.3377275,
-   "wall_ms": 157871,
+   "cost": 0.34344949999999996,
+   "wall_ms": 108366,
    "canonical": [
     "claude-opus-5"
    ],
@@ -6160,8 +6160,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.35645599999999994,
-   "wall_ms": 119996,
+   "cost": 0.3540995,
+   "wall_ms": 117889,
    "canonical": [
     "claude-opus-5"
    ],
@@ -6189,8 +6189,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.37035599999999996,
-   "wall_ms": 130672,
+   "cost": 0.32012450000000003,
+   "wall_ms": 99478,
    "canonical": [
     "claude-opus-5"
    ],
@@ -6218,8 +6218,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.293381,
-   "wall_ms": 92590,
+   "cost": 0.31619949999999997,
+   "wall_ms": 94483,
    "canonical": [
     "claude-opus-5"
    ],
@@ -6392,8 +6392,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.21382079999999998,
-   "wall_ms": 134495,
+   "cost": 0.2024688,
+   "wall_ms": 117934,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -6406,23 +6406,23 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 2,
-   "score": 8,
+   "score": 10,
    "max": 10,
    "items": {
     "H1": true,
     "H2": true,
     "H3": true,
     "H4": true,
-    "H5": false,
+    "H5": true,
     "H6": true,
-    "H7": false,
+    "H7": true,
     "H8": true,
     "H9": true,
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.1769908,
-   "wall_ms": 122071,
+   "cost": 0.20697820000000003,
+   "wall_ms": 145957,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -6450,8 +6450,8 @@
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.18827080000000002,
-   "wall_ms": 138110,
+   "cost": 0.1545082,
+   "wall_ms": 103554,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -6464,7 +6464,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
-   "score": 9,
+   "score": 8,
    "max": 10,
    "items": {
     "H1": true,
@@ -6476,11 +6476,11 @@
     "H7": true,
     "H8": true,
     "H9": true,
-    "H10": true
+    "H10": false
    },
    "incomplete": [],
-   "cost": 0.1466908,
-   "wall_ms": 99227,
+   "cost": 0.15078819999999998,
+   "wall_ms": 97051,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -6493,23 +6493,23 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 5,
-   "score": 10,
+   "score": 8,
    "max": 10,
    "items": {
     "H1": true,
     "H2": true,
     "H3": true,
     "H4": true,
-    "H5": true,
+    "H5": false,
     "H6": true,
-    "H7": true,
+    "H7": false,
     "H8": true,
     "H9": true,
     "H10": true
    },
    "incomplete": [],
-   "cost": 0.1634808,
-   "wall_ms": 111808,
+   "cost": 0.1582382,
+   "wall_ms": 105711,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -6822,7 +6822,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 1,
-   "score": 3,
+   "score": 5,
    "max": 11,
    "items": {
     "I1": true,
@@ -6830,16 +6830,16 @@
     "I3": false,
     "I4": true,
     "I5": false,
-    "I6": false,
-    "I7": false,
+    "I6": true,
+    "I7": true,
     "I8": false,
     "I9": true,
     "I10": false,
     "I11": false
    },
    "incomplete": [],
-   "cost": 0.0496505,
-   "wall_ms": 53483,
+   "cost": 0.047946499999999996,
+   "wall_ms": 47616,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -6852,7 +6852,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 2,
-   "score": 3,
+   "score": 5,
    "max": 11,
    "items": {
     "I1": true,
@@ -6860,16 +6860,16 @@
     "I3": false,
     "I4": true,
     "I5": false,
-    "I6": false,
+    "I6": true,
     "I7": false,
     "I8": false,
     "I9": true,
     "I10": false,
-    "I11": false
+    "I11": true
    },
    "incomplete": [],
-   "cost": 0.0312906,
-   "wall_ms": 63428,
+   "cost": 0.0514694,
+   "wall_ms": 77523,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -6882,15 +6882,15 @@
    "model": "haiku",
    "cond": "skills",
    "run": 3,
-   "score": 3,
+   "score": 5,
    "max": 11,
    "items": {
     "I1": true,
     "I2": false,
-    "I3": false,
+    "I3": true,
     "I4": true,
     "I5": false,
-    "I6": false,
+    "I6": true,
     "I7": false,
     "I8": false,
     "I9": true,
@@ -6898,8 +6898,8 @@
     "I11": false
    },
    "incomplete": [],
-   "cost": 0.0467119,
-   "wall_ms": 67567,
+   "cost": 0.046079400000000006,
+   "wall_ms": 65600,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -6912,11 +6912,11 @@
    "model": "haiku",
    "cond": "skills",
    "run": 4,
-   "score": 2,
+   "score": 3,
    "max": 11,
    "items": {
     "I1": true,
-    "I2": false,
+    "I2": true,
     "I3": false,
     "I4": false,
     "I5": false,
@@ -6928,8 +6928,8 @@
     "I11": false
    },
    "incomplete": [],
-   "cost": 0.0509319,
-   "wall_ms": 80731,
+   "cost": 0.042599399999999996,
+   "wall_ms": 59265,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -6948,9 +6948,9 @@
     "I1": true,
     "I2": true,
     "I3": false,
-    "I4": true,
+    "I4": false,
     "I5": false,
-    "I6": false,
+    "I6": true,
     "I7": false,
     "I8": false,
     "I9": true,
@@ -6958,8 +6958,8 @@
     "I11": false
    },
    "incomplete": [],
-   "cost": 0.0576419,
-   "wall_ms": 87657,
+   "cost": 0.0577594,
+   "wall_ms": 84325,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -7138,8 +7138,8 @@
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.19229,
-   "wall_ms": 44288,
+   "cost": 0.211795,
+   "wall_ms": 43442,
    "canonical": [
     "claude-opus-5"
    ],
@@ -7152,7 +7152,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 2,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "I1": true,
@@ -7163,13 +7163,13 @@
     "I6": true,
     "I7": true,
     "I8": true,
-    "I9": false,
+    "I9": true,
     "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.191865,
-   "wall_ms": 39962,
+   "cost": 0.24552000000000002,
+   "wall_ms": 58674,
    "canonical": [
     "claude-opus-5"
    ],
@@ -7182,7 +7182,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 3,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "I1": true,
@@ -7193,13 +7193,13 @@
     "I6": true,
     "I7": true,
     "I8": true,
-    "I9": false,
+    "I9": true,
     "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.1422455,
-   "wall_ms": 40185,
+   "cost": 0.15025950000000002,
+   "wall_ms": 37433,
    "canonical": [
     "claude-opus-5"
    ],
@@ -7212,7 +7212,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 4,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "I1": true,
@@ -7223,13 +7223,13 @@
     "I6": true,
     "I7": true,
     "I8": true,
-    "I9": false,
+    "I9": true,
     "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.1494455,
-   "wall_ms": 45783,
+   "cost": 0.16110950000000002,
+   "wall_ms": 45285,
    "canonical": [
     "claude-opus-5"
    ],
@@ -7242,7 +7242,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 5,
-   "score": 10,
+   "score": 11,
    "max": 11,
    "items": {
     "I1": true,
@@ -7253,13 +7253,13 @@
     "I6": true,
     "I7": true,
     "I8": true,
-    "I9": false,
+    "I9": true,
     "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.1714455,
-   "wall_ms": 59266,
+   "cost": 0.15755950000000002,
+   "wall_ms": 41187,
    "canonical": [
     "claude-opus-5"
    ],
@@ -7438,8 +7438,8 @@
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.0936988,
-   "wall_ms": 35176,
+   "cost": 0.1017208,
+   "wall_ms": 36896,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -7452,7 +7452,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 2,
-   "score": 9,
+   "score": 11,
    "max": 11,
    "items": {
     "I1": true,
@@ -7462,14 +7462,14 @@
     "I5": true,
     "I6": true,
     "I7": true,
-    "I8": false,
+    "I8": true,
     "I9": true,
     "I10": true,
-    "I11": false
+    "I11": true
    },
    "incomplete": [],
-   "cost": 0.0666766,
-   "wall_ms": 38749,
+   "cost": 0.039759600000000006,
+   "wall_ms": 35804,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -7492,14 +7492,14 @@
     "I5": true,
     "I6": true,
     "I7": true,
-    "I8": false,
-    "I9": true,
+    "I8": true,
+    "I9": false,
     "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.0707966,
-   "wall_ms": 41894,
+   "cost": 0.0664622,
+   "wall_ms": 33415,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -7528,8 +7528,8 @@
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.0670366,
-   "wall_ms": 39150,
+   "cost": 0.0650222,
+   "wall_ms": 32715,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -7542,7 +7542,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 5,
-   "score": 8,
+   "score": 10,
    "max": 11,
    "items": {
     "I1": true,
@@ -7553,13 +7553,13 @@
     "I6": true,
     "I7": true,
     "I8": false,
-    "I9": false,
-    "I10": false,
+    "I9": true,
+    "I10": true,
     "I11": true
    },
    "incomplete": [],
-   "cost": 0.0725066,
-   "wall_ms": 45696,
+   "cost": 0.06914220000000001,
+   "wall_ms": 33978,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -7899,8 +7899,8 @@
     "M12": false
    },
    "incomplete": [],
-   "cost": 0.11200800000000001,
-   "wall_ms": 87472,
+   "cost": 0.05251510000000001,
+   "wall_ms": 85638,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -7913,37 +7913,6 @@
    "model": "haiku",
    "cond": "skills",
    "run": 2,
-   "score": 5,
-   "max": 12,
-   "items": {
-    "M1": false,
-    "M2": false,
-    "M3": false,
-    "M4": true,
-    "M5": true,
-    "M6": false,
-    "M7": true,
-    "M8": true,
-    "M9": true,
-    "M10": false,
-    "M11": false,
-    "M12": false
-   },
-   "incomplete": [],
-   "cost": 0.166943,
-   "wall_ms": 193992,
-   "canonical": [
-    "claude-haiku-4-5-20251001"
-   ],
-   "judge": [
-    "claude-opus-5"
-   ]
-  },
-  {
-   "area": "migration",
-   "model": "haiku",
-   "cond": "skills",
-   "run": 3,
    "score": 2,
    "max": 12,
    "items": {
@@ -7961,8 +7930,39 @@
     "M12": false
    },
    "incomplete": [],
-   "cost": 0.09232800000000001,
-   "wall_ms": 48793,
+   "cost": 0.0268401,
+   "wall_ms": 29387,
+   "canonical": [
+    "claude-haiku-4-5-20251001"
+   ],
+   "judge": [
+    "claude-opus-5"
+   ]
+  },
+  {
+   "area": "migration",
+   "model": "haiku",
+   "cond": "skills",
+   "run": 3,
+   "score": 4,
+   "max": 12,
+   "items": {
+    "M1": false,
+    "M2": false,
+    "M3": false,
+    "M4": true,
+    "M5": false,
+    "M6": false,
+    "M7": true,
+    "M8": true,
+    "M9": false,
+    "M10": true,
+    "M11": false,
+    "M12": false
+   },
+   "incomplete": [],
+   "cost": 0.0361051,
+   "wall_ms": 52789,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -7975,7 +7975,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 4,
-   "score": 4,
+   "score": 3,
    "max": 12,
    "items": {
     "M1": false,
@@ -7986,14 +7986,14 @@
     "M6": false,
     "M7": true,
     "M8": true,
-    "M9": true,
+    "M9": false,
     "M10": false,
     "M11": false,
     "M12": false
    },
    "incomplete": [],
-   "cost": 0.103518,
-   "wall_ms": 72238,
+   "cost": 0.0947451,
+   "wall_ms": 167001,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -8006,25 +8006,25 @@
    "model": "haiku",
    "cond": "skills",
    "run": 5,
-   "score": 3,
+   "score": 6,
    "max": 12,
    "items": {
     "M1": false,
     "M2": false,
-    "M3": false,
+    "M3": true,
     "M4": true,
     "M5": false,
     "M6": false,
     "M7": true,
-    "M8": false,
+    "M8": true,
     "M9": true,
     "M10": false,
-    "M11": false,
+    "M11": true,
     "M12": false
    },
    "incomplete": [],
-   "cost": 0.088968,
-   "wall_ms": 39894,
+   "cost": 0.0407801,
+   "wall_ms": 53006,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -8209,8 +8209,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.601135,
-   "wall_ms": 108923,
+   "cost": 0.284222,
+   "wall_ms": 107761,
    "canonical": [
     "claude-opus-5"
    ],
@@ -8240,8 +8240,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.255927,
-   "wall_ms": 91756,
+   "cost": 0.29072200000000004,
+   "wall_ms": 105900,
    "canonical": [
     "claude-opus-5"
    ],
@@ -8254,11 +8254,11 @@
    "model": "opus",
    "cond": "skills",
    "run": 3,
-   "score": 12,
+   "score": 10,
    "max": 12,
    "items": {
-    "M1": true,
-    "M2": true,
+    "M1": false,
+    "M2": false,
     "M3": true,
     "M4": true,
     "M5": true,
@@ -8271,8 +8271,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.259452,
-   "wall_ms": 93725,
+   "cost": 0.262072,
+   "wall_ms": 94191,
    "canonical": [
     "claude-opus-5"
    ],
@@ -8302,8 +8302,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.24807700000000002,
-   "wall_ms": 87334,
+   "cost": 0.268447,
+   "wall_ms": 97686,
    "canonical": [
     "claude-opus-5"
    ],
@@ -8333,8 +8333,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.314052,
-   "wall_ms": 116579,
+   "cost": 0.25642200000000004,
+   "wall_ms": 93752,
    "canonical": [
     "claude-opus-5"
    ],
@@ -8502,7 +8502,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 1,
-   "score": 9,
+   "score": 10,
    "max": 12,
    "items": {
     "M1": false,
@@ -8510,7 +8510,7 @@
     "M3": true,
     "M4": true,
     "M5": true,
-    "M6": false,
+    "M6": true,
     "M7": true,
     "M8": true,
     "M9": false,
@@ -8519,8 +8519,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.26290600000000003,
-   "wall_ms": 91986,
+   "cost": 0.11357719999999999,
+   "wall_ms": 85499,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -8537,21 +8537,21 @@
    "max": 12,
    "items": {
     "M1": true,
-    "M2": true,
+    "M2": false,
     "M3": true,
     "M4": true,
     "M5": true,
     "M6": true,
     "M7": true,
-    "M8": true,
+    "M8": false,
     "M9": true,
-    "M10": false,
+    "M10": true,
     "M11": false,
-    "M12": false
+    "M12": true
    },
    "incomplete": [],
-   "cost": 0.1290292,
-   "wall_ms": 106466,
+   "cost": 0.1389272,
+   "wall_ms": 117194,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -8564,12 +8564,12 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 3,
-   "score": 10,
+   "score": 11,
    "max": 12,
    "items": {
-    "M1": false,
+    "M1": true,
     "M2": true,
-    "M3": true,
+    "M3": false,
     "M4": true,
     "M5": true,
     "M6": true,
@@ -8578,11 +8578,11 @@
     "M9": true,
     "M10": true,
     "M11": true,
-    "M12": false
+    "M12": true
    },
    "incomplete": [],
-   "cost": 0.1318392,
-   "wall_ms": 106225,
+   "cost": 0.12464720000000001,
+   "wall_ms": 97738,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -8595,6 +8595,37 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
+   "score": 10,
+   "max": 12,
+   "items": {
+    "M1": true,
+    "M2": true,
+    "M3": false,
+    "M4": true,
+    "M5": true,
+    "M6": true,
+    "M7": true,
+    "M8": true,
+    "M9": true,
+    "M10": true,
+    "M11": true,
+    "M12": false
+   },
+   "incomplete": [],
+   "cost": 0.11693719999999999,
+   "wall_ms": 85880,
+   "canonical": [
+    "claude-sonnet-5"
+   ],
+   "judge": [
+    "claude-opus-5"
+   ]
+  },
+  {
+   "area": "migration",
+   "model": "sonnet",
+   "cond": "skills",
+   "run": 5,
    "score": 9,
    "max": 12,
    "items": {
@@ -8612,39 +8643,8 @@
     "M12": true
    },
    "incomplete": [],
-   "cost": 0.14641920000000003,
-   "wall_ms": 125044,
-   "canonical": [
-    "claude-sonnet-5"
-   ],
-   "judge": [
-    "claude-opus-5"
-   ]
-  },
-  {
-   "area": "migration",
-   "model": "sonnet",
-   "cond": "skills",
-   "run": 5,
-   "score": 10,
-   "max": 12,
-   "items": {
-    "M1": true,
-    "M2": false,
-    "M3": false,
-    "M4": true,
-    "M5": true,
-    "M6": true,
-    "M7": true,
-    "M8": true,
-    "M9": true,
-    "M10": true,
-    "M11": true,
-    "M12": true
-   },
-   "incomplete": [],
-   "cost": 0.1244792,
-   "wall_ms": 100231,
+   "cost": 0.1268872,
+   "wall_ms": 102176,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -8957,24 +8957,24 @@
    "model": "haiku",
    "cond": "skills",
    "run": 1,
-   "score": 6,
+   "score": 7,
    "max": 11,
    "items": {
     "F1": true,
-    "F2": true,
+    "F2": false,
     "F3": true,
     "F4": true,
-    "F5": false,
+    "F5": true,
     "F6": true,
-    "F7": false,
+    "F7": true,
     "F8": false,
     "F9": true,
     "F10": false,
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.08847749999999999,
-   "wall_ms": 141063,
+   "cost": 0.08475650000000001,
+   "wall_ms": 124765,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -8987,24 +8987,24 @@
    "model": "haiku",
    "cond": "skills",
    "run": 2,
-   "score": 7,
+   "score": 6,
    "max": 11,
    "items": {
     "F1": true,
     "F2": true,
-    "F3": true,
+    "F3": false,
     "F4": true,
     "F5": true,
     "F6": true,
-    "F7": false,
+    "F7": true,
     "F8": false,
-    "F9": true,
+    "F9": false,
     "F10": false,
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.0642752,
-   "wall_ms": 113748,
+   "cost": 0.0641131,
+   "wall_ms": 108925,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -9024,17 +9024,17 @@
     "F2": true,
     "F3": true,
     "F4": true,
-    "F5": false,
+    "F5": true,
     "F6": true,
-    "F7": true,
+    "F7": false,
     "F8": false,
     "F9": true,
     "F10": false,
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.021910199999999998,
-   "wall_ms": 21458,
+   "cost": 0.0651831,
+   "wall_ms": 108870,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -9047,24 +9047,24 @@
    "model": "haiku",
    "cond": "skills",
    "run": 4,
-   "score": 6,
+   "score": 8,
    "max": 11,
    "items": {
     "F1": true,
-    "F2": false,
+    "F2": true,
     "F3": true,
     "F4": true,
-    "F5": true,
+    "F5": false,
     "F6": true,
-    "F7": false,
-    "F8": false,
+    "F7": true,
+    "F8": true,
     "F9": true,
     "F10": false,
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.060186199999999995,
-   "wall_ms": 105055,
+   "cost": 0.06995309999999999,
+   "wall_ms": 118232,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -9081,10 +9081,10 @@
    "max": 11,
    "items": {
     "F1": true,
-    "F2": true,
+    "F2": false,
     "F3": true,
     "F4": true,
-    "F5": false,
+    "F5": true,
     "F6": true,
     "F7": false,
     "F8": false,
@@ -9093,8 +9093,8 @@
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.0497852,
-   "wall_ms": 84260,
+   "cost": 0.0635431,
+   "wall_ms": 102099,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -9257,7 +9257,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 1,
-   "score": 9,
+   "score": 8,
    "max": 11,
    "items": {
     "F1": true,
@@ -9270,11 +9270,11 @@
     "F8": false,
     "F9": true,
     "F10": false,
-    "F11": true
+    "F11": false
    },
    "incomplete": [],
-   "cost": 0.205815,
-   "wall_ms": 42988,
+   "cost": 0.21094000000000002,
+   "wall_ms": 37900,
    "canonical": [
     "claude-opus-5"
    ],
@@ -9299,12 +9299,12 @@
     "F7": true,
     "F8": false,
     "F9": true,
-    "F10": true,
-    "F11": false
+    "F10": false,
+    "F11": true
    },
    "incomplete": [],
-   "cost": 0.1481495,
-   "wall_ms": 40411,
+   "cost": 0.1708355,
+   "wall_ms": 47397,
    "canonical": [
     "claude-opus-5"
    ],
@@ -9317,7 +9317,7 @@
    "model": "opus",
    "cond": "skills",
    "run": 3,
-   "score": 9,
+   "score": 10,
    "max": 11,
    "items": {
     "F1": true,
@@ -9327,14 +9327,14 @@
     "F5": true,
     "F6": true,
     "F7": true,
-    "F8": false,
+    "F8": true,
     "F9": true,
     "F10": false,
     "F11": true
    },
    "incomplete": [],
-   "cost": 0.1588495,
-   "wall_ms": 45458,
+   "cost": 0.1680605,
+   "wall_ms": 47027,
    "canonical": [
     "claude-opus-5"
    ],
@@ -9357,14 +9357,14 @@
     "F5": true,
     "F6": true,
     "F7": true,
-    "F8": false,
+    "F8": true,
     "F9": true,
     "F10": false,
-    "F11": true
+    "F11": false
    },
    "incomplete": [],
-   "cost": 0.1875995,
-   "wall_ms": 61006,
+   "cost": 0.1755855,
+   "wall_ms": 50667,
    "canonical": [
     "claude-opus-5"
    ],
@@ -9393,8 +9393,8 @@
     "F11": true
    },
    "incomplete": [],
-   "cost": 0.18114950000000002,
-   "wall_ms": 58163,
+   "cost": 0.1644605,
+   "wall_ms": 43593,
    "canonical": [
     "claude-opus-5"
    ],
@@ -9573,8 +9573,8 @@
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.1021588,
-   "wall_ms": 46864,
+   "cost": 0.0831468,
+   "wall_ms": 18086,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -9603,8 +9603,8 @@
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.0582182,
-   "wall_ms": 30247,
+   "cost": 0.0817406,
+   "wall_ms": 51078,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -9617,11 +9617,11 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 3,
-   "score": 7,
+   "score": 6,
    "max": 11,
    "items": {
     "F1": true,
-    "F2": true,
+    "F2": false,
     "F3": true,
     "F4": true,
     "F5": true,
@@ -9633,8 +9633,8 @@
     "F11": false
    },
    "incomplete": [],
-   "cost": 0.0675182,
-   "wall_ms": 40043,
+   "cost": 0.0485606,
+   "wall_ms": 14407,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -9647,24 +9647,24 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
-   "score": 7,
+   "score": 10,
    "max": 11,
    "items": {
     "F1": true,
-    "F2": false,
+    "F2": true,
     "F3": true,
     "F4": true,
     "F5": true,
     "F6": true,
     "F7": true,
-    "F8": false,
+    "F8": true,
     "F9": true,
     "F10": false,
-    "F11": false
+    "F11": true
    },
    "incomplete": [],
-   "cost": 0.044778200000000004,
-   "wall_ms": 15319,
+   "cost": 0.0738006,
+   "wall_ms": 43201,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -9687,14 +9687,14 @@
     "F5": true,
     "F6": true,
     "F7": true,
-    "F8": false,
+    "F8": true,
     "F9": true,
     "F10": false,
-    "F11": true
+    "F11": false
    },
    "incomplete": [],
-   "cost": 0.0663982,
-   "wall_ms": 39471,
+   "cost": 0.06863259999999999,
+   "wall_ms": 37622,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -10037,7 +10037,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 1,
-   "score": 7,
+   "score": 6,
    "max": 14,
    "items": {
     "S1": true,
@@ -10045,7 +10045,7 @@
     "S3": true,
     "S4": true,
     "S5": true,
-    "S6": true,
+    "S6": false,
     "S7": false,
     "S8": false,
     "S9": false,
@@ -10056,8 +10056,8 @@
     "S14": false
    },
    "incomplete": [],
-   "cost": 0.051448499999999994,
-   "wall_ms": 49678,
+   "cost": 0.051741499999999996,
+   "wall_ms": 47695,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -10078,19 +10078,19 @@
     "S3": true,
     "S4": true,
     "S5": true,
-    "S6": false,
+    "S6": true,
     "S7": false,
-    "S8": true,
+    "S8": false,
     "S9": false,
     "S10": true,
-    "S11": false,
+    "S11": true,
     "S12": true,
     "S13": false,
-    "S14": true
+    "S14": false
    },
    "incomplete": [],
-   "cost": 0.0274161,
-   "wall_ms": 38878,
+   "cost": 0.0300513,
+   "wall_ms": 34716,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -10103,7 +10103,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 3,
-   "score": 8,
+   "score": 9,
    "max": 14,
    "items": {
     "S1": true,
@@ -10115,15 +10115,15 @@
     "S7": false,
     "S8": false,
     "S9": false,
-    "S10": true,
+    "S10": false,
     "S11": true,
-    "S12": false,
+    "S12": true,
     "S13": false,
-    "S14": false
+    "S14": true
    },
    "incomplete": [],
-   "cost": 0.034906099999999995,
-   "wall_ms": 50373,
+   "cost": 0.096012,
+   "wall_ms": 32835,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -10136,7 +10136,7 @@
    "model": "haiku",
    "cond": "skills",
    "run": 4,
-   "score": 8,
+   "score": 11,
    "max": 14,
    "items": {
     "S1": true,
@@ -10144,19 +10144,19 @@
     "S3": true,
     "S4": true,
     "S5": true,
-    "S6": false,
+    "S6": true,
     "S7": true,
-    "S8": false,
+    "S8": true,
     "S9": false,
-    "S10": true,
+    "S10": false,
     "S11": true,
-    "S12": false,
+    "S12": true,
     "S13": false,
-    "S14": false
+    "S14": true
    },
    "incomplete": [],
-   "cost": 0.0239811,
-   "wall_ms": 29496,
+   "cost": 0.016947900000000002,
+   "wall_ms": 32097,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -10183,13 +10183,13 @@
     "S9": false,
     "S10": false,
     "S11": true,
-    "S12": false,
+    "S12": true,
     "S13": false,
-    "S14": true
+    "S14": false
    },
    "incomplete": [],
-   "cost": 0.0264211,
-   "wall_ms": 27242,
+   "cost": 0.0209229,
+   "wall_ms": 38923,
    "canonical": [
     "claude-haiku-4-5-20251001"
    ],
@@ -10386,8 +10386,8 @@
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.39081000000000005,
-   "wall_ms": 124013,
+   "cost": 0.66569,
+   "wall_ms": 130899,
    "canonical": [
     "claude-opus-5"
    ],
@@ -10419,8 +10419,8 @@
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.4536135,
-   "wall_ms": 152821,
+   "cost": 0.249724,
+   "wall_ms": 118758,
    "canonical": [
     "claude-opus-5"
    ],
@@ -10452,8 +10452,8 @@
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.34494650000000004,
-   "wall_ms": 144365,
+   "cost": 0.4220045,
+   "wall_ms": 162681,
    "canonical": [
     "claude-opus-5"
    ],
@@ -10485,8 +10485,8 @@
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.32127150000000004,
-   "wall_ms": 130828,
+   "cost": 0.571063,
+   "wall_ms": 202912,
    "canonical": [
     "claude-opus-5"
    ],
@@ -10518,8 +10518,8 @@
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.3619465,
-   "wall_ms": 152530,
+   "cost": 0.372273,
+   "wall_ms": 143918,
    "canonical": [
     "claude-opus-5"
    ],
@@ -10697,7 +10697,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 1,
-   "score": 12,
+   "score": 11,
    "max": 14,
    "items": {
     "S1": true,
@@ -10711,13 +10711,13 @@
     "S9": false,
     "S10": true,
     "S11": true,
-    "S12": true,
+    "S12": false,
     "S13": true,
     "S14": false
    },
    "incomplete": [],
-   "cost": 0.11102680000000001,
-   "wall_ms": 48192,
+   "cost": 0.22447799999999998,
+   "wall_ms": 41205,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -10745,12 +10745,12 @@
     "S10": true,
     "S11": true,
     "S12": true,
-    "S13": true,
-    "S14": false
+    "S13": false,
+    "S14": true
    },
    "incomplete": [],
-   "cost": 0.068407,
-   "wall_ms": 46282,
+   "cost": 0.0323822,
+   "wall_ms": 29725,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -10763,7 +10763,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 3,
-   "score": 11,
+   "score": 12,
    "max": 14,
    "items": {
     "S1": true,
@@ -10773,17 +10773,17 @@
     "S5": true,
     "S6": true,
     "S7": true,
-    "S8": false,
+    "S8": true,
     "S9": true,
-    "S10": true,
+    "S10": false,
     "S11": true,
-    "S12": false,
+    "S12": true,
     "S13": true,
     "S14": false
    },
    "incomplete": [],
-   "cost": 0.07157699999999999,
-   "wall_ms": 52736,
+   "cost": 0.0414322,
+   "wall_ms": 37886,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -10796,7 +10796,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 4,
-   "score": 12,
+   "score": 11,
    "max": 14,
    "items": {
     "S1": true,
@@ -10806,17 +10806,17 @@
     "S5": true,
     "S6": true,
     "S7": true,
-    "S8": false,
+    "S8": true,
     "S9": false,
     "S10": true,
-    "S11": true,
+    "S11": false,
     "S12": true,
     "S13": true,
-    "S14": true
+    "S14": false
    },
    "incomplete": [],
-   "cost": 0.080827,
-   "wall_ms": 57558,
+   "cost": 0.0533622,
+   "wall_ms": 49238,
    "canonical": [
     "claude-sonnet-5"
    ],
@@ -10829,7 +10829,7 @@
    "model": "sonnet",
    "cond": "skills",
    "run": 5,
-   "score": 11,
+   "score": 10,
    "max": 14,
    "items": {
     "S1": true,
@@ -10839,17 +10839,17 @@
     "S5": true,
     "S6": true,
     "S7": true,
-    "S8": false,
+    "S8": true,
     "S9": false,
     "S10": false,
     "S11": true,
-    "S12": true,
-    "S13": true,
+    "S12": false,
+    "S13": false,
     "S14": true
    },
    "incomplete": [],
-   "cost": 0.06061699999999999,
-   "wall_ms": 38673,
+   "cost": 0.0282622,
+   "wall_ms": 24180,
    "canonical": [
     "claude-sonnet-5"
    ],

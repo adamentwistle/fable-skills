@@ -1,0 +1,40 @@
+{
+ "area": "perf",
+ "run": "haiku-skills-run1",
+ "items": {
+  "F1": true,
+  "F2": false,
+  "F3": true,
+  "F4": true,
+  "F5": true,
+  "F6": true,
+  "F7": true,
+  "F8": false,
+  "F9": true,
+  "F10": false,
+  "F11": false
+ },
+ "citations": {
+  "F1": "N+1 query in serialize_event loop \u2014 each event fetches a user separately; 1.9k events = 1.9k DB round-trips \u2014 batch-fetch all users in one WHERE id IN query",
+  "F2": "",
+  "F3": "Blocking requests.get() in lookup_geo stalls the event loop, causes /healthz timeout, triggers pod restarts \u2014 replace with httpx async client.",
+  "F4": "Missing index on (org_id, created_at DESC) causes full table scan of 4.2M rows",
+  "F5": "Unbounded _request_timings list grows with every request \u2014 cap to recent 10k entries to limit memory.",
+  "F6": "Unbounded _geo_cache dict accumulates IPs over time ... bound to 10k entries with LRU eviction.",
+  "F7": "Verify: measure p50/p95 latency for orgs 4127 and 88 via Datadog dashboard post-deploy to confirm fixes.",
+  "F8": "",
+  "F9": "DO NOT SHIP the on-call proposal \u2014 more workers/pool doesn't fix the N+1 queries or blocking I/O that are the real bottlenecks; caching helps latency on hits but doesn't stop the memory leak or pod restarts.",
+  "F10": "",
+  "F11": ""
+ },
+ "score": 7,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.168322,
+ "judge_wall_ms": 28204,
+ "graded_at": "2026-09-04T02:24:51+0100"
+}

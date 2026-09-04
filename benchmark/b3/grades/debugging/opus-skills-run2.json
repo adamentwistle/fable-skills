@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run2",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": true,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the cache has no invalidation \u2014 `_cache` is populated once and nothing ever compares it against the file's current state",
+  "A2": "NOT a fix \u2014 a TTL / time-based expiry: it shortens the stale window but still serves known-wrong values for the whole interval",
+  "A3": "NOT a fix \u2014 an explicit `reload_config()` or `_cache = None` at call sites: a mitigation that pushes correctness onto every caller",
+  "A4": "The cache also ignores `path` \u2014 the first call wins and a later `get_config('other.json')` returns the wrong file's contents",
+  "A5": "adding a lock: addresses concurrent double-load, not staleness; still needed *after* finding 1, since stat-then-read-then-store is a race",
+  "A6": "The cached `dict` is returned by reference, so any caller mutating it silently rewrites everyone's config",
+  "A7": "call `get_config()`, write a changed value to `config.json`, call again in the same process, assert the two returned values differ",
+  "A8": ""
+ },
+ "score": 7,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.101132,
+ "judge_wall_ms": 13594,
+ "graded_at": "2026-09-04T02:21:56+0100"
+}

@@ -1,0 +1,27 @@
+**No — this cannot ship Thursday.** The staging run that was read as a success backfilled 50% of the table, and three separate defects cause a production outage between rollout steps 2 and 4. This needs a re-cut across two releases.
+
+1. The backfill skipped half of staging: `OFFSET` pages through a result set that shrinks as rows are updated, so each batch's offset lands past 5,000 rows it never selected — `done: 1055000` of 2,104,377 is exactly the 50.1% that arithmetic predicts, and 1,049,377 rows were left NULL while the script exited 0; fix with keyset pagination (`WHERE state IS NULL AND id > :last_id ORDER BY id LIMIT 5000`) and drop `OFFSET` entirely.
+2. `Order.from_row` calls `OrderState(row["state"])`, which raises `ValueError` on NULL, and the app deploys (step 2) *before* the backfill (step 3) — so every read of the 61.4M not-yet-backfilled rows throws; the app must tolerate NULL `state` or deploy after a reconciled backfill.
+3. `mark_paid` matches `WHERE state = 0`, which matches nothing for rows still holding `status='pending'` and NULL `state`, so the payment webhook silently no-ops, returns 2xx, and the provider stops retrying — orders stay unpaid with no error anywhere.
+4. `jobs/nightly_finance_export.py` selects `o.status` and filters on it; the grep was scoped to `app/` and missed it, so 0143 breaks the 02:00 UTC Friday export into Finance's Looker model.
+5. There is no dual-write, so new orders written after step 2 have NULL `status` and vanish from that export's `status IN ('paid','shipped')` filter — Finance silently undercounts from Thursday afternoon, before 0143 even runs.
+6. 7,764 rows (`PAID` 5210, `canceled` 1988, `complete` 417, NULL 149) fall through the `CASE` to NULL, so 0143's `SET NOT NULL` fails and the whole release stalls mid-rollout; add case-insensitive matching plus explicit synonym arms.
+7. The entire loop sits inside one `with conn.transaction():`, so the "batched, safe to re-run" claim is false — nothing commits until the end, a pod eviction rolls back hours of work, and the long transaction blocks vacuum on a 61M-row table; commit per batch.
+8. Duration does not fit the window: staging moved 1,055,000 rows in 660s ≈ 1,600 rows/s, so a *correct* backfill of 61,437,902 rows is ~10.7 hours, and fixing `OFFSET` does not speed it up.
+9. `op.alter_column("orders", "state", nullable=False)` takes ACCESS EXCLUSIVE and full-scans 61M rows; use `ADD CONSTRAINT ... CHECK (state IS NOT NULL) NOT VALID`, then `VALIDATE CONSTRAINT`, then `SET NOT NULL`.
+10. No dry-run mode; add a flag that reports would-change counts and sample IDs per source `status` value without writing.
+11. 0143's `downgrade` recreates an empty `status` column — that is not a rollback, it is permanent data loss, and it builds `ix_orders_status` non-concurrently under a write lock.
+12. A multi-hour backfill on the primary generates enough WAL to lag the two streaming replicas, so reads served there see stale/NULL `state` and hit finding 2 even after the primary is done.
+13. `done += BATCH` counts iterations, not affected rows, so the progress log cannot detect finding 1; use `cur.rowcount`.
+14. Neither migration sets `lock_timeout`/`statement_timeout`, so a blocked DDL statement queues behind it and stalls all writes to `orders`.
+15. Tests ran only against a fresh schema at head, so nothing covers the mixed state — add a test with rows holding legacy `status` and NULL `state`.
+16. `ix_orders_state` is created with `postgresql_concurrently=True`; a failure leaves an INVALID index and the migration is not re-runnable, so add a drop-if-invalid guard.
+17. API clients filtering `?status=canceled` or `complete` matched real rows before and will now 4xx or return empty, since the mapping is by enum name only.
+18. **Before step 1:** get a product and Finance decision on what `complete` (417) and NULL (149) map to — I cannot infer either from the enum.
+19. **Before step 1:** take a before-image of `(id, status)` into a backup table; that table is the only real rollback for 0143.
+20. **Before step 3:** run the dry run and compare its count to 61,437,902 minus already-set rows; a mismatch stops the rollout.
+21. **Between steps 3 and 4:** require `SELECT count(*) FROM orders WHERE state IS NULL` = 0, plus a cross-tab `SELECT status, state, count(*) FROM orders GROUP BY 1,2` proving every source spelling landed on its intended integer.
+22. **Between steps 3 and 4:** fetch ~20 sample IDs from each source spelling through the real app read path, not raw SQL — that is the check that would have caught finding 2.
+23. **After step 4:** watch the 02:00 UTC export the next morning and diff its row count against the prior day before Finance loads it.
+24. Re-sequence into two releases: 0142 + a deploy that writes both `status` and `state` and reads either → backfill → reconcile → a deploy that reads `state` → 0143 in the *following* release, days later, after the export job is migrated.
+25. I could not verify `app/api/orders.py` or the tests — both are described but not shown — so the name-mapping claim in finding 17 and the suite-green claim are unchecked; likewise every finding here comes from the PR text alone, as I have no access to this repository.

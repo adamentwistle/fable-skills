@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "opus-skills-run1",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": true,
+  "A4": true,
+  "A5": true,
+  "A6": true,
+  "A7": true,
+  "A8": false
+ },
+ "citations": {
+  "A1": "the cache is written once and has no invalidation condition \u2014 `_cache is None` is only ever true once per process, so nothing can ever re-read the file; fix by storing a version stamp alongside the value and re-reading when it changes",
+  "A2": "NOT a fix \u2014 a TTL/time-based expiry: it shortens the stale window but still serves known-wrong values for up to the TTL",
+  "A3": "NOT a fix \u2014 exposing a `reload_config()` for callers to call: it makes correctness depend on every call site knowing when an external process wrote the file",
+  "A4": "The cache is not keyed by `path`, so `get_config('a.json')` then `get_config('b.json')` returns a's contents; key the cache dict by the resolved absolute path.",
+  "A5": "adding a lock: it makes concurrent first-reads safe but a correctly-locked stale value is still stale; add one anyway only if threads share this, since the stat-then-read window is racy",
+  "A6": "The same mutable dict object is handed to every caller, so one caller's mutation silently edits everyone's config and also desyncs the cache from disk; return a deep copy",
+  "A7": "before the fix both lines print `{'v': 1}`; after, the second prints `{'v': 2}`",
+  "A8": ""
+ },
+ "score": 7,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.109122,
+ "judge_wall_ms": 18182,
+ "graded_at": "2026-09-04T02:22:00+0100"
+}

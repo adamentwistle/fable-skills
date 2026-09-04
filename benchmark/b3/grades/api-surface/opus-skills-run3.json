@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run3",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`total_cents` and top-level `currency` are gone; `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` \u2192 `undefined`",
+  "P2": "`InvoiceBadge.tsx:9` tests `status === 'paid'`, which never matches now",
+  "P3": "`Disputed` inserted mid-enum shifts `Paid` 2\u21923 and `Void` 3\u21924, and `invoices.state` is a SMALLINT holding the old ordinals; every existing Paid row now reads as Disputed",
+  "P4": "`values.prod.yaml` still sets `INVOICE_GRACE_DAYS: \"21\"`, staging `\"14\"`; Zod strips the unknown key and the new key falls to its default, so prod silently drops from 21 to 7 days",
+  "P5": "`--filter='[origin/main]'` skipped `@acme/notifier` and `@acme/scripts` (the packages holding the broken callers)",
+  "P6": "`expect(res.status).toBeTruthy()` and `expect(res.total).toBeDefined()` pass for any non-empty value ... Restore concrete expectations.",
+  "P7": "the author's own sweep shows this, contradicting the \"platform team confirmed both shapes\" note",
+  "P8": "every out-of-repo subscriber gets the new shape with no version bump and no consumer list. Enumerate subscribers",
+  "P9": "Fix the hook or keep `total_cents` alongside `total`.",
+  "P10": "query the invoices table for the current distribution of `state` values and confirm what each ordinal means today",
+  "P11": "`invoiceRoutes.ts:88` omits `rateBps`, so the route falls back to the hardcoded `150` while `dunning.ts` uses `config.LATE_FEE_RATE_BPS`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.179662,
+ "judge_wall_ms": 16627,
+ "graded_at": "2026-09-04T02:21:19+0100"
+}

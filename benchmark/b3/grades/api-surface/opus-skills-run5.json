@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "opus-skills-run5",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`total_cents` and `currency` are removed; `apps/portal/src/client/hooks/useInvoice.ts:23` reads `data.total_cents` (now `undefined` ...) and `services/reconciler/reconcile.py:64` compares `inv[\"total_cents\"]`",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` will stop rendering the Paid badge, and `reconcile.py:64` will match zero settled invoices",
+  "P3": "Inserting `Disputed` before `Paid` shifts `Paid` 2\u21923 and `Void` 3\u21924, and `invoices.state` is a SMALLINT holding those numbers; every existing paid row will read back as `Disputed`",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` sets `INVOICE_GRACE_DAYS: \"21\"` and staging sets `14`; ... both environments fall to the new default of 7",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` pass a bare number ... `turbo run typecheck test --filter='[origin/main]'` skipped `@acme/notifier`, `@acme/reconciler-client` and `@acme/scripts` \u2014 exactly the packages holding the broken call sites",
+  "P6": "`expect(res.status).toBeTruthy()` and `expect(res.total).toBeDefined()` pass for `'draft'` and `{}`; restore exact assertions ... Un-skip it and let it fail before merging.",
+  "P7": "The \"platform team confirmed both shapes\" note is contradicted by the author's own sweep \u2014 `reconcile.py:64` keys on both `\"paid\"` and `\"total_cents\"`",
+  "P8": "whether any out-of-repo consumer reads `total_cents`/`'paid'`, and whether the mobile app was actually tested against the new shape",
+  "P9": "Keep `total_cents` and `currency` alongside `total` for one release",
+  "P10": "Re-run typecheck and test across the whole workspace before this is mergeable.",
+  "P11": "Dunning passes `config.LATE_FEE_RATE_BPS`, the `GET /v1/invoices/:id` route doesn't, so the fee shown to the customer falls back to the hardcoded `150`"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.182672,
+ "judge_wall_ms": 18812,
+ "graded_at": "2026-09-04T02:21:25+0100"
+}

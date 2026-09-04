@@ -1,0 +1,40 @@
+{
+ "area": "api-surface",
+ "run": "sonnet-skills-run2",
+ "items": {
+  "P1": true,
+  "P2": true,
+  "P3": true,
+  "P4": true,
+  "P5": true,
+  "P6": true,
+  "P7": true,
+  "P8": true,
+  "P9": true,
+  "P10": true,
+  "P11": true
+ },
+ "citations": {
+  "P1": "`useInvoice.ts:23` reads `data.total_cents`, which no longer exists in the response \u2014 will read `undefined`",
+  "P2": "`apps/portal/src/client/components/InvoiceBadge.tsx:9` (`status === 'paid'`) and `services/reconciler/reconcile.py:64` (`inv[\"status\"] == \"paid\"` ... ) are known in-repo consumers still on the old shape and will silently misbehave (badge stops showing \"Paid\", reconciler stops matching)",
+  "P3": "shifting the numeric values of `Paid` (2\u21923) and `Void` (3\u21924); `invoices.state` is a persisted SMALLINT column (`repo.ts`) ... this silently corrupts stored/historical invoice states on read \u2014 append `Disputed` at the end of the enum instead, or migrate/backfill existing rows",
+  "P4": "`infra/helm/billing/values.prod.yaml:31` and `values.staging.yaml:29` still set the old name, so `BILLING_GRACE_PERIOD_DAYS` will silently fall back to its new default of 7 (prod currently relies on 21)",
+  "P5": "`services/notifier/src/reminders.ts:57` and `scripts/backfill-late-fees.js:22` still call it with a positional number \u2014 both will typecheck-fail/crash (notifier wasn't in CI scope since \"no changes since origin/main\")",
+  "P6": "replaced exact assertions (`status === 'paid'`, `total_cents === 12500`) with `toBeTruthy()`/`toBeDefined()`, and the state-persistence round-trip test was skipped rather than fixed \u2014 restore precise assertions and un-skip the DB round-trip test",
+  "P7": "the PR description's claim that mobile/reconciler handle both shapes is unverifiable from this diff ... block merge until these are updated or the response is versioned/dual-shaped, regardless of the \"don't hold on downstream concerns\" note",
+  "P8": "the PR description's claim that mobile/reconciler handle both shapes is unverifiable from this diff",
+  "P9": "block merge until these are updated or the response is versioned/dual-shaped",
+  "P10": "CI must run affected-package detection correctly (or full suite) before this can be trusted as green",
+  "P11": "`invoiceRoutes.ts:88` doesn't pass `rateBps` while `dunning.ts:41` does pass `config.LATE_FEE_RATE_BPS` \u2014 if that config value differs from 150, the same invoice now gets two different late fees"
+ },
+ "score": 11,
+ "max": 11,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.192797,
+ "judge_wall_ms": 27933,
+ "graded_at": "2026-09-04T02:21:38+0100"
+}

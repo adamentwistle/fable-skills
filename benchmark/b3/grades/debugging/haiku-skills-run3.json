@@ -1,0 +1,34 @@
+{
+ "area": "debugging",
+ "run": "haiku-skills-run3",
+ "items": {
+  "A1": true,
+  "A2": true,
+  "A3": false,
+  "A4": false,
+  "A5": false,
+  "A6": false,
+  "A7": false,
+  "A8": false
+ },
+ "citations": {
+  "A1": "Cache never revalidates against source; `_cache is None` checks only if cache was populated, not if file changed.",
+  "A2": "TTL expiration won't work; stale reads still occur within the expiration window.",
+  "A3": "",
+  "A4": "",
+  "A5": "",
+  "A6": "",
+  "A7": "",
+  "A8": ""
+ },
+ "score": 2,
+ "max": 8,
+ "incomplete": [],
+ "judge_alias": "opus",
+ "judge_models": [
+  "claude-opus-5"
+ ],
+ "judge_cost_usd": 0.087487,
+ "judge_wall_ms": 9909,
+ "graded_at": "2026-09-04T02:21:43+0100"
+}

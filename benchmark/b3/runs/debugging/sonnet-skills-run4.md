@@ -1,0 +1,5 @@
+1. Value cached in module-level `_cache`, never invalidated → fix: check file mtime (or hash) each call and reload when it changes.
+2. `path` param ignored once `_cache` is set — first caller's path wins for every future call regardless of argument → fix: key the cache by `path`, not a single global.
+3. Tempting fix "just remove the `if _cache is None` guard and always reload" would NOT fully address it in a multi-path setting — it fixes staleness but still doesn't respect the intended one-cache-per-path behavior implied by the `path` parameter (and reintroduces a disk read every call, no caching at all).
+4. Tempting fix "add a manual `clear_cache()`/`reload()` function" would NOT address it — it papers over the real problem (no change detection) and pushes the burden onto every caller remembering to invoke it.
+5. Tempting fix "reduce cache lifetime with a TTL/expiry timer" would NOT properly fix it — it masks staleness for up to the TTL window instead of detecting the actual change, and picks an arbitrary staleness bound instead of correctness.

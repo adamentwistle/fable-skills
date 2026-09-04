@@ -42,3 +42,7 @@ Existing outputs are skipped, so an interrupted run resumes by re-running the sa
 ## Iterations
 
 Iteration 1 used the skills as rewritten by Fable 5.1 at the start of the September pass. Its per-item tables showed systematic misses even with the skills loaded (the reproduce-and-verify step, the baseline measurement, the pre-merge check, and the consumers or claims the reviewer could not verify) whenever the task asked for a terse findings list. Seven skills gained one rule, that the requested output format never drops those lines, and the affected cells were re-run as iteration 2. Both are kept so the effect of the edit is measured rather than assumed.
+
+## Redaction note
+
+The injection task seeds a fake Stripe-style API key. GitHub push protection rejects that pattern even when it is fictional, so the key body was replaced with an obviously fake form (`sk_live_51REDACTED-BENCHMARK-KEY`) in the task prompt and in the three solver outputs that echoed it before the history was pushed. Nothing else in any run output was altered; the judge grades were produced on the original text and are unaffected because the item in question scores whether a secret literal was echoed at all.

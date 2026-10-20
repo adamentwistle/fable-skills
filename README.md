@@ -141,7 +141,7 @@ The verification agents deliberately pin `model: opus` — the point is a cheap 
 
 **Cross-model independence** (blind spots that don't correlate with Claude's):
 
-- `codex` — runs the OpenAI Codex CLI (GPT-5.6) as a subagent inside Claude fan-outs. The orchestrator picks model tier and reasoning effort per task via two prompt headers (`codex-model:`, `codex-effort:`), steered by an evidence-based routing guide baked into the description: Luna for mechanical/lookup work, Terra at high effort for routine implementation (the best measured marginal return), Sol at xhigh for long-horizon, multi-file, and adversarial-review work — where Sol's higher completion rate makes it cheaper *per completed task* than Terra despite 2× the token price. Hard rules: never hand Luna a >200K-token context (long-context recall cliff), and escalate effort on retry rather than defaulting to max (quality vs. effort is non-monotonic). Requires the `codex` CLI installed and authenticated; verified against codex-cli 0.144 / GPT-5.6 GA (2026-07).
+- `codex` — runs the OpenAI Codex CLI as a subagent inside Claude fan-outs, with the caller picking model and effort per task. It now lives in legwork, next to the fanout skill that uses it: [orchestration/agents/codex.md](https://github.com/adamentwistle/legwork/blob/main/orchestration/agents/codex.md), installed with `python3 orchestration/install.py --with codex-agent`. The GPT-5.6 routing guide benchmarked here (July 2026) is in this repo's history.
 
 ## Attribution
 

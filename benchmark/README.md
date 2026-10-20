@@ -48,6 +48,7 @@ grading/
 - R1–R20 in the grader material map to runs as: R1–5 = opus48-bare-1..5, R6–10 = opus48-skills-1..5, R11–15 = sonnet5-bare-1..5, R16–20 = sonnet5-skills-1..5 (orchestrator's stated map; within-group order verified by content match for R1/R2 in debugging).
 - Trailing "Model suitability/Model note" paragraphs in run and grader outputs are part of the agents' verbatim final messages.
 - A stray CJK artifact ("永久") in `runs/debugging/opus48-bare-run2.md` is present in the original output and preserved verbatim.
+- Two concurrency outputs (`runs/concurrency/opus48-bare-run2.md` and `sonnet5-bare-run5.md`) named the session owner's employer. The name is replaced with `[company]` for privacy; nothing else in them was changed.
 
 ## Known gaps / caveats
 
